@@ -1,37 +1,73 @@
 
 import React from 'react';
-import { Bell, Search, User } from 'lucide-react';
+import { Menu, Bell, Settings, User, LogOut } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuItem, 
+  DropdownMenuLabel, 
+  DropdownMenuSeparator, 
+  DropdownMenuTrigger 
+} from '@/components/ui/dropdown-menu';
+import { useAuth } from '@/contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
-const DashboardHeader = () => {
+interface DashboardHeaderProps {
+  toggleSidebar?: () => void;
+}
+
+const DashboardHeader = ({ toggleSidebar }: DashboardHeaderProps) => {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await logout();
+    navigate('/login');
+  };
+
   return (
-    <header className="h-16 border-b border-border bg-background flex items-center px-6">
-      <div className="flex w-full items-center justify-between">
-        <div className="flex items-center h-10 w-full max-w-md">
-          <div className="flex items-center h-10 rounded-md border border-input bg-background px-3 text-sm focus-within:ring-1 focus-within:ring-ring w-full">
-            <Search className="h-4 w-4 text-muted-foreground mr-2" />
-            <input
-              type="search"
-              placeholder="Search..."
-              className="flex h-9 w-full rounded-md bg-transparent py-2 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
-            />
-          </div>
+    <header className="border-b bg-card">
+      <div className="flex h-16 items-center justify-between px-4">
+        <div className="flex items-center">
+          {toggleSidebar && (
+            <Button variant="ghost" size="icon" className="md:hidden mr-2" onClick={toggleSidebar}>
+              <Menu className="h-5 w-5" />
+              <span className="sr-only">Toggle sidebar</span>
+            </Button>
+          )}
+          <h1 className="text-lg font-medium">Kalmar Studio Dashboard</h1>
         </div>
-        
         <div className="flex items-center gap-4">
-          <button className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring h-10 w-10 hover:bg-accent hover:text-accent-foreground">
+          <Button variant="ghost" size="icon">
             <Bell className="h-5 w-5" />
             <span className="sr-only">Notifications</span>
-          </button>
-          
-          <div className="flex items-center gap-2">
-            <div className="flex h-10 w-10 shrink-0 select-none items-center justify-center rounded-full bg-muted">
-              <User className="h-5 w-5" />
-            </div>
-            <div className="hidden md:block">
-              <p className="text-sm font-medium">Admin User</p>
-              <p className="text-xs text-muted-foreground">admin@kalmarstudio.com</p>
-            </div>
-          </div>
+          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <User className="h-5 w-5" />
+                <span className="sr-only">User menu</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
+                <User className="h-4 w-4 mr-2" />
+                <span>{user?.name || 'Profile'}</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => navigate('/dashboard/settings')}>
+                <Settings className="h-4 w-4 mr-2" />
+                <span>Settings</span>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={handleLogout}>
+                <LogOut className="h-4 w-4 mr-2" />
+                <span>Logout</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </header>
