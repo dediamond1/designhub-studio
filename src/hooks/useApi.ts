@@ -19,12 +19,14 @@ export const useFetch = <T>(url: string, queryKey: string[]) => {
       
       return response.json();
     },
-    onError: (error) => {
-      toast({
-        title: 'Error',
-        description: error instanceof Error ? error.message : 'Failed to fetch data',
-        variant: 'destructive',
-      });
+    meta: {
+      onError: (error: Error) => {
+        toast({
+          title: 'Error',
+          description: error.message || 'Failed to fetch data',
+          variant: 'destructive',
+        });
+      },
     },
   });
 };

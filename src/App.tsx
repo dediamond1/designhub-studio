@@ -17,6 +17,8 @@ import Contact from "./pages/Contact";
 import Career from "./pages/Career";
 import Ads from "./pages/Ads";
 import Login from "./pages/Login";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
 import Dashboard from "./pages/Dashboard";
 import DashboardOrders from "./pages/dashboard/Orders";
@@ -47,7 +49,11 @@ const App = () => (
             <Route path="/contact" element={<Contact />} />
             <Route path="/career" element={<Career />} />
             <Route path="/ads" element={<Ads />} />
+            
+            {/* Authentication Routes */}
             <Route path="/login" element={<Login />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
             
             {/* Protected Dashboard Routes */}
             <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />

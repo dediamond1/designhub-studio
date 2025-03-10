@@ -1,7 +1,8 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
+import { auth } from '@/lib/better-auth';
 
 interface User {
   id: string;
@@ -25,19 +26,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
 
   useEffect(() => {
     // Check if user is already logged in
     const checkAuth = async () => {
       try {
-        const response = await fetch('/api/auth/me', {
-          credentials: 'include',
-        });
+        setLoading(true);
+        const currentUser = await auth.getCurrentUser();
         
-        if (response.ok) {
-          const userData = await response.json();
-          setUser(userData);
+        if (currentUser) {
+          setUser({
+            id: currentUser.id,
+            name: currentUser.name || '',
+            email: currentUser.email,
+            role: currentUser.role as 'admin' | 'user' || 'user',
+          });
         }
       } catch (error) {
         console.error('Authentication check failed:', error);
@@ -52,27 +57,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const login = async (email: string, password: string) => {
     setLoading(true);
     try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-        credentials: 'include',
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Login failed');
+      const result = await auth.signIn(email, password);
+      
+      if (result.user) {
+        const userData = {
+          id: result.user.id,
+          name: result.user.name || '',
+          email: result.user.email,
+          role: result.user.role as 'admin' | 'user' || 'user',
+        };
+        
+        setUser(userData);
+        
+        toast({
+          title: 'Login successful',
+          description: `Welcome back, ${userData.name}!`,
+        });
+        
+        // Redirect to the page they were trying to access or dashboard
+        const from = location.state?.from?.pathname || '/dashboard';
+        navigate(from, { replace: true });
       }
-
-      const userData = await response.json();
-      setUser(userData);
-      toast({
-        title: 'Login successful',
-        description: `Welcome back, ${userData.name}!`,
-      });
-      navigate('/dashboard');
     } catch (error) {
       console.error('Login failed:', error);
       toast({
@@ -88,27 +93,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const register = async (name: string, email: string, password: string) => {
     setLoading(true);
     try {
-      const response = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ name, email, password }),
-        credentials: 'include',
+      const result = await auth.signUp(email, password, {
+        name: name,
+        role: 'user',
       });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Registration failed');
+      
+      if (result.user) {
+        const userData = {
+          id: result.user.id,
+          name: result.user.name || '',
+          email: result.user.email,
+          role: result.user.role as 'admin' | 'user' || 'user',
+        };
+        
+        setUser(userData);
+        
+        toast({
+          title: 'Registration successful',
+          description: 'Your account has been created successfully!',
+        });
+        
+        navigate('/dashboard');
       }
-
-      const userData = await response.json();
-      setUser(userData);
-      toast({
-        title: 'Registration successful',
-        description: 'Your account has been created successfully!',
-      });
-      navigate('/dashboard');
     } catch (error) {
       console.error('Registration failed:', error);
       toast({
@@ -123,10 +129,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const logout = async () => {
     try {
-      await fetch('/api/auth/logout', {
-        method: 'POST',
-        credentials: 'include',
-      });
+      await auth.signOut();
       setUser(null);
       toast({
         title: 'Logged out',
