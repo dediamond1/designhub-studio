@@ -1,4 +1,3 @@
-
 import React, { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useScrollReveal } from '../utils/animations';
@@ -8,11 +7,10 @@ import {
   RefreshCw, 
   Download,
   Save,
-  TShirt,
   Shirt,
   Sticker,
   BookOpen,
-  Card
+  CreditCard
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -26,11 +24,11 @@ const DesignPreviewTool = () => {
   const [isDragging, setIsDragging] = useState(false);
   
   const products = [
-    { id: 'tshirt', icon: <TShirt className="h-6 w-6" />, label: 'T-Shirt', image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' },
+    { id: 'tshirt', icon: <Shirt className="h-6 w-6" />, label: 'T-Shirt', image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' },
     { id: 'hoodie', icon: <Shirt className="h-6 w-6" />, label: 'Hoodie', image: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' },
     { id: 'sticker', icon: <Sticker className="h-6 w-6" />, label: 'Sticker', image: 'https://images.unsplash.com/photo-1535450216233-37512d7595a1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' },
     { id: 'brochure', icon: <BookOpen className="h-6 w-6" />, label: 'Brochure', image: 'https://images.unsplash.com/photo-1586075010923-2dd4570fb338?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' },
-    { id: 'card', icon: <Card className="h-6 w-6" />, label: 'Business Card', image: 'https://images.unsplash.com/photo-1574279606130-09958dc756f7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' }
+    { id: 'card', icon: <CreditCard className="h-6 w-6" />, label: 'Business Card', image: 'https://images.unsplash.com/photo-1574279606130-09958dc756f7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' }
   ];
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
