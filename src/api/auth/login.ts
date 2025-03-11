@@ -21,8 +21,8 @@ export default async function login(req: Request, res: Response) {
       return res.status(400).json({ success: false, message: 'Please provide email and password' });
     }
 
-    // Find user
-    const user = await User.findOne({ email });
+    // Find user - using exec() to properly execute the query
+    const user = await User.findOne({ email }).exec();
     if (!user) {
       return res.status(401).json({ success: false, message: 'Invalid credentials' });
     }

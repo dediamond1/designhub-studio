@@ -18,8 +18,8 @@ export default async function forgotPassword(req: Request, res: Response) {
       return res.status(400).json({ success: false, message: 'Email is required' });
     }
 
-    // Find user
-    const user = await User.findOne({ email });
+    // Find user - using exec() to properly execute the query
+    const user = await User.findOne({ email }).exec();
     
     // Don't reveal that the user doesn't exist
     if (!user) {

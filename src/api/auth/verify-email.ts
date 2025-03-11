@@ -17,8 +17,8 @@ export default async function verifyEmail(req: Request, res: Response) {
       return res.status(400).json({ success: false, message: 'Verification token is required' });
     }
 
-    // Find user with this verification token
-    const user = await User.findOne({ verificationToken: token });
+    // Find user with this verification token - using exec() to properly execute the query
+    const user = await User.findOne({ verificationToken: token }).exec();
     
     if (!user) {
       return res.status(400).json({ success: false, message: 'Invalid verification token' });
