@@ -2,89 +2,89 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Facebook, Instagram, Linkedin, Twitter, ArrowRight } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { Facebook, Instagram, Twitter, Linkedin, Mail, Phone, MapPin } from 'lucide-react';
+import LanguageSwitcher from './LanguageSwitcher';
 
 const Footer = () => {
-  const { t } = useTranslation();
-  const [email, setEmail] = React.useState('');
-  
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Handle newsletter signup
-    setEmail('');
-    // Toast notification would go here
-  };
+  const { t } = useTranslation('common');
   
   const currentYear = new Date().getFullYear();
   
-  const links = {
-    company: [
-      { name: t('navigation.about'), path: '/about' },
-      { name: t('navigation.career'), path: '/career' },
-      { name: t('navigation.blog'), path: '/blog' },
-      { name: t('navigation.news'), path: '/news' },
-    ],
+  const footerLinks = {
     services: [
-      { name: t('services.tshirts.title'), path: '/services#t-shirts' },
-      { name: t('services.businessCards.title'), path: '/services#business-cards' },
-      { name: t('services.decals.title'), path: '/services#decals' },
-      { name: t('services.graphicDesign.title'), path: '/services#design' },
-      { name: t('services.webSocial.title'), path: '/services#web' },
+      { name: t('footer.links.services.design'), href: '/design' },
+      { name: t('footer.links.services.printing'), href: '/design/print' },
+      { name: t('footer.links.services.clothes'), href: '/design/clothes' },
+      { name: t('footer.links.services.stickers'), href: '/design/stickers' },
     ],
-    support: [
-      { name: t('navigation.contact'), path: '/contact' },
-      { name: 'FAQ', path: '/faq' },
-      { name: t('Delivery Information'), path: '/delivery' },
-      { name: t('Return Policy'), path: '/returns' },
+    company: [
+      { name: t('footer.links.company.about'), href: '/about' },
+      { name: t('footer.links.company.team'), href: '/team' },
+      { name: t('footer.links.company.careers'), href: '/career' },
+      { name: t('footer.links.company.contact'), href: '/contact' },
+    ],
+    resources: [
+      { name: t('footer.links.resources.blog'), href: '/blog' },
+      { name: t('footer.links.resources.news'), href: '/news' },
+      { name: t('footer.links.resources.faq'), href: '/faq' },
+      { name: t('footer.links.resources.press'), href: '/press' },
     ]
   };
   
   const socialLinks = [
-    { icon: <Facebook className="h-5 w-5" />, name: 'Facebook', url: 'https://facebook.com' },
-    { icon: <Instagram className="h-5 w-5" />, name: 'Instagram', url: 'https://instagram.com' },
-    { icon: <Twitter className="h-5 w-5" />, name: 'Twitter', url: 'https://twitter.com' },
-    { icon: <Linkedin className="h-5 w-5" />, name: 'LinkedIn', url: 'https://linkedin.com' },
+    { icon: <Facebook />, href: 'https://facebook.com/kalmarstudio' },
+    { icon: <Instagram />, href: 'https://instagram.com/kalmarstudio' },
+    { icon: <Twitter />, href: 'https://twitter.com/kalmarstudio' },
+    { icon: <Linkedin />, href: 'https://linkedin.com/company/kalmarstudio' },
   ];
 
   return (
-    <footer className="bg-kalmar-950 text-white">
-      <div className="section-container pt-16 pb-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
+    <footer className="bg-gradient-to-b from-white to-purple-50/70 border-t border-purple-100">
+      <div className="section-container py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
           {/* Company Info */}
-          <div className="lg:col-span-2">
-            <NavLink to="/" className="inline-block text-2xl font-display font-bold tracking-tight mb-6">
-              Kalmar Studio
-            </NavLink>
-            <p className="text-white/70 mb-6 max-w-md">
+          <div>
+            <div className="flex items-center mb-5">
+              <div className="bg-gradient-to-br from-purple-600 to-purple-500 w-10 h-10 rounded-lg flex items-center justify-center text-white font-bold">K</div>
+              <span className="ml-2 text-2xl font-display font-bold tracking-tight bg-gradient-to-r from-purple-600 to-orange-500 bg-clip-text text-transparent">
+                Kalmar
+              </span>
+            </div>
+            <p className="text-gray-600 mb-6 max-w-xs">
               {t('footer.description')}
             </p>
             
-            <div className="flex space-x-4 mb-8">
-              {socialLinks.map((link, index) => (
-                <a 
-                  key={index}
-                  href={link.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-2 bg-white/10 rounded-full hover:bg-white/20 transition-colors"
-                  aria-label={link.name}
-                >
-                  {link.icon}
+            <div className="space-y-3">
+              <div className="flex items-start">
+                <MapPin className="h-5 w-5 text-purple-500 mr-3 mt-0.5" />
+                <span className="text-gray-600">
+                  Tryckvägen 123, 123 45 Kalmar, Sweden
+                </span>
+              </div>
+              <div className="flex items-center">
+                <Phone className="h-5 w-5 text-purple-500 mr-3" />
+                <a href="tel:+46701234567" className="text-gray-600 hover:text-purple-600 transition-colors">
+                  +46 70 123 45 67
                 </a>
-              ))}
+              </div>
+              <div className="flex items-center">
+                <Mail className="h-5 w-5 text-purple-500 mr-3" />
+                <a href="mailto:info@kalmarstudio.se" className="text-gray-600 hover:text-purple-600 transition-colors">
+                  info@kalmarstudio.se
+                </a>
+              </div>
             </div>
           </div>
           
-          {/* Quick Links */}
+          {/* Services Links */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">{t('footer.company')}</h3>
+            <h3 className="text-base font-semibold mb-5 text-gray-900">{t('footer.categories.services')}</h3>
             <ul className="space-y-3">
-              {links.company.map((link, index) => (
+              {footerLinks.services.map((link, index) => (
                 <li key={index}>
                   <NavLink 
-                    to={link.path} 
-                    className="text-white/70 hover:text-white transition-colors"
+                    to={link.href} 
+                    className="text-gray-600 hover:text-purple-600 transition-colors"
                   >
                     {link.name}
                   </NavLink>
@@ -93,14 +93,15 @@ const Footer = () => {
             </ul>
           </div>
           
+          {/* Company Links */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">{t('footer.services')}</h3>
+            <h3 className="text-base font-semibold mb-5 text-gray-900">{t('footer.categories.company')}</h3>
             <ul className="space-y-3">
-              {links.services.map((link, index) => (
+              {footerLinks.company.map((link, index) => (
                 <li key={index}>
                   <NavLink 
-                    to={link.path} 
-                    className="text-white/70 hover:text-white transition-colors"
+                    to={link.href} 
+                    className="text-gray-600 hover:text-purple-600 transition-colors"
                   >
                     {link.name}
                   </NavLink>
@@ -109,53 +110,88 @@ const Footer = () => {
             </ul>
           </div>
           
+          {/* Resources Links */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">{t('footer.support')}</h3>
+            <h3 className="text-base font-semibold mb-5 text-gray-900">{t('footer.categories.resources')}</h3>
             <ul className="space-y-3">
-              {links.support.map((link, index) => (
+              {footerLinks.resources.map((link, index) => (
                 <li key={index}>
                   <NavLink 
-                    to={link.path} 
-                    className="text-white/70 hover:text-white transition-colors"
+                    to={link.href} 
+                    className="text-gray-600 hover:text-purple-600 transition-colors"
                   >
                     {link.name}
                   </NavLink>
                 </li>
               ))}
             </ul>
-            
-            <div className="mt-8">
-              <h3 className="text-lg font-semibold mb-4">{t('footer.newsletter')}</h3>
-              <form onSubmit={handleSubmit} className="flex">
+          </div>
+        </div>
+        
+        {/* Newsletter */}
+        <div className="border-t border-purple-100 pt-8 pb-6">
+          <div className="grid md:grid-cols-2 gap-8 items-center">
+            <div>
+              <h3 className="text-lg font-semibold mb-2 text-gray-900">{t('footer.newsletter.title')}</h3>
+              <p className="text-gray-600 mb-0">
+                {t('footer.newsletter.description')}
+              </p>
+            </div>
+            <div>
+              <form className="flex flex-col sm:flex-row gap-3">
                 <input
                   type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder={t('footer.emailPlaceholder')}
-                  className="flex-1 px-4 py-2 rounded-l-md bg-white/10 border border-white/20 text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-kalmar-400"
+                  placeholder={t('footer.newsletter.placeholder')}
+                  className="flex-grow px-4 py-3 rounded-lg border border-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white"
                   required
                 />
-                <button
-                  type="submit"
-                  className="bg-kalmar-600 hover:bg-kalmar-700 px-4 py-2 rounded-r-md transition-colors"
-                  aria-label={t('common.subscribe')}
+                <button 
+                  type="submit" 
+                  className="bg-purple-600 hover:bg-purple-700 text-white font-medium py-3 px-6 rounded-lg transition-colors whitespace-nowrap"
                 >
-                  <ArrowRight className="h-5 w-5" />
+                  {t('footer.newsletter.button')}
                 </button>
               </form>
             </div>
           </div>
         </div>
         
-        <div className="border-t border-white/10 mt-12 pt-8 text-white/50 text-sm flex flex-col md:flex-row justify-between items-center">
-          <p>© {currentYear} Kalmar Studio. {t('All rights reserved.')}</p>
-          <div className="mt-4 md:mt-0 flex space-x-6">
-            <NavLink to="/terms" className="hover:text-white transition-colors">
-              {t('Terms of Service')}
-            </NavLink>
-            <NavLink to="/privacy" className="hover:text-white transition-colors">
-              {t('Privacy Policy')}
-            </NavLink>
+        {/* Bottom bar */}
+        <div className="border-t border-purple-100 pt-8 mt-8">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-6 mb-4 md:mb-0">
+              <div className="text-gray-600 text-sm">
+                © {currentYear} Kalmar Studio. {t('footer.rights')}
+              </div>
+              <div className="flex space-x-4 text-sm">
+                <NavLink to="/privacy" className="text-gray-600 hover:text-purple-600 transition-colors">
+                  {t('footer.privacy')}
+                </NavLink>
+                <NavLink to="/terms" className="text-gray-600 hover:text-purple-600 transition-colors">
+                  {t('footer.terms')}
+                </NavLink>
+              </div>
+            </div>
+            
+            <div className="flex items-center space-x-6">
+              <div className="flex space-x-3">
+                {socialLinks.map((link, index) => (
+                  <a 
+                    key={index}
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-white border border-purple-100 p-2 rounded-full text-purple-500 hover:bg-purple-50 hover:text-purple-600 transition-colors"
+                    aria-label={`Social media link ${index + 1}`}
+                  >
+                    <span className="sr-only">Social Media</span>
+                    {React.cloneElement(link.icon as React.ReactElement, { size: 16 })}
+                  </a>
+                ))}
+              </div>
+              
+              <LanguageSwitcher />
+            </div>
           </div>
         </div>
       </div>

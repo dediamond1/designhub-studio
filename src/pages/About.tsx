@@ -18,22 +18,22 @@ const highlights = [
 
 const values = [
   {
-    icon: <Users className="h-6 w-6" />,
+    icon: <Users className="h-6 w-6 text-purple-500" />,
     title: 'Kundrelationer',
     description: 'Vi bygger långsiktiga relationer med våra kunder genom att alltid leverera över förväntan och prioritera kundnöjdhet.'
   },
   {
-    icon: <Award className="h-6 w-6" />,
+    icon: <Award className="h-6 w-6 text-orange-500" />,
     title: 'Kvalitet',
     description: 'Vi kompromissar aldrig med kvalitet. Varje produkt som lämnar våra lokaler håller högsta standard.'
   },
   {
-    icon: <Clock className="h-6 w-6" />,
+    icon: <Clock className="h-6 w-6 text-purple-500" />,
     title: 'Punktlighet',
     description: 'Vi förstår vikten av deadlines och levererar alltid i tid. Din tid är värdefull för oss.'
   },
   {
-    icon: <Leaf className="h-6 w-6" />,
+    icon: <Leaf className="h-6 w-6 text-orange-500" />,
     title: 'Hållbarhet',
     description: 'Vi tar miljöansvar genom att använda hållbara material och miljövänliga processer i vår produktion.'
   }
@@ -49,12 +49,12 @@ const AboutPage = () => {
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <main>
-        <section className="pt-28 pb-20 md:pt-32 md:pb-32 bg-kalmar-50">
+        <section className="pt-28 pb-20 md:pt-32 md:pb-32 bg-gradient-to-br from-white via-purple-50 to-orange-50">
           <div className="section-container">
             <div className="text-center mb-16 max-w-2xl mx-auto">
               <span
                 className={cn(
-                  "inline-block py-1 px-3 mb-6 text-xs font-medium tracking-wider border border-primary/30 rounded-full bg-primary/5 transition-all duration-700",
+                  "inline-block py-1 px-3 mb-6 text-xs font-medium tracking-wider border border-purple-200 rounded-full bg-purple-50 text-purple-600 transition-all duration-700",
                   isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
                 )}
               >
@@ -62,7 +62,7 @@ const AboutPage = () => {
               </span>
               <h1
                 className={cn(
-                  "text-3xl md:text-5xl font-bold mb-4 transition-all duration-700 delay-100",
+                  "text-3xl md:text-5xl font-bold mb-4 transition-all duration-700 delay-100 text-gray-900",
                   isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
                 )}
               >
@@ -70,7 +70,7 @@ const AboutPage = () => {
               </h1>
               <p
                 className={cn(
-                  "text-foreground/70 text-lg transition-all duration-700 delay-200",
+                  "text-gray-600 text-lg transition-all duration-700 delay-200",
                   isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
                 )}
               >
@@ -86,7 +86,7 @@ const AboutPage = () => {
               <div className="relative">
                 <div
                   className={cn(
-                    "relative z-10 rounded-2xl overflow-hidden shadow-card transition-all duration-700",
+                    "relative z-10 rounded-2xl overflow-hidden border border-purple-100 transition-all duration-700",
                     isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
                   )}
                 >
@@ -98,13 +98,13 @@ const AboutPage = () => {
                 </div>
                 <div 
                   className={cn(
-                    "absolute bottom-0 right-0 translate-y-1/4 translate-x-1/4 -z-10 w-64 h-64 bg-kalmar-100 rounded-full transition-all duration-700 delay-200",
+                    "absolute bottom-0 right-0 translate-y-1/4 translate-x-1/4 -z-10 w-64 h-64 bg-purple-100 rounded-full transition-all duration-700 delay-200",
                     isVisible ? "opacity-100 scale-100" : "opacity-0 scale-90"
                   )}
                 />
                 <div 
                   className={cn(
-                    "absolute top-0 left-0 -translate-y-1/4 -translate-x-1/4 -z-10 w-40 h-40 bg-kalmar-200 rounded-full transition-all duration-700 delay-300",
+                    "absolute top-0 left-0 -translate-y-1/4 -translate-x-1/4 -z-10 w-40 h-40 bg-orange-100 rounded-full transition-all duration-700 delay-300",
                     isVisible ? "opacity-100 scale-100" : "opacity-0 scale-90"
                   )}
                 />
@@ -113,7 +113,7 @@ const AboutPage = () => {
               <div>
                 <h2
                   className={cn(
-                    "text-3xl md:text-4xl font-bold mb-6 transition-all duration-700 delay-100",
+                    "text-3xl md:text-4xl font-bold mb-6 transition-all duration-700 delay-100 text-gray-900",
                     isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
                   )}
                 >
@@ -122,7 +122,7 @@ const AboutPage = () => {
 
                 <p
                   className={cn(
-                    "text-foreground/70 mb-6 transition-all duration-700 delay-200",
+                    "text-gray-600 mb-6 transition-all duration-700 delay-200",
                     isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
                   )}
                 >
@@ -131,7 +131,7 @@ const AboutPage = () => {
 
                 <p
                   className={cn(
-                    "text-foreground/70 mb-8 transition-all duration-700 delay-300",
+                    "text-gray-600 mb-8 transition-all duration-700 delay-300",
                     isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
                   )}
                 >
@@ -146,8 +146,8 @@ const AboutPage = () => {
                 >
                   {highlights.map((item, index) => (
                     <div key={index} className="flex items-center">
-                      <CheckCircle className="h-5 w-5 text-kalmar-600 mr-2 flex-shrink-0" />
-                      <span>{item}</span>
+                      <CheckCircle className="h-5 w-5 text-purple-600 mr-2 flex-shrink-0" />
+                      <span className="text-gray-700">{item}</span>
                     </div>
                   ))}
                 </div>
@@ -156,11 +156,11 @@ const AboutPage = () => {
           </div>
         </section>
         
-        <section ref={valuesRef} className="py-20 md:py-32 bg-kalmar-50">
+        <section ref={valuesRef} className="py-20 md:py-32 bg-gradient-to-br from-white via-purple-50 to-orange-50">
           <div className="section-container">
             <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">Våra värderingar</h2>
-              <p className="text-foreground/70 text-lg max-w-2xl mx-auto">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900">Våra värderingar</h2>
+              <p className="text-gray-600 text-lg max-w-2xl mx-auto">
                 Värderingar som guidar oss i vårt dagliga arbete och formar hur vi interagerar med våra kunder och partners.
               </p>
             </div>
@@ -170,30 +170,30 @@ const AboutPage = () => {
                 <div
                   key={index}
                   className={cn(
-                    "bg-background p-8 rounded-xl border border-border shadow-subtle transition-all duration-700",
+                    "bg-white p-8 rounded-xl border border-purple-100 hover-lift transition-all duration-700",
                     valuesVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
                   )}
                   style={{ transitionDelay: `${300 + index * 100}ms` }}
                 >
-                  <div className="p-3 bg-kalmar-100/50 rounded-lg inline-block mb-5">
+                  <div className="p-3 bg-gradient-to-br from-white to-purple-50 rounded-lg inline-block mb-5 border border-purple-100">
                     {value.icon}
                   </div>
-                  <h3 className="text-xl font-semibold mb-3">{value.title}</h3>
-                  <p className="text-foreground/70">{value.description}</p>
+                  <h3 className="text-xl font-semibold mb-3 text-gray-900">{value.title}</h3>
+                  <p className="text-gray-600">{value.description}</p>
                 </div>
               ))}
             </div>
           </div>
         </section>
         
-        <section className="py-20 md:py-32">
+        <section className="py-20 md:py-32 bg-gradient-to-br from-purple-600 to-purple-700 text-white">
           <div className="section-container">
             <div className="max-w-3xl mx-auto text-center">
               <h2 className="text-3xl md:text-4xl font-bold mb-6">Redo att samarbeta med oss?</h2>
-              <p className="text-foreground/70 text-lg mb-10">Vi ser fram emot att hjälpa dig förverkliga dina idéer. Kontakta oss idag för att diskutera ditt projekt.</p>
+              <p className="text-white/80 text-lg mb-10">Vi ser fram emot att hjälpa dig förverkliga dina idéer. Kontakta oss idag för att diskutera ditt projekt.</p>
               <NavLink
                 to="/contact"
-                className="button-primary group"
+                className="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-white text-purple-700 font-medium transition-colors hover:bg-purple-50 group"
               >
                 Kontakta oss
                 <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />

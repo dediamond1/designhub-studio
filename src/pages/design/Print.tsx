@@ -17,8 +17,12 @@ import {
   Image as ImageIcon, 
   Check, 
   X, 
-  RotateCw 
+  RotateCw,
+  Printer,
+  FileType,
+  Palette
 } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 const PrintDesignPage = () => {
   const [files, setFiles] = useState<File[]>([]);
@@ -57,19 +61,19 @@ const PrintDesignPage = () => {
   
   return (
     <div className="container max-w-5xl mx-auto py-10 px-4">
-      <h1 className="text-3xl font-bold mb-6">Custom Print Design</h1>
+      <h1 className="text-3xl font-bold mb-6 text-foreground">Custom Print Design</h1>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <Card>
-          <CardHeader>
+        <Card className="border border-purple-200 bg-white">
+          <CardHeader className="bg-purple-50 border-b border-purple-100">
             <CardTitle>Upload Your Design</CardTitle>
             <CardDescription>
               Upload high-resolution images for your custom prints
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="pt-6">
             <div className="space-y-4">
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+              <div className="border-2 border-dashed border-purple-200 rounded-lg p-8 text-center bg-purple-50/50">
                 {preview ? (
                   <div className="space-y-4">
                     <img 
@@ -82,6 +86,7 @@ const PrintDesignPage = () => {
                         variant="outline" 
                         size="sm" 
                         onClick={clearFiles}
+                        className="border-purple-200 text-purple-700 hover:bg-purple-50"
                       >
                         <X className="h-4 w-4 mr-1" /> Remove
                       </Button>
@@ -89,6 +94,7 @@ const PrintDesignPage = () => {
                         variant="outline" 
                         size="sm" 
                         onClick={() => document.getElementById('file-upload')?.click()}
+                        className="border-purple-200 text-purple-700 hover:bg-purple-50"
                       >
                         <RotateCw className="h-4 w-4 mr-1" /> Change
                       </Button>
@@ -96,13 +102,14 @@ const PrintDesignPage = () => {
                   </div>
                 ) : (
                   <div className="flex flex-col items-center">
-                    <Upload className="h-12 w-12 text-gray-400 mb-4" />
-                    <p className="text-sm text-gray-500 mb-2">
+                    <Upload className="h-12 w-12 text-purple-400 mb-4" />
+                    <p className="text-sm text-gray-600 mb-2">
                       Drag and drop your files here or click to browse
                     </p>
                     <Button 
                       variant="secondary" 
                       onClick={() => document.getElementById('file-upload')?.click()}
+                      className="bg-purple-100 text-purple-700 hover:bg-purple-200"
                     >
                       <PlusCircle className="h-4 w-4 mr-2" /> Select Files
                     </Button>
@@ -124,13 +131,14 @@ const PrintDesignPage = () => {
                   value={designName}
                   onChange={(e) => setDesignName(e.target.value)}
                   placeholder="Enter a name for your design"
+                  className="border-purple-200 focus:border-purple-300"
                 />
               </div>
             </div>
           </CardContent>
-          <CardFooter>
+          <CardFooter className="bg-purple-50/50 border-t border-purple-100">
             <Button 
-              className="w-full" 
+              className="w-full bg-purple-600 hover:bg-purple-700 text-white" 
               onClick={handleUpload} 
               disabled={files.length === 0 || !designName || uploading}
             >
@@ -147,50 +155,58 @@ const PrintDesignPage = () => {
           </CardFooter>
         </Card>
         
-        <Card>
-          <CardHeader>
+        <Card className="border border-orange-200 bg-white">
+          <CardHeader className="bg-orange-50 border-b border-orange-100">
             <CardTitle>Design Guidelines</CardTitle>
             <CardDescription>
               Tips to ensure your print design comes out perfect
             </CardDescription>
           </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
+          <CardContent className="pt-6">
+            <div className="space-y-5">
               <div className="flex items-start gap-3">
-                <ImageIcon className="h-5 w-5 text-primary mt-0.5" />
+                <div className="mt-1 bg-orange-100 p-1.5 rounded-full">
+                  <ImageIcon className="h-4 w-4 text-orange-600" />
+                </div>
                 <div>
-                  <h3 className="font-medium">High Resolution</h3>
-                  <p className="text-sm text-muted-foreground">
+                  <h3 className="font-medium text-gray-900">High Resolution</h3>
+                  <p className="text-sm text-gray-600">
                     Use at least 300dpi images for best print quality.
                   </p>
                 </div>
               </div>
               
               <div className="flex items-start gap-3">
-                <ImageIcon className="h-5 w-5 text-primary mt-0.5" />
+                <div className="mt-1 bg-purple-100 p-1.5 rounded-full">
+                  <FileType className="h-4 w-4 text-purple-600" />
+                </div>
                 <div>
-                  <h3 className="font-medium">File Format</h3>
-                  <p className="text-sm text-muted-foreground">
+                  <h3 className="font-medium text-gray-900">File Format</h3>
+                  <p className="text-sm text-gray-600">
                     We recommend PNG or JPEG files for photos and SVG for graphics.
                   </p>
                 </div>
               </div>
               
               <div className="flex items-start gap-3">
-                <ImageIcon className="h-5 w-5 text-primary mt-0.5" />
+                <div className="mt-1 bg-orange-100 p-1.5 rounded-full">
+                  <Palette className="h-4 w-4 text-orange-600" />
+                </div>
                 <div>
-                  <h3 className="font-medium">Colors</h3>
-                  <p className="text-sm text-muted-foreground">
+                  <h3 className="font-medium text-gray-900">Colors</h3>
+                  <p className="text-sm text-gray-600">
                     Use RGB color mode for digital printing.
                   </p>
                 </div>
               </div>
               
               <div className="flex items-start gap-3">
-                <ImageIcon className="h-5 w-5 text-primary mt-0.5" />
+                <div className="mt-1 bg-purple-100 p-1.5 rounded-full">
+                  <ImageIcon className="h-4 w-4 text-purple-600" />
+                </div>
                 <div>
-                  <h3 className="font-medium">Size</h3>
-                  <p className="text-sm text-muted-foreground">
+                  <h3 className="font-medium text-gray-900">Size</h3>
+                  <p className="text-sm text-gray-600">
                     Ensure your image is sized correctly for the product.
                   </p>
                 </div>
@@ -201,7 +217,7 @@ const PrintDesignPage = () => {
       </div>
       
       <div className="mt-8">
-        <Card>
+        <Card className="border border-purple-100 bg-gradient-to-b from-white to-purple-50/30">
           <CardHeader>
             <CardTitle>Our Printing Process</CardTitle>
             <CardDescription>
@@ -210,32 +226,32 @@ const PrintDesignPage = () => {
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="p-4 bg-muted rounded-lg text-center">
-                <div className="h-12 w-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <Upload className="h-6 w-6 text-primary" />
+              <div className="p-6 bg-white border border-purple-100 rounded-lg text-center hover-lift">
+                <div className="h-12 w-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <Upload className="h-6 w-6 text-purple-600" />
                 </div>
-                <h3 className="font-medium mb-1">Upload</h3>
-                <p className="text-sm text-muted-foreground">
+                <h3 className="font-medium mb-1 text-gray-900">Upload</h3>
+                <p className="text-sm text-gray-600">
                   Submit your design files through our system
                 </p>
               </div>
               
-              <div className="p-4 bg-muted rounded-lg text-center">
-                <div className="h-12 w-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <ImageIcon className="h-6 w-6 text-primary" />
+              <div className="p-6 bg-white border border-orange-100 rounded-lg text-center hover-lift">
+                <div className="h-12 w-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <ImageIcon className="h-6 w-6 text-orange-600" />
                 </div>
-                <h3 className="font-medium mb-1">Process</h3>
-                <p className="text-sm text-muted-foreground">
+                <h3 className="font-medium mb-1 text-gray-900">Process</h3>
+                <p className="text-sm text-gray-600">
                   Our team optimizes your design for printing
                 </p>
               </div>
               
-              <div className="p-4 bg-muted rounded-lg text-center">
-                <div className="h-12 w-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <Check className="h-6 w-6 text-primary" />
+              <div className="p-6 bg-white border border-purple-100 rounded-lg text-center hover-lift">
+                <div className="h-12 w-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <Printer className="h-6 w-6 text-purple-600" />
                 </div>
-                <h3 className="font-medium mb-1">Print</h3>
-                <p className="text-sm text-muted-foreground">
+                <h3 className="font-medium mb-1 text-gray-900">Print</h3>
+                <p className="text-sm text-gray-600">
                   High-quality printing on your chosen products
                 </p>
               </div>

@@ -88,12 +88,12 @@ const BlogPage = () => {
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <main>
-        <section className="pt-28 pb-20 md:pt-32 md:pb-32 bg-kalmar-50">
+        <section className="pt-28 pb-20 md:pt-32 md:pb-32 bg-gradient-to-br from-white via-purple-50 to-orange-50">
           <div className="section-container">
             <div className="text-center mb-16 max-w-2xl mx-auto">
               <span
                 className={cn(
-                  "inline-block py-1 px-3 mb-6 text-xs font-medium tracking-wider border border-primary/30 rounded-full bg-primary/5 transition-all duration-700",
+                  "inline-block py-1 px-3 mb-6 text-xs font-medium tracking-wider border border-purple-200 rounded-full bg-purple-50 text-purple-600 transition-all duration-700",
                   isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
                 )}
               >
@@ -101,7 +101,7 @@ const BlogPage = () => {
               </span>
               <h1
                 className={cn(
-                  "text-3xl md:text-5xl font-bold mb-4 transition-all duration-700 delay-100",
+                  "text-3xl md:text-5xl font-bold mb-4 transition-all duration-700 delay-100 text-gray-900",
                   isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
                 )}
               >
@@ -109,7 +109,7 @@ const BlogPage = () => {
               </h1>
               <p
                 className={cn(
-                  "text-foreground/70 text-lg transition-all duration-700 delay-200",
+                  "text-gray-600 text-lg transition-all duration-700 delay-200",
                   isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
                 )}
               >
@@ -129,8 +129,8 @@ const BlogPage = () => {
                     className={cn(
                       "px-4 py-2 rounded-full text-sm font-medium transition-all",
                       index === 0 
-                        ? "bg-kalmar-600 text-white" 
-                        : "bg-kalmar-50 text-foreground hover:bg-kalmar-100"
+                        ? "bg-purple-600 text-white" 
+                        : "bg-purple-50 text-gray-700 hover:bg-purple-100"
                     )}
                   >
                     {category}
@@ -144,7 +144,7 @@ const BlogPage = () => {
                 <article
                   key={post.id}
                   className={cn(
-                    "bg-white rounded-xl border border-border shadow-subtle hover:shadow-elevated transition-all duration-500 overflow-hidden group",
+                    "bg-white rounded-xl border border-purple-100 hover-lift transition-all duration-500 overflow-hidden group",
                     isVisible
                       ? "opacity-100 translate-y-0"
                       : "opacity-0 translate-y-8"
@@ -160,41 +160,41 @@ const BlogPage = () => {
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                     <div className="absolute top-4 left-4">
-                      <span className="bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-medium">
+                      <span className="bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-medium text-purple-600 border border-purple-100">
                         {post.category}
                       </span>
                     </div>
                   </div>
                   
                   <div className="p-6">
-                    <div className="flex items-center text-sm text-foreground/60 mb-3">
+                    <div className="flex items-center text-sm text-gray-500 mb-3">
                       <span className="flex items-center">
-                        <Calendar className="h-4 w-4 mr-1" />
+                        <Calendar className="h-4 w-4 mr-1 text-purple-400" />
                         {post.date}
                       </span>
                       <span className="mx-2">•</span>
                       <span className="flex items-center">
-                        <User className="h-4 w-4 mr-1" />
+                        <User className="h-4 w-4 mr-1 text-purple-400" />
                         {post.author}
                       </span>
                       <span className="mx-2">•</span>
                       <span>{post.readTime}</span>
                     </div>
                     
-                    <h3 className="text-xl font-semibold mb-3 group-hover:text-kalmar-600 transition-colors">
+                    <h3 className="text-xl font-semibold mb-3 group-hover:text-purple-600 transition-colors text-gray-900">
                       {post.title}
                     </h3>
                     
-                    <p className="text-foreground/70 mb-6">
+                    <p className="text-gray-600 mb-6">
                       {post.excerpt}
                     </p>
                     
                     <NavLink
                       to={`/blog/${post.id}`}
-                      className="flex items-center text-kalmar-600 font-medium hover:text-kalmar-700 transition-colors group"
+                      className="flex items-center text-purple-600 font-medium hover:text-purple-700 transition-colors group/link"
                     >
                       Läs mer
-                      <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                      <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover/link:translate-x-1" />
                     </NavLink>
                   </div>
                 </article>
@@ -209,11 +209,11 @@ const BlogPage = () => {
           </div>
         </section>
         
-        <section className="py-20 md:py-32 bg-kalmar-50">
+        <section className="py-20 md:py-32 bg-gradient-to-br from-white via-purple-50 to-orange-50">
           <div className="section-container">
             <div className="max-w-xl mx-auto text-center">
-              <h2 className="text-3xl font-bold mb-6">Prenumerera på vårt nyhetsbrev</h2>
-              <p className="text-foreground/70 mb-8">
+              <h2 className="text-3xl font-bold mb-6 text-gray-900">Prenumerera på vårt nyhetsbrev</h2>
+              <p className="text-gray-600 mb-8">
                 Få de senaste artiklarna, tips och erbjudanden direkt i din inkorg. Vi skickar nyhetsbrev ungefär en gång i månaden.
               </p>
               
@@ -221,7 +221,7 @@ const BlogPage = () => {
                 <input
                   type="email"
                   placeholder="Din e-postadress"
-                  className="flex-grow px-4 py-3 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-kalmar-500"
+                  className="flex-grow px-4 py-3 rounded-lg border border-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-500"
                   required
                 />
                 <button type="submit" className="button-primary whitespace-nowrap">

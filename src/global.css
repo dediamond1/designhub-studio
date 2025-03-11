@@ -12,8 +12,8 @@
     --popover: 0 0% 100%;
     --popover-foreground: 224 71.4% 4.1%;
     
-    /* New purple primary color */
-    --primary: 260 70% 65%;
+    /* Purple primary color - adjusted for better contrast */
+    --primary: 260 70% 55%;
     --primary-foreground: 210 20% 98%;
     
     --secondary: 220 14.3% 95.9%;
@@ -29,20 +29,20 @@
     --ring: 262.1 83.3% 57.8%;
     --radius: 0.5rem;
     
-    /* Kalmar Studio New Colors */
+    /* Kalmar Studio Colors - adjusted for better contrast */
     --kalmar-50: 260 40% 98%;
     --kalmar-100: 260 36% 96%;
     --kalmar-200: 260 34% 90%;
     --kalmar-300: 260 33% 80%;
     --kalmar-400: 260 32% 65%;
-    --kalmar-500: 260 31% 50%;
-    --kalmar-600: 260 38% 40%;
-    --kalmar-700: 260 42% 32%;
-    --kalmar-800: 260 46% 22%;
-    --kalmar-900: 260 50% 13%;
-    --kalmar-950: 260 55% 8%;
+    --kalmar-500: 260 31% 55%;
+    --kalmar-600: 260 38% 45%;
+    --kalmar-700: 260 42% 35%;
+    --kalmar-800: 260 46% 25%;
+    --kalmar-900: 260 50% 15%;
+    --kalmar-950: 260 55% 10%;
     
-    /* Orange accent colors */
+    /* Orange accent colors - adjusted for better contrast */
     --orange-50: 24 100% 97%;
     --orange-100: 24 94% 93%;
     --orange-200: 24 94% 86%;
@@ -88,7 +88,7 @@
     font-feature-settings: "rlig" 1, "calt" 1;
   }
   h1, h2, h3, h4, h5, h6 {
-    @apply tracking-tight;
+    @apply tracking-tight text-foreground;
   }
   
   /* For language-specific typography adjustments */
@@ -132,20 +132,11 @@
 /* Glassmorphism navbar effect */
 .glassmorphism {
   @apply bg-background/90 backdrop-blur-md;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
 }
 
-/* Card shadows */
-.shadow-card {
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-}
-
-.shadow-subtle {
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
-}
-
-.shadow-elevated {
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+/* Card styles - removed shadows */
+.card-no-shadow {
+  @apply border border-border bg-card;
 }
 
 /* Scroll reveal animations */
@@ -160,7 +151,7 @@
   transform: translateY(0);
 }
 
-/* New gradients for purple and orange theme */
+/* Gradients for purple and orange theme */
 .gradient-primary {
   @apply bg-gradient-to-r from-purple-500 to-purple-600;
 }
@@ -185,13 +176,13 @@
   @apply bg-orange-50;
 }
 
-/* New card styles */
+/* Card styles */
 .card-accent {
-  @apply border border-orange-200 bg-gradient-to-b from-white to-orange-50 rounded-xl shadow-sm;
+  @apply border border-orange-200 bg-gradient-to-b from-white to-orange-50 rounded-xl;
 }
 
 .card-primary {
-  @apply border border-purple-200 bg-gradient-to-b from-white to-purple-50 rounded-xl shadow-sm;
+  @apply border border-purple-200 bg-gradient-to-b from-white to-purple-50 rounded-xl;
 }
 
 /* Button variants */
@@ -201,4 +192,50 @@
 
 .button-accent-outline {
   @apply inline-flex items-center justify-center px-6 py-3 rounded-lg bg-transparent text-orange-500 border border-orange-300 font-medium transition-colors hover:bg-orange-50;
+}
+
+/* Content container styles */
+.content-container {
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+/* Section spacing */
+.section-spacing {
+  @apply py-16 md:py-24;
+}
+
+/* Text contrast helpers */
+.text-on-dark {
+  @apply text-white;
+}
+
+.text-on-light {
+  @apply text-gray-900;
+}
+
+/* Hover effects without shadows */
+.hover-lift {
+  @apply transition-transform duration-300 hover:-translate-y-1;
+}
+
+/* Better form controls with consistent theming */
+.form-input {
+  @apply w-full px-4 py-3 rounded-md border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all;
+}
+
+.form-select {
+  @apply w-full px-4 py-3 rounded-md border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all;
+}
+
+.form-textarea {
+  @apply w-full px-4 py-3 rounded-md border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all;
+}
+
+/* Border accent */
+.border-accent {
+  @apply border-orange-300;
+}
+
+.border-primary-theme {
+  @apply border-purple-300;
 }

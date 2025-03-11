@@ -40,25 +40,25 @@ const Navbar = () => {
           name: t('navigation.design'), 
           path: '/design',
           description: t('menuDescriptions.design', 'Create your own custom designs'),
-          icon: <ShoppingBag className="h-5 w-5 text-kalmar-500" />
+          icon: <ShoppingBag className="h-5 w-5 text-purple-500" />
         },
         { 
           name: t('navigation.print'), 
           path: '/design/print',
           description: t('menuDescriptions.print', 'Professional printing services'),
-          icon: <ShoppingBag className="h-5 w-5 text-kalmar-500" />
+          icon: <ShoppingBag className="h-5 w-5 text-purple-500" />
         },
         { 
           name: t('navigation.clothes'), 
           path: '/design/clothes',
           description: t('menuDescriptions.clothes', 'Custom apparel and clothing'),
-          icon: <ShoppingBag className="h-5 w-5 text-kalmar-500" />
+          icon: <ShoppingBag className="h-5 w-5 text-orange-500" />
         },
         { 
           name: t('navigation.stickers'), 
           path: '/design/stickers',
           description: t('menuDescriptions.stickers', 'Custom stickers and decals'),
-          icon: <ShoppingBag className="h-5 w-5 text-kalmar-500" />
+          icon: <ShoppingBag className="h-5 w-5 text-orange-500" />
         },
       ]
     },
@@ -71,19 +71,19 @@ const Navbar = () => {
           name: t('navigation.blog'), 
           path: '/blog',
           description: t('menuDescriptions.blog', 'Read our latest articles'),
-          icon: <ShoppingBag className="h-5 w-5 text-kalmar-500" />
+          icon: <ShoppingBag className="h-5 w-5 text-purple-500" />
         },
         { 
           name: t('navigation.news'), 
           path: '/news',
           description: t('menuDescriptions.news', 'Company news and updates'),
-          icon: <ShoppingBag className="h-5 w-5 text-kalmar-500" />
+          icon: <ShoppingBag className="h-5 w-5 text-orange-500" />
         },
         { 
           name: t('navigation.offers'), 
           path: '/offers',
           description: t('menuDescriptions.offers', 'Special deals and promotions'),
-          icon: <ShoppingBag className="h-5 w-5 text-kalmar-500" />
+          icon: <ShoppingBag className="h-5 w-5 text-purple-500" />
         },
       ] 
     },
@@ -95,7 +95,7 @@ const Navbar = () => {
       className={cn(
         'fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out',
         isScrolled 
-          ? 'py-3 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md shadow-sm border-b border-gray-200 dark:border-gray-800' 
+          ? 'py-3 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md border-b border-purple-100' 
           : 'py-5 bg-transparent'
       )}
     >
@@ -106,8 +106,8 @@ const Navbar = () => {
             to="/" 
             className="flex items-center space-x-2 z-20"
           >
-            <div className="bg-gradient-to-br from-kalmar-600 to-kalmar-500 w-10 h-10 rounded-lg flex items-center justify-center text-white font-bold shadow-md">K</div>
-            <span className="text-xl md:text-2xl font-display font-bold tracking-tight bg-gradient-to-r from-kalmar-600 to-kalmar-500 bg-clip-text text-transparent">
+            <div className="bg-gradient-to-br from-purple-600 to-purple-500 w-10 h-10 rounded-lg flex items-center justify-center text-white font-bold">K</div>
+            <span className="text-xl md:text-2xl font-display font-bold tracking-tight bg-gradient-to-r from-purple-600 to-orange-500 bg-clip-text text-transparent">
               Kalmar Studio
             </span>
           </NavLink>
@@ -122,12 +122,12 @@ const Navbar = () => {
                   className={({ isActive }) => cn(
                     'px-4 py-2 rounded-md text-base font-medium transition-colors relative group',
                     isActive 
-                      ? 'text-kalmar-600 dark:text-kalmar-400' 
-                      : 'text-gray-700 dark:text-gray-300 hover:text-kalmar-600 dark:hover:text-kalmar-400'
+                      ? 'text-purple-600 dark:text-purple-400' 
+                      : 'text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400'
                   )}
                 >
                   {item.name}
-                  <span className="absolute bottom-0 left-0 w-full h-0.5 bg-kalmar-500 scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
+                  <span className="absolute bottom-0 left-0 w-full h-0.5 bg-purple-500 scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
                 </NavLink>
               ) : (
                 <div 
@@ -140,13 +140,13 @@ const Navbar = () => {
                     className={cn(
                       'flex items-center px-4 py-2 rounded-md text-base font-medium transition-colors relative group',
                       hoveredMenu === item.name || item.children?.some(child => location.pathname === child.path)
-                        ? 'text-kalmar-600 dark:text-kalmar-400' 
-                        : 'text-gray-700 dark:text-gray-300 hover:text-kalmar-600 dark:hover:text-kalmar-400'
+                        ? 'text-purple-600 dark:text-purple-400' 
+                        : 'text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400'
                     )}
                   >
                     {item.name}
                     <ChevronDown className="ml-1 h-4 w-4 opacity-70 group-hover:opacity-100 transition-opacity" />
-                    <span className="absolute bottom-0 left-0 w-full h-0.5 bg-kalmar-500 scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
+                    <span className="absolute bottom-0 left-0 w-full h-0.5 bg-purple-500 scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
                   </button>
 
                   <AnimatePresence>
@@ -156,7 +156,7 @@ const Navbar = () => {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 10 }}
                         transition={{ duration: 0.2 }}
-                        className="absolute left-0 mt-1 w-64 rounded-lg bg-white shadow-xl border border-gray-100 overflow-hidden z-50"
+                        className="absolute left-0 mt-1 w-64 rounded-lg bg-white border border-purple-100 overflow-hidden z-50"
                       >
                         <div className="py-2">
                           {item.children?.map((child) => (
@@ -164,19 +164,19 @@ const Navbar = () => {
                               key={child.path}
                               to={child.path}
                               className={({ isActive }) => cn(
-                                'flex items-start px-4 py-3 hover:bg-gray-50 transition-colors',
-                                isActive ? 'bg-gray-50' : ''
+                                'flex items-start px-4 py-3 hover:bg-purple-50 transition-colors',
+                                isActive ? 'bg-purple-50' : ''
                               )}
                             >
                               {child.icon}
                               <div className="ml-3">
                                 <p className={cn(
                                   'text-sm font-medium',
-                                  location.pathname === child.path ? 'text-kalmar-600' : 'text-gray-900'
+                                  location.pathname === child.path ? 'text-purple-600' : 'text-gray-900'
                                 )}>
                                   {child.name}
                                 </p>
-                                <p className="text-xs text-gray-500 mt-0.5">{child.description}</p>
+                                <p className="text-xs text-gray-600 mt-0.5">{child.description}</p>
                               </div>
                             </NavLink>
                           ))}
@@ -195,7 +195,7 @@ const Navbar = () => {
             
             <NavLink 
               to="/login" 
-              className="flex items-center px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md transition-colors"
+              className="flex items-center px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-purple-50 dark:hover:bg-gray-800 rounded-md transition-colors"
             >
               <User className="mr-2 h-4 w-4" />
               {t('login')}
@@ -203,7 +203,7 @@ const Navbar = () => {
             
             <NavLink 
               to="/contact" 
-              className="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-kalmar-600 to-kalmar-500 hover:from-kalmar-700 hover:to-kalmar-600 rounded-md shadow-sm transition-colors"
+              className="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-700 hover:to-purple-600 rounded-md transition-colors"
             >
               {t('getQuote')}
             </NavLink>
@@ -213,7 +213,7 @@ const Navbar = () => {
           <div className="lg:hidden flex items-center space-x-2 z-20">
             <LanguageSwitcher />
             <button
-              className="p-2 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none transition-colors"
+              className="p-2 rounded-md text-gray-700 dark:text-gray-300 hover:bg-purple-50 dark:hover:bg-gray-800 focus:outline-none transition-colors"
               onClick={() => setIsOpen(!isOpen)}
               aria-label="Toggle menu"
             >
@@ -231,7 +231,7 @@ const Navbar = () => {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
-            className="lg:hidden bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shadow-xl"
+            className="lg:hidden bg-white dark:bg-gray-900 border-b border-purple-100 dark:border-gray-800"
           >
             <div className="container mx-auto px-4 py-6 space-y-6">
               {navItems.map((item, index) => (
@@ -242,7 +242,7 @@ const Navbar = () => {
                         {item.name}
                         <ChevronRight className="ml-auto h-5 w-5 text-gray-400" />
                       </div>
-                      <div className="pl-4 space-y-1 border-l-2 border-gray-200 dark:border-gray-700">
+                      <div className="pl-4 space-y-1 border-l-2 border-purple-200 dark:border-gray-700">
                         {item.children?.map((child) => (
                           <NavLink
                             key={child.path}
@@ -250,8 +250,8 @@ const Navbar = () => {
                             className={({ isActive }) => cn(
                               'flex items-center px-3 py-2 rounded-md',
                               isActive 
-                                ? 'text-kalmar-600 dark:text-kalmar-400 font-medium bg-gray-50 dark:bg-gray-800' 
-                                : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'
+                                ? 'text-purple-600 dark:text-purple-400 font-medium bg-purple-50 dark:bg-gray-800' 
+                                : 'text-gray-700 dark:text-gray-300 hover:bg-purple-50 dark:hover:bg-gray-800'
                             )}
                           >
                             {child.name}
@@ -265,8 +265,8 @@ const Navbar = () => {
                       className={({ isActive }) => cn(
                         'flex items-center px-3 py-2 rounded-md',
                         isActive 
-                          ? 'text-kalmar-600 dark:text-kalmar-400 font-medium bg-gray-50 dark:bg-gray-800' 
-                          : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'
+                          ? 'text-purple-600 dark:text-purple-400 font-medium bg-purple-50 dark:bg-gray-800' 
+                          : 'text-gray-700 dark:text-gray-300 hover:bg-purple-50 dark:hover:bg-gray-800'
                       )}
                     >
                       {item.name}
@@ -275,17 +275,17 @@ const Navbar = () => {
                 </div>
               ))}
               
-              <div className="pt-4 border-t border-gray-200 dark:border-gray-700 flex flex-col space-y-3">
+              <div className="pt-4 border-t border-purple-100 dark:border-gray-700 flex flex-col space-y-3">
                 <NavLink 
                   to="/login" 
-                  className="flex items-center justify-center px-4 py-2.5 text-sm font-medium text-center text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md transition-colors"
+                  className="flex items-center justify-center px-4 py-2.5 text-sm font-medium text-center text-gray-700 dark:text-gray-300 hover:bg-purple-50 dark:hover:bg-gray-800 rounded-md transition-colors"
                 >
                   <User className="mr-2 h-4 w-4" />
                   {t('login')}
                 </NavLink>
                 <NavLink 
                   to="/contact" 
-                  className="flex items-center justify-center px-4 py-2.5 text-sm font-medium text-center text-white bg-gradient-to-r from-kalmar-600 to-kalmar-500 hover:from-kalmar-700 hover:to-kalmar-600 rounded-md shadow-sm transition-colors"
+                  className="flex items-center justify-center px-4 py-2.5 text-sm font-medium text-center text-white bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-700 hover:to-purple-600 rounded-md transition-colors"
                 >
                   {t('getQuote')}
                 </NavLink>
