@@ -9,28 +9,28 @@ import { motion } from 'framer-motion';
 const ProcessSection = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const isVisible = useScrollReveal(sectionRef, 0.1);
-  const { t } = useTranslation();
+  const { t } = useTranslation('home');
 
   const processes = [
     {
       icon: <MessageSquare className="h-6 w-6" />,
-      title: t('process.consultation.title', 'Consultation'),
-      description: t('process.consultation.description', 'We start with understanding your needs and vision to create the perfect print solution.')
+      title: t('process.consultation.title'),
+      description: t('process.consultation.description')
     },
     {
       icon: <Palette className="h-6 w-6" />,
-      title: t('process.design.title', 'Design'),
-      description: t('process.design.description', 'Our expert designers create stunning visuals tailored to your brand and specifications.')
+      title: t('process.design.title'),
+      description: t('process.design.description')
     },
     {
       icon: <Printer className="h-6 w-6" />,
-      title: t('process.printing.title', 'Printing'),
-      description: t('process.printing.description', 'Using cutting-edge technology, we bring your designs to life with premium quality printing.')
+      title: t('process.printing.title'),
+      description: t('process.printing.description')
     },
     {
       icon: <Package className="h-6 w-6" />,
-      title: t('process.delivery.title', 'Delivery'),
-      description: t('process.delivery.description', 'We ensure your finished products are delivered on time and in perfect condition.')
+      title: t('process.delivery.title'),
+      description: t('process.delivery.description')
     }
   ];
 
@@ -44,7 +44,7 @@ const ProcessSection = () => {
             transition={{ duration: 0.5 }}
             className="inline-block py-1 px-3 mb-6 text-xs font-medium tracking-wider border border-primary/30 rounded-full bg-primary/5"
           >
-            {t('process.tagline', 'HOW WE WORK')}
+            {t('process.tagline')}
           </motion.span>
           
           <motion.h2
@@ -53,7 +53,7 @@ const ProcessSection = () => {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="text-3xl md:text-4xl font-bold mb-4"
           >
-            {t('process.title', 'Our Simple Process')}
+            {t('process.title')}
           </motion.h2>
           
           <motion.p
@@ -62,7 +62,7 @@ const ProcessSection = () => {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="text-foreground/70 text-lg max-w-2xl mx-auto"
           >
-            {t('process.description', 'From concept to delivery, we make custom printing easy and hassle-free.')}
+            {t('process.description')}
           </motion.p>
         </div>
 

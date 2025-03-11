@@ -9,18 +9,10 @@ import { cn } from '@/lib/utils';
 const AboutSection = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const isVisible = useScrollReveal(sectionRef, 0.1);
-  const { t } = useTranslation();
+  const { t } = useTranslation('home');
 
   const highlights = t('about.highlights', {
-    returnObjects: true,
-    defaultValue: [
-      'High-quality printing solutions',
-      'Personal service',
-      'Fast deliveries',
-      'Environmentally friendly materials',
-      'Award-winning design',
-      'Customer-focused process'
-    ]
+    returnObjects: true
   }) as string[];
 
   return (
@@ -114,7 +106,7 @@ const AboutSection = () => {
                 isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
               )}
             >
-              {t('common.learnMore')}
+              {t('common:buttons.learnMore')}
               <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
             </NavLink>
           </div>

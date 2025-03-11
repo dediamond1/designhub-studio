@@ -9,7 +9,7 @@ import { motion } from 'framer-motion';
 const TestimonialsSection = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const isVisible = useScrollReveal(sectionRef, 0.1);
-  const { t } = useTranslation(['home']);
+  const { t } = useTranslation('home');
 
   const testimonials = t('testimonials.items', { returnObjects: true }) as Array<{
     quote: string;

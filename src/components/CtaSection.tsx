@@ -48,7 +48,7 @@ const CtaSection = () => {
                 to="/design"
                 className="inline-flex items-center justify-center px-8 py-4 text-base font-medium rounded-full bg-white text-kalmar-600 shadow-xl hover:bg-gray-50 transition-colors group"
               >
-                {t('common.startDesigning')}
+                {t('common:startDesigning')}
                 <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
               </NavLink>
             </motion.div>
