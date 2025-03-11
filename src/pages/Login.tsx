@@ -40,13 +40,12 @@ const Login = () => {
 
   const onSubmit = async (data: LoginFormValues) => {
     setLoading(true);
-    // Ensure we're passing data with required email and password (not optional)
-    const credentials = {
+    
+    const result = await login({
       email: data.email,
       password: data.password
-    };
+    });
     
-    const result = await login(credentials);
     setLoading(false);
     
     if (result.success) {

@@ -1,6 +1,6 @@
 
 import React, { createContext, useContext, ReactNode } from 'react';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuthContext as useAuth } from '@/hooks/useAuth';
 import { 
   LoginCredentials, 
   RegisterCredentials, 

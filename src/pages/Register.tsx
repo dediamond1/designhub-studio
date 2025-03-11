@@ -49,14 +49,12 @@ const Register = () => {
     setLoading(true);
     
     const { confirmPassword, ...registerData } = data;
-    // Ensure we're passing data with required fields (not optional)
-    const credentials = {
+    
+    const result = await register({
       name: registerData.name,
       email: registerData.email,
       password: registerData.password
-    };
-    
-    const result = await register(credentials);
+    });
     
     setLoading(false);
     

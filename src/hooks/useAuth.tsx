@@ -10,8 +10,6 @@ import {
   VerifyEmailRequest 
 } from '@/types/auth';
 
-const API_URL = '/api/auth';
-
 export const useAuthContext = () => {
   const [user, setUser] = useState<UserData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -41,98 +39,64 @@ export const useAuthContext = () => {
     initAuth();
   }, []);
 
-  // Register a new user
+  // Register a new user (mock functionality)
   const register = useCallback(async (credentials: RegisterCredentials) => {
     setLoading(true);
-    try {
-      const response = await fetch(`${API_URL}/register`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(credentials),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        toast({
-          title: 'Registration Failed',
-          description: data.message || 'Failed to register account',
-          variant: 'destructive',
-        });
-        setLoading(false);
-        return { success: false, message: data.message };
-      }
-
-      // Store user data and token
-      localStorage.setItem('user', JSON.stringify(data.user));
-      localStorage.setItem('token', data.token);
-      setUser(data.user);
-
-      toast({
-        title: 'Registration Successful',
-        description: 'Please check your email to verify your account',
-      });
-      
-      setLoading(false);
-      return { success: true, message: data.message };
-    } catch (error: any) {
-      toast({
-        title: 'Registration Error',
-        description: error.message || 'An unexpected error occurred',
-        variant: 'destructive',
-      });
-      setLoading(false);
-      return { success: false, message: error.message };
-    }
+    
+    // Mock API delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // Create a mock user
+    const mockUser: UserData = {
+      id: 'user_' + Math.random().toString(36).substr(2, 9),
+      name: credentials.name,
+      email: credentials.email,
+      role: 'user',
+      verified: false
+    };
+    
+    // Store user data and token
+    localStorage.setItem('user', JSON.stringify(mockUser));
+    localStorage.setItem('token', 'mock_token_' + Date.now());
+    setUser(mockUser);
+    
+    toast({
+      title: 'Registration Successful',
+      description: 'Please check your email to verify your account',
+    });
+    
+    setLoading(false);
+    return { success: true, message: 'Registration successful!' };
   }, [toast]);
 
-  // Login user
+  // Login user (mock functionality)
   const login = useCallback(async (credentials: LoginCredentials) => {
     setLoading(true);
-    try {
-      const response = await fetch(`${API_URL}/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(credentials),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        toast({
-          title: 'Login Failed',
-          description: data.message || 'Invalid credentials',
-          variant: 'destructive',
-        });
-        setLoading(false);
-        return { success: false, message: data.message };
-      }
-
-      // Store user data and token
-      localStorage.setItem('user', JSON.stringify(data.user));
-      localStorage.setItem('token', data.token);
-      setUser(data.user);
-
-      toast({
-        title: 'Login Successful',
-        description: 'Welcome back!',
-      });
-      
-      setLoading(false);
-      return { success: true, message: data.message };
-    } catch (error: any) {
-      toast({
-        title: 'Login Error',
-        description: error.message || 'An unexpected error occurred',
-        variant: 'destructive',
-      });
-      setLoading(false);
-      return { success: false, message: error.message };
-    }
+    
+    // Mock API delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // Always succeed in this mock version
+    const mockUser: UserData = {
+      id: 'user_' + Math.random().toString(36).substr(2, 9),
+      name: 'Demo User',
+      email: credentials.email,
+      role: 'admin',
+      verified: true
+    };
+    
+    // Store user data and token
+    localStorage.setItem('user', JSON.stringify(mockUser));
+    localStorage.setItem('token', 'mock_token_' + Date.now());
+    setUser(mockUser);
+    
+    toast({
+      title: 'Login Successful',
+      description: 'Welcome back!',
+    });
+    
+    setLoading(false);
+    return { success: true, message: 'Login successful!' };
   }, [toast]);
 
   // Logout user
@@ -141,145 +105,69 @@ export const useAuthContext = () => {
     localStorage.removeItem('token');
     setUser(null);
     
-    window.location.href = '/login'; // Using direct navigation instead of useNavigate
-    
     toast({
       title: 'Logged Out',
       description: 'You have been successfully logged out',
     });
   }, [toast]);
 
-  // Request password reset
+  // Request password reset (mock functionality)
   const forgotPassword = useCallback(async (data: ResetPasswordRequest) => {
     setLoading(true);
-    try {
-      const response = await fetch(`${API_URL}/forgot-password`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        toast({
-          title: 'Request Failed',
-          description: result.message || 'Failed to process your request',
-          variant: 'destructive',
-        });
-        setLoading(false);
-        return { success: false, message: result.message };
-      }
-
-      toast({
-        title: 'Request Sent',
-        description: 'If your email exists in our system, you will receive password reset instructions',
-      });
-      
-      setLoading(false);
-      return { success: true, message: result.message, token: result.resetToken };
-    } catch (error: any) {
-      toast({
-        title: 'Request Error',
-        description: error.message || 'An unexpected error occurred',
-        variant: 'destructive',
-      });
-      setLoading(false);
-      return { success: false, message: error.message };
-    }
+    
+    // Mock API delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    toast({
+      title: 'Request Sent',
+      description: 'If your email exists in our system, you will receive password reset instructions',
+    });
+    
+    setLoading(false);
+    return { 
+      success: true, 
+      message: 'Password reset link sent!', 
+      token: 'mock_reset_token_' + Date.now() 
+    };
   }, [toast]);
 
-  // Reset password with token
+  // Reset password with token (mock functionality)
   const resetPassword = useCallback(async (data: ChangePasswordRequest) => {
     setLoading(true);
-    try {
-      const response = await fetch(`${API_URL}/reset-password`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        toast({
-          title: 'Password Reset Failed',
-          description: result.message || 'Failed to reset your password',
-          variant: 'destructive',
-        });
-        setLoading(false);
-        return { success: false, message: result.message };
-      }
-
-      toast({
-        title: 'Password Reset Successful',
-        description: 'Your password has been successfully reset',
-      });
-      
-      setLoading(false);
-      return { success: true, message: result.message };
-    } catch (error: any) {
-      toast({
-        title: 'Reset Error',
-        description: error.message || 'An unexpected error occurred',
-        variant: 'destructive',
-      });
-      setLoading(false);
-      return { success: false, message: error.message };
-    }
+    
+    // Mock API delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    toast({
+      title: 'Password Reset Successful',
+      description: 'Your password has been successfully reset',
+    });
+    
+    setLoading(false);
+    return { success: true, message: 'Password reset successful!' };
   }, [toast]);
 
-  // Verify email with token
+  // Verify email with token (mock functionality)
   const verifyEmail = useCallback(async (data: VerifyEmailRequest) => {
     setLoading(true);
-    try {
-      const response = await fetch(`${API_URL}/verify-email`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        toast({
-          title: 'Verification Failed',
-          description: result.message || 'Failed to verify your email',
-          variant: 'destructive',
-        });
-        setLoading(false);
-        return { success: false, message: result.message };
-      }
-
-      toast({
-        title: 'Email Verified',
-        description: 'Your email has been successfully verified',
-      });
-      
-      // If the user is logged in, update the verified status
-      if (user) {
-        const updatedUser = { ...user, verified: true };
-        localStorage.setItem('user', JSON.stringify(updatedUser));
-        setUser(updatedUser);
-      }
-      
-      setLoading(false);
-      return { success: true, message: result.message };
-    } catch (error: any) {
-      toast({
-        title: 'Verification Error',
-        description: error.message || 'An unexpected error occurred',
-        variant: 'destructive',
-      });
-      setLoading(false);
-      return { success: false, message: error.message };
+    
+    // Mock API delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // If the user is logged in, update the verified status
+    if (user) {
+      const updatedUser = { ...user, verified: true };
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+      setUser(updatedUser);
     }
+    
+    toast({
+      title: 'Email Verified',
+      description: 'Your email has been successfully verified',
+    });
+    
+    setLoading(false);
+    return { success: true, message: 'Email verification successful!' };
   }, [toast, user]);
 
   return {
