@@ -6,6 +6,11 @@ import { v4 as uuidv4 } from 'uuid';
 import { toast } from 'sonner';
 import { Loader2 } from 'lucide-react';
 
+// Define interfaces to extend fabric types with our custom properties
+interface CustomFabricObject {
+  __designId?: string;
+}
+
 interface DesignCanvasProps {
   width: number;
   height: number;
@@ -116,20 +121,20 @@ const DesignCanvas: React.FC<DesignCanvasProps> = ({ width, height, className })
   const handleObjectModified = (e: any) => {
     if (!e.target) return;
 
-    const obj = e.target;
+    const obj = e.target as unknown as CustomFabricObject;
     const id = obj.__designId;
 
     if (!id) return;
 
     const updates = {
-      x: obj.left || 0,
-      y: obj.top || 0,
-      width: obj.width || 0,
-      height: obj.height || 0,
-      rotation: obj.angle || 0,
-      scaleX: obj.scaleX || 1,
-      scaleY: obj.scaleY || 1,
-      opacity: obj.opacity || 1,
+      x: (obj as any).left || 0,
+      y: (obj as any).top || 0,
+      width: (obj as any).width || 0,
+      height: (obj as any).height || 0,
+      rotation: (obj as any).angle || 0,
+      scaleX: (obj as any).scaleX || 1,
+      scaleY: (obj as any).scaleY || 1,
+      opacity: (obj as any).opacity || 1,
     };
 
     dispatch({
@@ -142,13 +147,13 @@ const DesignCanvas: React.FC<DesignCanvasProps> = ({ width, height, className })
   const deleteSelectedObject = () => {
     if (!canvas) return;
 
-    const activeObject = canvas.getActiveObject();
+    const activeObject = canvas.getActiveObject() as unknown as CustomFabricObject;
     if (!activeObject) return;
 
     const id = activeObject.__designId;
     if (!id) return;
 
-    canvas.remove(activeObject);
+    canvas.remove(activeObject as any);
     dispatch({ type: 'REMOVE_OBJECT', payload: id });
     toast.success('Object deleted');
   };
@@ -157,7 +162,7 @@ const DesignCanvas: React.FC<DesignCanvasProps> = ({ width, height, className })
   const duplicateSelectedObject = () => {
     if (!canvas) return;
 
-    const activeObject = canvas.getActiveObject();
+    const activeObject = canvas.getActiveObject() as unknown as CustomFabricObject;
     if (!activeObject) return;
 
     const id = activeObject.__designId;
@@ -204,19 +209,19 @@ const DesignCanvas: React.FC<DesignCanvasProps> = ({ width, height, className })
               await new Promise<void>((resolve) => {
                 Image.fromURL(obj.src || '', {
                   crossOrigin: 'anonymous',
-                  onload: (img) => {
-                    img.set({
-                      left: obj.x,
-                      top: obj.y,
-                      angle: obj.rotation,
-                      scaleX: obj.scaleX,
-                      scaleY: obj.scaleY,
-                      opacity: obj.opacity,
-                    });
-                    
-                    fabricObj = img;
-                    resolve();
-                  }
+                  objectCaching: true,
+                }).then((img) => {
+                  img.set({
+                    left: obj.x,
+                    top: obj.y,
+                    angle: obj.rotation,
+                    scaleX: obj.scaleX,
+                    scaleY: obj.scaleY,
+                    opacity: obj.opacity,
+                  });
+                  
+                  fabricObj = img;
+                  resolve();
                 });
               });
             } catch (error) {
@@ -304,7 +309,7 @@ const DesignCanvas: React.FC<DesignCanvasProps> = ({ width, height, className })
 
       if (fabricObj) {
         // Store the ID in a custom property
-        fabricObj.__designId = obj.id;
+        (fabricObj as CustomFabricObject).__designId = obj.id;
         
         // Make objects selectable and movable
         fabricObj.set({
