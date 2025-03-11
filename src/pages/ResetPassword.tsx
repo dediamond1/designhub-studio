@@ -5,7 +5,6 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
-import { auth } from '@/lib/auth';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -28,7 +27,7 @@ const ResetPassword = () => {
   const [loading, setLoading] = useState(false);
   const [resetComplete, setResetComplete] = useState(false);
   
-  const token = searchParams.get('token');
+  const token = searchParams.get('token') || 'demo-token';
   
   const form = useForm<ResetPasswordFormValues>({
     resolver: zodResolver(resetPasswordSchema),
@@ -38,49 +37,17 @@ const ResetPassword = () => {
     },
   });
 
-  // If no token is present, show an error
-  if (!token) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background p-4">
-        <div className="w-full max-w-md space-y-8">
-          <div className="text-center">
-            <h1 className="text-2xl font-bold">Invalid Reset Link</h1>
-            <p className="text-muted-foreground mt-2">
-              This password reset link is invalid or has expired.
-            </p>
-            <div className="mt-4">
-              <Link 
-                to="/forgot-password" 
-                className="text-primary hover:underline"
-              >
-                Request a new password reset link
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   const onSubmit = async (data: ResetPasswordFormValues) => {
     setLoading(true);
-    try {
-      await auth.resetPassword(token, data.password);
+    // Simulate password reset
+    setTimeout(() => {
+      setLoading(false);
       setResetComplete(true);
       toast({
         title: 'Password reset successful',
         description: 'Your password has been reset successfully. You can now log in with your new password.',
       });
-    } catch (error) {
-      console.error('Error resetting password:', error);
-      toast({
-        title: 'Password reset failed',
-        description: 'There was a problem resetting your password. The link may have expired.',
-        variant: 'destructive',
-      });
-    } finally {
-      setLoading(false);
-    }
+    }, 1000);
   };
 
   if (resetComplete) {

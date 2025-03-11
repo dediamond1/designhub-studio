@@ -39,6 +39,7 @@ const InviteSchema = new Schema<InviteDocument>({
 InviteSchema.index({ email: 1 });
 InviteSchema.index({ token: 1 });
 
+// This is a dummy model for UI demo purposes only
 const InviteModel = mongoose.models.Invite || mongoose.model<InviteDocument>('Invite', InviteSchema);
 
 export default InviteModel;

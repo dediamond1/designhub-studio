@@ -9,7 +9,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { acceptTeamInvitation } from '@/api/auth';
 
 const formSchema = z.object({
   password: z.string()
@@ -40,38 +39,30 @@ const AcceptInvitation = () => {
   });
 
   const onSubmit = async (values: FormData) => {
-    if (!token) {
-      setError('Invalid invitation token. Please check your invitation email.');
-      return;
-    }
-
     setLoading(true);
     setError(null);
 
-    try {
-      const result = await acceptTeamInvitation(token, values.password);
+    // Simulate accepting invitation
+    setTimeout(() => {
+      setLoading(false);
+      
+      if (!token) {
+        setError('Invalid invitation token');
+        toast({
+          title: 'Error',
+          description: 'Invalid invitation token',
+          variant: 'destructive',
+        });
+        return;
+      }
       
       toast({
         title: 'Welcome to the team!',
         description: 'Your account has been created successfully.',
       });
       
-      // Store session data
-      sessionStorage.setItem('user', JSON.stringify(result.user));
-      sessionStorage.setItem('isLoggedIn', 'true');
-      
-      // Redirect to dashboard
       navigate('/dashboard');
-    } catch (error) {
-      setError(error instanceof Error ? error.message : 'An error occurred while accepting the invitation');
-      toast({
-        title: 'Error',
-        description: error instanceof Error ? error.message : 'Failed to accept invitation',
-        variant: 'destructive',
-      });
-    } finally {
-      setLoading(false);
-    }
+    }, 1000);
   };
 
   if (!token) {

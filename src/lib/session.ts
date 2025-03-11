@@ -1,7 +1,7 @@
 
 /**
- * Session storage wrapper with defensive programming
- * This implementation uses browser's sessionStorage with fallbacks
+ * Session storage wrapper
+ * This implementation uses browser's sessionStorage for UI demo purposes only
  */
 
 // Type for session data structure

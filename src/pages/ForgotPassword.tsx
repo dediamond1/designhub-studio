@@ -5,7 +5,6 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Link } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
-import { auth } from '@/lib/auth';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -31,23 +30,15 @@ const ForgotPassword = () => {
 
   const onSubmit = async (data: ForgotPasswordFormValues) => {
     setLoading(true);
-    try {
-      await auth.sendPasswordResetEmail(data.email);
+    // Simulate password reset email
+    setTimeout(() => {
+      setLoading(false);
       setEmailSent(true);
       toast({
         title: 'Email sent',
         description: 'If an account exists with that email, we\'ve sent a password reset link.',
       });
-    } catch (error) {
-      console.error('Error sending reset email:', error);
-      toast({
-        title: 'Error',
-        description: 'There was a problem sending the password reset email. Please try again.',
-        variant: 'destructive',
-      });
-    } finally {
-      setLoading(false);
-    }
+    }, 1000);
   };
 
   return (

@@ -4,8 +4,6 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { AuthProvider } from "./contexts/AuthContext";
-import PrivateRoute from "./components/auth/PrivateRoute";
 import Index from "./pages/Index";
 import About from "./pages/About";
 import Services from "./pages/Services";
@@ -42,44 +40,42 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <AuthProvider>
-          <Routes>
-            {/* Public Routes */}
-            <Route path="/" element={<Index />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/services" element={<Services />} />
-            <Route path="/design" element={<Design />} />
-            <Route path="/design/clothes" element={<ClothesDesign />} />
-            <Route path="/design/print" element={<PrintDesign />} />
-            <Route path="/design/stickers" element={<StickersDesign />} />
-            <Route path="/blog" element={<Blog />} />
-            <Route path="/news" element={<News />} />
-            <Route path="/offers" element={<Offers />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/career" element={<Career />} />
-            <Route path="/ads" element={<Ads />} />
-            
-            {/* Authentication Routes */}
-            <Route path="/login" element={<Login />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/verify-email" element={<VerifyEmail />} />
-            <Route path="/accept-invitation" element={<AcceptInvitation />} />
-            
-            {/* Protected Dashboard Routes */}
-            <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
-            <Route path="/dashboard/orders" element={<PrivateRoute><DashboardOrders /></PrivateRoute>} />
-            <Route path="/dashboard/products" element={<PrivateRoute><DashboardProducts /></PrivateRoute>} />
-            <Route path="/dashboard/customers" element={<PrivateRoute><DashboardCustomers /></PrivateRoute>} />
-            <Route path="/dashboard/designs" element={<PrivateRoute><DashboardDesigns /></PrivateRoute>} />
-            <Route path="/dashboard/analytics" element={<PrivateRoute><DashboardAnalytics /></PrivateRoute>} />
-            <Route path="/dashboard/settings" element={<PrivateRoute><DashboardSettings /></PrivateRoute>} />
-            <Route path="/dashboard/team" element={<PrivateRoute><TeamMembers /></PrivateRoute>} />
-            
-            {/* Catch-all route */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </AuthProvider>
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/" element={<Index />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/design" element={<Design />} />
+          <Route path="/design/clothes" element={<ClothesDesign />} />
+          <Route path="/design/print" element={<PrintDesign />} />
+          <Route path="/design/stickers" element={<StickersDesign />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/news" element={<News />} />
+          <Route path="/offers" element={<Offers />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/career" element={<Career />} />
+          <Route path="/ads" element={<Ads />} />
+          
+          {/* Authentication Routes - UI Only */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/verify-email" element={<VerifyEmail />} />
+          <Route path="/accept-invitation" element={<AcceptInvitation />} />
+          
+          {/* Dashboard Routes - No Authentication Required Now */}
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard/orders" element={<DashboardOrders />} />
+          <Route path="/dashboard/products" element={<DashboardProducts />} />
+          <Route path="/dashboard/customers" element={<DashboardCustomers />} />
+          <Route path="/dashboard/designs" element={<DashboardDesigns />} />
+          <Route path="/dashboard/analytics" element={<DashboardAnalytics />} />
+          <Route path="/dashboard/settings" element={<DashboardSettings />} />
+          <Route path="/dashboard/team" element={<TeamMembers />} />
+          
+          {/* Catch-all route */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

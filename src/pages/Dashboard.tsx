@@ -7,11 +7,6 @@ import { useNavigate } from 'react-router-dom';
 const Dashboard = () => {
   const navigate = useNavigate();
 
-  React.useEffect(() => {
-    // You could add authentication check here in the future
-    // if (!isAuthenticated) navigate('/login');
-  }, [navigate]);
-
   return (
     <div className="flex h-screen bg-background">
       <DashboardSidebar />

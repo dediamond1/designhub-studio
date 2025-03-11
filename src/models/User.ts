@@ -47,7 +47,7 @@ const UserSchema = new Schema<UserDocument>({
 // Create compound index for email lookup
 UserSchema.index({ email: 1 });
 
-// Don't use model in browser environment
+// This is a dummy model for UI demo purposes only
 const UserModel = mongoose.models.User || mongoose.model<UserDocument>('User', UserSchema);
 
 export default UserModel;

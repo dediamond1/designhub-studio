@@ -1,133 +1,90 @@
 
-import { dbConnect } from '@/lib/db';
-import { 
-  loginUser, 
-  registerUser, 
-  getCurrentUser, 
-  requestPasswordReset,
-  resetPassword,
-  verifyEmail,
-  inviteTeamMember,
-  acceptInvitation,
-  getAllUsers,
-  updateUserRole,
-  deleteUser
-} from '@/services/authService';
-import { UserResponse } from '@/types/user';
+// Dummy auth API functions for UI demo
 
-// These functions are adapters for our API routes
-// They bridge between the API layer and our service layer
-// In a browser environment, these would call fetch to the backend
-// But for demo purposes, they directly access the service layer
+// Simulate user data
+const dummyUser = {
+  id: '1',
+  email: 'user@example.com',
+  name: 'Demo User',
+  role: 'admin',
+  verified: true,
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  lastLogin: new Date()
+};
 
 // User login
-export const login = async (email: string, password: string): Promise<UserResponse> => {
-  try {
-    const response = await loginUser(email, password);
-    return response.user;
-  } catch (error) {
-    console.error("Login error:", error);
-    throw error;
-  }
+export const login = async (email: string, password: string) => {
+  console.log('Mock login:', email);
+  return dummyUser;
 };
 
 // User registration
 export const register = async (name: string, email: string, password: string) => {
-  try {
-    return await registerUser(name, email, password);
-  } catch (error) {
-    console.error("Registration error:", error);
-    throw error;
-  }
+  console.log('Mock registration:', email);
+  return {
+    user: { ...dummyUser, name, email },
+    success: true
+  };
 };
 
 // Get current user
 export const getUser = async (userId: string) => {
-  try {
-    return await getCurrentUser(userId);
-  } catch (error) {
-    console.error("Get user error:", error);
-    throw error;
-  }
+  console.log('Mock get user:', userId);
+  return dummyUser;
 };
 
 // Request password reset
 export const forgotPassword = async (email: string) => {
-  try {
-    return await requestPasswordReset(email);
-  } catch (error) {
-    console.error("Forgot password error:", error);
-    throw error;
-  }
+  console.log('Mock forgot password:', email);
+  return true;
 };
 
 // Reset password with token
 export const changePassword = async (token: string, newPassword: string) => {
-  try {
-    return await resetPassword(token, newPassword);
-  } catch (error) {
-    console.error("Reset password error:", error);
-    throw error;
-  }
+  console.log('Mock reset password with token:', token);
+  return true;
 };
 
 // Verify email address
 export const verifyUserEmail = async (token: string) => {
-  try {
-    return await verifyEmail(token);
-  } catch (error) {
-    console.error("Verify email error:", error);
-    throw error;
-  }
+  console.log('Mock verify email:', token);
+  return true;
 };
 
 // Admin: Get all users
-export const getUsers = async (adminId: string) => {
-  try {
-    return await getAllUsers(adminId);
-  } catch (error) {
-    console.error("Get users error:", error);
-    throw error;
-  }
+export const getUsers = async () => {
+  console.log('Mock get all users');
+  return [
+    dummyUser,
+    { ...dummyUser, id: '2', name: 'Another User', email: 'another@example.com', role: 'user' },
+    { ...dummyUser, id: '3', name: 'Team Member', email: 'team@example.com', role: 'team-member' }
+  ];
 };
 
 // Admin: Update user role
 export const updateRole = async (adminId: string, userId: string, role: 'admin' | 'user' | 'team-member') => {
-  try {
-    return await updateUserRole(adminId, userId, role);
-  } catch (error) {
-    console.error("Update role error:", error);
-    throw error;
-  }
+  console.log(`Mock update role: User ${userId} to ${role}`);
+  return { ...dummyUser, id: userId, role };
 };
 
 // Admin: Delete user
 export const removeUser = async (adminId: string, userId: string) => {
-  try {
-    return await deleteUser(adminId, userId);
-  } catch (error) {
-    console.error("Remove user error:", error);
-    throw error;
-  }
+  console.log(`Mock delete user: ${userId}`);
+  return true;
 };
 
 // Admin: Invite team member
 export const invite = async (adminId: string, email: string, name: string, role: 'admin' | 'team-member') => {
-  try {
-    return await inviteTeamMember(email, name, role, adminId);
-  } catch (error) {
-    console.error("Invite error:", error);
-    throw error;
-  }
+  console.log(`Mock invite: ${email} as ${role}`);
+  return true;
 };
 
 // Accept invitation
 export const acceptTeamInvitation = async (token: string, password: string) => {
-  try {
-    const response = await acceptInvitation(token, password);
-    return response;
-  } catch (error) {
-    console.error("Accept invitation error:", error);
-    throw error;
-  }
+  console.log(`Mock accept invitation with token: ${token}`);
+  return {
+    user: dummyUser,
+    success: true
+  };
 };

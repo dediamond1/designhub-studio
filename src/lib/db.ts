@@ -1,43 +1,12 @@
 
 import mongoose from 'mongoose';
 
-// Use environment variables for connection string
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/kalmarstudio';
-
-// Track connection status
-let isConnected = false;
-
 /**
- * Connect to MongoDB using mongoose
+ * Connect to MongoDB using mongoose (mock version for browser)
  */
 export async function dbConnect(): Promise<typeof mongoose> {
-  // If we already have a connection, use it
-  if (isConnected) {
-    return mongoose;
-  }
-
-  try {
-    // In browser environment, this is a simulation for demonstration
-    // In a real app with server-side rendering, this would connect to MongoDB
-    console.log('Attempting to connect to MongoDB...');
-    
-    // For browser environment, create a mock connection
-    if (typeof window !== 'undefined') {
-      console.log('Browser environment detected, using mock connection');
-      isConnected = true;
-      return createMockConnection();
-    }
-    
-    // For server environment (this won't run in browser)
-    const connection = await mongoose.connect(MONGODB_URI);
-    isConnected = true;
-    console.log('MongoDB connected successfully');
-    return connection;
-  } catch (error) {
-    console.error('MongoDB connection error:', error);
-    isConnected = false;
-    return createMockConnection();
-  }
+  console.log('Mock database connection for UI demo');
+  return createMockConnection();
 }
 
 /**
@@ -62,7 +31,7 @@ function createMockConnection() {
         })
       }
     },
-    model: function mockModel(name: string, schema: any) {
+    model: function mockModel(name: string) {
       return {
         find: () => ({ exec: async () => [] }),
         findOne: () => ({ exec: async () => null }),
@@ -84,25 +53,14 @@ export const connectToDatabase = dbConnect;
  * Disconnect from MongoDB
  */
 export async function dbDisconnect(): Promise<void> {
-  if (isConnected) {
-    try {
-      if (typeof window === 'undefined') {
-        await mongoose.disconnect();
-      }
-      isConnected = false;
-      console.log('MongoDB disconnected successfully');
-    } catch (error) {
-      console.error('Error disconnecting from MongoDB:', error);
-    }
-  }
+  console.log('Mock database disconnection');
+  return Promise.resolve();
 }
 
 /**
  * Create indexes for the application collections
- * This is useful to ensure proper indexing for queries
  */
 export async function ensureIndexes(): Promise<void> {
-  // This function will be implemented in the models directly with mongoose
-  console.log('Indexes are now managed by mongoose schemas');
+  console.log('Mock indexes creation');
   return Promise.resolve();
 }

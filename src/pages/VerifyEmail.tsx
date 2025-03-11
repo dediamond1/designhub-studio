@@ -4,40 +4,27 @@ import { useSearchParams, Link } from 'react-router-dom';
 import { ArrowRight, CheckCircle, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { useAuth } from '@/contexts/AuthContext';
 
 const VerifyEmail = () => {
   const [searchParams] = useSearchParams();
   const token = searchParams.get('token');
-  const { verifyEmail } = useAuth();
   const [verificationStatus, setVerificationStatus] = useState<'loading' | 'success' | 'error'>('loading');
   const [message, setMessage] = useState<string>('Verifying your email...');
 
   useEffect(() => {
-    const verifyUserEmail = async () => {
+    // Simulate verification process
+    const timeout = setTimeout(() => {
       if (!token) {
         setVerificationStatus('error');
         setMessage('Invalid verification link. Please request a new verification email.');
-        return;
+      } else {
+        setVerificationStatus('success');
+        setMessage('Your email has been successfully verified! You can now login to your account.');
       }
+    }, 1500);
 
-      try {
-        const result = await verifyEmail(token);
-        if (result) {
-          setVerificationStatus('success');
-          setMessage('Your email has been successfully verified! You can now login to your account.');
-        } else {
-          setVerificationStatus('error');
-          setMessage('Failed to verify your email. The link may have expired or is invalid.');
-        }
-      } catch (error) {
-        setVerificationStatus('error');
-        setMessage(error instanceof Error ? error.message : 'Failed to verify your email. Please try again later.');
-      }
-    };
-
-    verifyUserEmail();
-  }, [token, verifyEmail]);
+    return () => clearTimeout(timeout);
+  }, [token]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
