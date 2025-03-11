@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Canvas, Text, Image, Rect, Circle, Triangle, Polygon } from 'fabric';
+import { Canvas, Text, Image, Rect, Circle, Triangle, Polygon, Line, Group } from 'fabric';
 import { useDesign } from '../../contexts/DesignContext';
 import { v4 as uuidv4 } from 'uuid';
 import { toast } from 'sonner';
@@ -56,7 +56,7 @@ const DesignCanvas: React.FC<DesignCanvasProps> = ({ width, height, className })
       
       // Create horizontal lines
       for (let i = 0; i < canvasHeight / gridSize; i++) {
-        const line = new fabric.Line([0, i * gridSize, canvasWidth, i * gridSize], {
+        const line = new Line([0, i * gridSize, canvasWidth, i * gridSize], {
           stroke: '#e5e7eb',
           selectable: false,
           evented: false,
@@ -67,7 +67,7 @@ const DesignCanvas: React.FC<DesignCanvasProps> = ({ width, height, className })
       
       // Create vertical lines
       for (let i = 0; i < canvasWidth / gridSize; i++) {
-        const line = new fabric.Line([i * gridSize, 0, i * gridSize, canvasHeight], {
+        const line = new Line([i * gridSize, 0, i * gridSize, canvasHeight], {
           stroke: '#e5e7eb',
           selectable: false,
           evented: false,
@@ -76,15 +76,22 @@ const DesignCanvas: React.FC<DesignCanvasProps> = ({ width, height, className })
         gridGroup.push(line);
       }
       
-      return new fabric.Group(gridGroup, {
+      const group = new Group(gridGroup, {
         selectable: false,
         evented: false,
       });
+      
+      // Add a custom property to identify this as a grid
+      (group as any).isGrid = true;
+      
+      return group;
     };
     
     const grid = createGrid();
     fabricCanvas.add(grid);
-    fabricCanvas.sendToBack(grid);
+    // Use lower-level API to move grid to back
+    grid.moveTo(0);
+    fabricCanvas.renderAll();
 
     // Set up event listeners
     fabricCanvas.on('object:moving', (e: any) => {
@@ -395,10 +402,10 @@ const DesignCanvas: React.FC<DesignCanvasProps> = ({ width, height, className })
           if (obj.src) {
             try {
               await new Promise<void>((resolve) => {
-                // Fix: Remove objectCaching from options and use the correct pattern for loading images
+                // Use proper loader for images without invalid properties
                 Image.fromURL(obj.src || '', {
                   crossOrigin: 'anonymous',
-                }).then((img) => {
+                }, (img) => {
                   img.set({
                     left: obj.x,
                     top: obj.y,

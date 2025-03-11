@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useReducer, useEffect } from 'react';
 import { toast } from 'sonner';
 
@@ -44,6 +43,7 @@ export type DesignState = {
   width: number;
   height: number;
   resolution: number;
+  selectedObject: DesignObject | null;
 };
 
 export type DesignAction =
@@ -60,13 +60,10 @@ export type DesignAction =
   | { type: 'MOVE_OBJECT_FORWARD'; payload: string }
   | { type: 'MOVE_OBJECT_BACKWARD'; payload: string }
   | { type: 'DUPLICATE_OBJECT'; payload: string }
-  | { type: 'ARRANGE_OBJECTS'; payload: 'front' | 'back' | 'forward' | 'backward'; objectId: string };
-
-// History action types
-export type HistoryAction =
+  | { type: 'ARRANGE_OBJECTS'; payload: 'front' | 'back' | 'forward' | 'backward'; objectId: string }
+  | { type: 'SET_SELECTED_OBJECT'; payload: DesignObject | null }
   | { type: 'UNDO' }
-  | { type: 'REDO' }
-  | { type: 'UPDATE'; payload: DesignState };
+  | { type: 'REDO' };
 
 // Initial state
 const initialDesignState: DesignState = {
@@ -78,7 +75,8 @@ const initialDesignState: DesignState = {
   name: 'Untitled Design',
   width: 800,
   height: 600,
-  resolution: 300
+  resolution: 300,
+  selectedObject: null
 };
 
 // Reducers
@@ -218,6 +216,16 @@ const designReducer = (state: DesignState, action: DesignAction): DesignState =>
       
       return { ...state, objects };
     }
+    
+    case 'SET_SELECTED_OBJECT':
+      return {
+        ...state,
+        selectedObject: action.payload
+      };
+    
+    case 'UNDO':
+    case 'REDO':
+      return state;
     
     default:
       return state;
