@@ -1,6 +1,6 @@
 
 import React, { useEffect, useRef, useState } from 'react';
-import { fabric } from 'fabric';
+import * as fabric from 'fabric';
 import { useDesign } from '../../contexts/DesignContext';
 import { v4 as uuidv4 } from 'uuid';
 import { toast } from 'sonner';
