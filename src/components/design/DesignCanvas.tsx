@@ -90,8 +90,8 @@ const DesignCanvas: React.FC<DesignCanvasProps> = ({ width, height, className })
     
     const grid = createGrid();
     fabricCanvas.add(grid);
-    // Use setZIndex to move grid to back
-    fabricCanvas.setZIndex(grid, 0);
+    // Send grid to back using the correct method
+    grid.sendToBack();
     fabricCanvas.renderAll();
 
     // Set up event listeners
