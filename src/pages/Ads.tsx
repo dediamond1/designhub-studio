@@ -9,6 +9,11 @@ import { ArrowRight, ExternalLink, Users, BarChart, Globe, Mail, Phone } from 'l
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
+// Define benefit types to ensure proper array typing
+interface BenefitItem {
+  benefits: string[];
+}
+
 const Ads = () => {
   const { t, i18n } = useTranslation(['ads', 'common']);
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -19,6 +24,11 @@ const Ads = () => {
     t('seo.title'),
     'https://kalmarstudio.com/ads'
   );
+
+  // Explicitly cast benefit arrays to ensure they're treated as arrays
+  const bronzeBenefits = t('sponsorships.levels.bronze.benefits', { returnObjects: true }) as string[];
+  const silverBenefits = t('sponsorships.levels.silver.benefits', { returnObjects: true }) as string[];
+  const goldBenefits = t('sponsorships.levels.gold.benefits', { returnObjects: true }) as string[];
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -128,7 +138,7 @@ const Ads = () => {
                 </div>
                 <div className="p-6">
                   <ul className="space-y-2">
-                    {t('sponsorships.levels.bronze.benefits', { returnObjects: true }).map((benefit, index) => (
+                    {bronzeBenefits.map((benefit, index) => (
                       <li key={index} className="flex items-start">
                         <ArrowRight className="h-4 w-4 text-amber-400 mr-2 mt-1 shrink-0" />
                         <span>{benefit}</span>
@@ -149,7 +159,7 @@ const Ads = () => {
                 </div>
                 <div className="p-6">
                   <ul className="space-y-2">
-                    {t('sponsorships.levels.silver.benefits', { returnObjects: true }).map((benefit, index) => (
+                    {silverBenefits.map((benefit, index) => (
                       <li key={index} className="flex items-start">
                         <ArrowRight className="h-4 w-4 text-gray-400 mr-2 mt-1 shrink-0" />
                         <span>{benefit}</span>
@@ -170,7 +180,7 @@ const Ads = () => {
                 </div>
                 <div className="p-6">
                   <ul className="space-y-2">
-                    {t('sponsorships.levels.gold.benefits', { returnObjects: true }).map((benefit, index) => (
+                    {goldBenefits.map((benefit, index) => (
                       <li key={index} className="flex items-start">
                         <ArrowRight className="h-4 w-4 text-yellow-500 mr-2 mt-1 shrink-0" />
                         <span>{benefit}</span>
