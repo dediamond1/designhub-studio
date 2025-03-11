@@ -7,6 +7,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HelmetProvider } from 'react-helmet-async';
 import './i18n';
 
+// Import Navbar
+import Navbar from "./components/Navbar";
+
 import Index from "./pages/Index";
 import About from "./pages/About";
 import Services from "./pages/Services";
@@ -43,6 +46,9 @@ const App = () => (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <BrowserRouter>
+          {/* Add Navbar here so it appears on all pages */}
+          <Navbar />
+          
           <Toaster />
           <Sonner />
           <Routes>

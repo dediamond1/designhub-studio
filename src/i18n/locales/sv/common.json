@@ -4,60 +4,42 @@
     "home": "Hem",
     "about": "Om oss",
     "services": "Tjänster",
-    "design": "Designa din egen",
+    "design": "Design",
+    "print": "Trycktjänster",
+    "clothes": "Kläder",
+    "stickers": "Dekaler",
     "blog": "Blogg",
     "news": "Nyheter",
     "offers": "Erbjudanden",
     "contact": "Kontakt",
     "career": "Karriär",
-    "ads": "Reklam"
+    "ads": "Annonser",
+    "resources": "Resurser"
   },
   "buttons": {
-    "getQuote": "Få offert",
-    "startDesigning": "Börja designa",
     "readMore": "Läs mer",
-    "contactUs": "Kontakta oss",
-    "learnMore": "Lär dig mer",
-    "subscribe": "Prenumerera",
-    "submitMessage": "Skicka meddelande",
-    "backToHome": "Tillbaka till startsidan",
-    "login": "Logga in",
-    "register": "Registrera dig",
-    "forgotPassword": "Glömt lösenord?",
-    "resetPassword": "Återställ lösenord"
-  },
-  "formLabels": {
-    "name": "Namn",
-    "email": "E-post",
-    "password": "Lösenord",
-    "confirmPassword": "Bekräfta lösenord",
-    "message": "Meddelande",
-    "phone": "Telefon",
-    "subject": "Ämne"
-  },
-  "formPlaceholders": {
-    "email": "din.epost@exempel.com",
-    "password": "••••••••",
-    "name": "Ditt namn"
+    "getStarted": "Kom igång",
+    "learnMore": "Läs mer",
+    "viewAll": "Visa alla",
+    "download": "Ladda ner",
+    "try": "Prova"
   },
   "footer": {
-    "rights": "Alla rättigheter förbehållna",
-    "company": "Företaget",
     "services": "Tjänster",
-    "support": "Support",
+    "company": "Företag",
+    "contact": "Kontakt",
     "newsletter": "Nyhetsbrev",
-    "newsletterDescription": "Få de senaste artiklarna, tips och erbjudanden direkt i din inkorg. Vi skickar nyhetsbrev ungefär en gång i månaden.",
+    "emailPlaceholder": "Din e-post",
     "subscribe": "Prenumerera",
-    "connect": "Följ oss"
+    "copyright": "© 2023 Kalmar Studio. Alla rättigheter förbehållna."
   },
-  "metadata": {
-    "company": "Kalmar Studio",
-    "address": "Tryckvägen 123, 123 45 Kalmar, Sverige",
-    "phone": "+46 70 123 45 67",
-    "email": "info@kalmarstudio.se"
+  "getQuote": "Få en offert",
+  "login": "Logga in",
+  "error": {
+    "title": "Fel",
+    "tryAgain": "Försök igen"
   },
-  "loading": "Laddar...",
-  "error": "Ett fel inträffade",
-  "success": "Klart!",
-  "tryAgain": "Vänligen försök igen"
+  "success": {
+    "title": "Klart"
+  }
 }

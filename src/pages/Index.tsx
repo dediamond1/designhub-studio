@@ -5,7 +5,6 @@ import HeroSection from '../components/HeroSection';
 import ServicesSection from '../components/ServicesSection';
 import AboutSection from '../components/AboutSection';
 import ContactSection from '../components/ContactSection';
-import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { SEO, createOrganizationSchema, createWebsiteSchema } from '@/utils/seo';
 
@@ -64,7 +63,6 @@ const Index = () => {
         schema={[websiteSchema, organizationSchema]}
         lang={i18n.language}
       />
-      <Navbar />
       <main>
         <HeroSection />
         <ServicesSection />

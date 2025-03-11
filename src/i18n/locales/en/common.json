@@ -2,62 +2,44 @@
 {
   "navigation": {
     "home": "Home",
-    "about": "About Us",
+    "about": "About",
     "services": "Services",
-    "design": "Design Your Own",
+    "design": "Design",
+    "print": "Print Services",
+    "clothes": "Clothing",
+    "stickers": "Stickers",
     "blog": "Blog",
     "news": "News",
     "offers": "Offers",
     "contact": "Contact",
     "career": "Careers",
-    "ads": "Advertising"
+    "ads": "Ads",
+    "resources": "Resources"
   },
   "buttons": {
-    "getQuote": "Get a Quote",
-    "startDesigning": "Start Designing",
     "readMore": "Read More",
-    "contactUs": "Contact Us",
+    "getStarted": "Get Started",
     "learnMore": "Learn More",
-    "subscribe": "Subscribe",
-    "submitMessage": "Send Message",
-    "backToHome": "Back to Home",
-    "login": "Log In",
-    "register": "Sign Up",
-    "forgotPassword": "Forgot Password?",
-    "resetPassword": "Reset Password"
-  },
-  "formLabels": {
-    "name": "Name",
-    "email": "Email",
-    "password": "Password",
-    "confirmPassword": "Confirm Password",
-    "message": "Message",
-    "phone": "Phone",
-    "subject": "Subject"
-  },
-  "formPlaceholders": {
-    "email": "your.email@example.com",
-    "password": "••••••••",
-    "name": "Your name"
+    "viewAll": "View All",
+    "download": "Download",
+    "try": "Try it"
   },
   "footer": {
-    "rights": "All rights reserved",
-    "company": "Company",
     "services": "Services",
-    "support": "Support",
+    "company": "Company",
+    "contact": "Contact",
     "newsletter": "Newsletter",
-    "newsletterDescription": "Get the latest articles, tips and offers directly in your inbox. We send newsletters about once a month.",
+    "emailPlaceholder": "Your email",
     "subscribe": "Subscribe",
-    "connect": "Connect with us"
+    "copyright": "© 2023 Kalmar Studio. All rights reserved."
   },
-  "metadata": {
-    "company": "Kalmar Studio",
-    "address": "Tryckvägen 123, 123 45 Kalmar, Sweden",
-    "phone": "+46 70 123 45 67",
-    "email": "info@kalmarstudio.se"
+  "getQuote": "Get a Quote",
+  "login": "Sign In",
+  "error": {
+    "title": "Error",
+    "tryAgain": "Please try again"
   },
-  "loading": "Loading...",
-  "error": "An error occurred",
-  "success": "Success!",
-  "tryAgain": "Please try again"
+  "success": {
+    "title": "Success"
+  }
 }
