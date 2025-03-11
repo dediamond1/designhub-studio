@@ -1,62 +1,74 @@
 
 import { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
+import { dbConnect } from '@/lib/db';
 import { ObjectId } from 'mongodb';
-import { connectToDatabase } from '@/lib/db';
 
-// JWT secret key
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-me-in-production';
+// Extended Request interface to include user
+declare global {
+  namespace Express {
+    interface Request {
+      user?: any;
+      session: {
+        userId?: string;
+        role?: string;
+        isAuthenticated?: boolean;
+      }
+    }
+  }
+}
 
-// Middleware to authenticate JWT tokens
+/**
+ * Middleware to authenticate API requests
+ */
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+  // Check if the request has a valid session
+  if (!req.session || !req.session.userId) {
+    return res.status(401).json({ success: false, message: 'Not authenticated' });
+  }
+
   try {
-    // Get token from headers
-    const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return res.status(401).json({ message: 'Authentication required' });
-    }
-    
-    const token = authHeader.split(' ')[1];
-    
-    // Verify token
-    const decoded = jwt.verify(token, JWT_SECRET) as { id: string; email: string; role: string };
-    
-    // Connect to database and find user
-    const { db } = await connectToDatabase();
-    const user = await db.collection('users').findOne({ _id: new ObjectId(decoded.id) });
-    
+    // Get the user from the database
+    const { db } = await dbConnect();
+    const user = await db.collection('users').findOne({ _id: new ObjectId(req.session.userId) });
+
     if (!user) {
-      return res.status(401).json({ message: 'User not found' });
+      // Clear invalid session
+      req.session.userId = undefined;
+      req.session.role = undefined;
+      req.session.isAuthenticated = false;
+      return res.status(401).json({ success: false, message: 'User not found' });
     }
-    
+
     // Attach user to request
-    req.user = {
-      id: user._id.toString(),
-      email: user.email,
-      role: user.role
-    };
-    
+    req.user = user;
     next();
   } catch (error) {
-    console.error('Auth middleware error:', error);
-    return res.status(401).json({ message: 'Authentication failed' });
+    console.error('Authentication error:', error);
+    return res.status(500).json({ success: false, message: 'Authentication failed' });
   }
 };
 
-// Middleware to restrict access to admin users
+/**
+ * Middleware to check if user has admin role
+ */
 export const adminMiddleware = (req: Request, res: Response, next: NextFunction) => {
   if (!req.user || req.user.role !== 'admin') {
-    return res.status(403).json({ message: 'Admin access required' });
+    return res.status(403).json({ success: false, message: 'Admin access required' });
   }
   
   next();
 };
 
-// Middleware to restrict access to specific roles
+/**
+ * Middleware to verify that user has the specified role
+ */
 export const roleMiddleware = (roles: string[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
     if (!req.user || !roles.includes(req.user.role)) {
-      return res.status(403).json({ message: 'Access denied' });
+      return res.status(403).json({ 
+        success: false, 
+        message: `Access denied. Required role: ${roles.join(' or ')}`
+      });
     }
     
     next();

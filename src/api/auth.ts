@@ -1,5 +1,5 @@
 
-import { connectToDatabase } from '@/lib/db';
+import { dbConnect } from '@/lib/db';
 import { ObjectId } from 'mongodb';
 import { 
   loginUser, 
@@ -29,8 +29,8 @@ export const register = async (name: string, email: string, password: string) =>
 };
 
 // Get current user
-export const getUser = async (token: string) => {
-  return await getCurrentUser(token);
+export const getUser = async (userId: string) => {
+  return await getCurrentUser(userId);
 };
 
 // Request password reset

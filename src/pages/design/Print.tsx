@@ -1,258 +1,250 @@
 
-import React, { useState, useRef } from 'react';
-import { useScrollReveal } from '../../utils/animations';
-import Navbar from '../../components/Navbar';
-import Footer from '../../components/Footer';
-import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import React, { useState } from 'react';
 import { 
-  FileText, 
-  CreditCard, 
-  FileCard, 
+  Card, 
+  CardContent, 
+  CardDescription, 
+  CardFooter, 
+  CardHeader, 
+  CardTitle 
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { 
   Upload, 
-  Text, 
-  Plus, 
-  Save,
-  RotateCcw
+  PlusCircle, 
+  Image as ImageIcon, 
+  Check, 
+  X, 
+  RotateCw 
 } from 'lucide-react';
 
-const PrintDesigner = () => {
-  const [activeTab, setActiveTab] = useState('businessCard');
-  const [design, setDesign] = useState<string | null>(null);
-  const canvasRef = useRef<HTMLDivElement>(null);
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const isVisible = useScrollReveal(sectionRef, 0.1);
+const PrintDesignPage = () => {
+  const [files, setFiles] = useState<File[]>([]);
+  const [preview, setPreview] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const [designName, setDesignName] = useState('');
   
-  const printTypes = [
-    { id: 'businessCard', name: 'Business Card', icon: <CreditCard className="h-5 w-5" /> },
-    { id: 'flyer', name: 'Flyer', icon: <FileText className="h-5 w-5" /> },
-    { id: 'brochure', name: 'Brochure', icon: <FileCard className="h-5 w-5" /> },
-  ];
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const selectedFiles = Array.from(e.target.files);
+      setFiles(selectedFiles);
+      
+      // Generate preview for the first file
+      const fileUrl = URL.createObjectURL(selectedFiles[0]);
+      setPreview(fileUrl);
+    }
+  };
   
-  const templates = [
-    { id: 1, name: 'Corporate', img: 'https://images.unsplash.com/photo-1566125882500-87e10f726cdc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&q=80' },
-    { id: 2, name: 'Creative', img: 'https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&q=80' },
-    { id: 3, name: 'Modern', img: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&q=80' },
-  ];
-  
-  const handleUpload = () => {
-    // This would normally open a file picker and upload an image
-    alert('Image upload functionality would be implemented here');
+  const handleUpload = async () => {
+    if (files.length === 0 || !designName) return;
     
-    // For demo purposes, set a placeholder image
-    setDesign('https://images.unsplash.com/photo-1563694983011-6f4d90358083?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80');
+    setUploading(true);
+    
+    // Simulate upload delay
+    setTimeout(() => {
+      setUploading(false);
+      // Reset form or navigate to next step
+      alert('Design uploaded successfully!');
+    }, 2000);
   };
   
-  const handleSelectTemplate = (templateId: number) => {
-    // In a real implementation, this would load the template
-    setDesign(templates.find(t => t.id === templateId)?.img || null);
-  };
-  
-  const handleSaveDesign = () => {
-    // This would save the design to the user's account
-    alert('Design saved successfully!');
+  const clearFiles = () => {
+    setFiles([]);
+    setPreview(null);
   };
   
   return (
-    <div className="min-h-screen flex flex-col">
-      <Navbar />
-      <main>
-        <section className="pt-28 pb-16 md:pt-32 md:pb-16 bg-gradient-to-br from-kalmar-50 to-kalmar-100/50">
-          <div className="section-container">
-            <div className="text-center mb-8 max-w-3xl mx-auto">
-              <h1 className="text-3xl md:text-5xl font-bold mb-4">Business Cards & Print Designer</h1>
-              <p className="text-foreground/70 text-lg">
-                Design professional business cards, flyers, and brochures with our easy-to-use tool.
-              </p>
-            </div>
-          </div>
-        </section>
-        
-        <section ref={sectionRef} className="py-16">
-          <div className="section-container">
-            <div className="grid md:grid-cols-12 gap-8">
-              {/* Designer Panel */}
-              <div className="md:col-span-4 lg:col-span-3 space-y-6">
-                <div className="bg-white rounded-xl border shadow-sm p-6">
-                  <h3 className="text-lg font-semibold mb-4">Print Type</h3>
-                  <Tabs defaultValue="businessCard" onValueChange={setActiveTab}>
-                    <TabsList className="grid grid-cols-3 mb-2">
-                      {printTypes.map((type) => (
-                        <TabsTrigger key={type.id} value={type.id}>
-                          {type.icon}
-                        </TabsTrigger>
-                      ))}
-                    </TabsList>
-                    
-                    {printTypes.map((type) => (
-                      <TabsContent key={type.id} value={type.id}>
-                        <p className="text-sm text-muted-foreground">{type.name}</p>
-                      </TabsContent>
-                    ))}
-                  </Tabs>
-                </div>
-                
-                <div className="bg-white rounded-xl border shadow-sm p-6">
-                  <h3 className="text-lg font-semibold mb-4">Design Tools</h3>
-                  
+    <div className="container max-w-5xl mx-auto py-10 px-4">
+      <h1 className="text-3xl font-bold mb-6">Custom Print Design</h1>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <Card>
+          <CardHeader>
+            <CardTitle>Upload Your Design</CardTitle>
+            <CardDescription>
+              Upload high-resolution images for your custom prints
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+                {preview ? (
                   <div className="space-y-4">
-                    <Button 
-                      onClick={handleUpload} 
-                      variant="outline" 
-                      className="w-full justify-start"
-                    >
-                      <Upload className="mr-2 h-4 w-4" />
-                      Upload Logo/Image
-                    </Button>
-                    
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium">Contact Information</label>
-                      <textarea
-                        className="w-full px-3 py-2 border rounded-md text-sm"
-                        rows={4}
-                        placeholder="Name&#10;Company&#10;Phone&#10;Email"
-                      />
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="bg-white rounded-xl border shadow-sm p-6">
-                  <h3 className="text-lg font-semibold mb-4">Templates</h3>
-                  <div className="grid grid-cols-2 gap-2">
-                    {templates.map((template) => (
-                      <div 
-                        key={template.id}
-                        className="border rounded-md overflow-hidden cursor-pointer hover:border-primary transition-colors"
-                        onClick={() => handleSelectTemplate(template.id)}
+                    <img 
+                      src={preview} 
+                      alt="Design preview" 
+                      className="max-h-48 mx-auto object-contain"
+                    />
+                    <div className="flex justify-center gap-2">
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        onClick={clearFiles}
                       >
-                        <img 
-                          src={template.img} 
-                          alt={template.name} 
-                          className="w-full h-24 object-cover"
-                        />
-                        <div className="p-2 text-center text-xs">{template.name}</div>
-                      </div>
-                    ))}
-                    
-                    <div className="border rounded-md overflow-hidden flex items-center justify-center h-24 cursor-pointer hover:border-primary transition-colors">
-                      <Plus className="h-8 w-8 text-muted-foreground" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Preview Area */}
-              <div className="md:col-span-8 lg:col-span-6">
-                <div className="bg-white rounded-xl border shadow-sm p-6 h-full">
-                  <div className="flex justify-between items-center mb-4">
-                    <h3 className="text-lg font-semibold">Preview</h3>
-                    <div className="flex gap-2">
-                      <Button variant="outline" size="sm">
-                        <RotateCcw className="h-4 w-4 mr-1" />
-                        Reset
+                        <X className="h-4 w-4 mr-1" /> Remove
                       </Button>
-                      <Button onClick={handleSaveDesign} size="sm">
-                        <Save className="h-4 w-4 mr-1" />
-                        Save Design
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        onClick={() => document.getElementById('file-upload')?.click()}
+                      >
+                        <RotateCw className="h-4 w-4 mr-1" /> Change
                       </Button>
                     </div>
                   </div>
-                  
-                  <div 
-                    ref={canvasRef}
-                    className="relative bg-gray-50 rounded-lg overflow-hidden flex items-center justify-center"
-                  >
-                    {activeTab === 'businessCard' && (
-                      <div className="relative w-full h-64 p-8 flex items-center justify-center">
-                        <div className="w-96 h-48 rounded bg-white shadow-md flex items-center justify-center">
-                          {design ? (
-                            <img
-                              src={design}
-                              alt="Business Card Design"
-                              className="max-w-full max-h-full object-contain"
-                            />
-                          ) : (
-                            <div className="text-center text-muted-foreground">
-                              <p>Your business card preview</p>
-                              <p className="text-sm">Choose a template or upload your design</p>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    )}
-                    
-                    {activeTab === 'flyer' && (
-                      <div className="flex items-center justify-center h-64 text-muted-foreground">
-                        <p>Flyer preview would appear here</p>
-                      </div>
-                    )}
-                    
-                    {activeTab === 'brochure' && (
-                      <div className="flex items-center justify-center h-64 text-muted-foreground">
-                        <p>Brochure preview would appear here</p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-              
-              {/* Product Details */}
-              <div className="md:col-span-12 lg:col-span-3">
-                <div className="bg-white rounded-xl border shadow-sm p-6">
-                  <h3 className="text-lg font-semibold mb-4">Order Details</h3>
-                  
-                  <div className="space-y-4">
-                    <div>
-                      <h4 className="font-medium">Premium Business Cards</h4>
-                      <p className="text-sm text-muted-foreground">350gsm, matte finish</p>
-                      <p className="text-lg font-bold mt-1">$29.99 / 100 cards</p>
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium">Quantity</label>
-                      <select className="w-full px-3 py-2 border rounded-md text-sm">
-                        <option>100 cards</option>
-                        <option>250 cards</option>
-                        <option>500 cards</option>
-                        <option>1000 cards</option>
-                      </select>
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium">Paper Type</label>
-                      <select className="w-full px-3 py-2 border rounded-md text-sm">
-                        <option>Standard (350gsm)</option>
-                        <option>Premium (400gsm)</option>
-                        <option>Luxury (450gsm)</option>
-                      </select>
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium">Finish</label>
-                      <select className="w-full px-3 py-2 border rounded-md text-sm">
-                        <option>Matte</option>
-                        <option>Gloss</option>
-                        <option>Silk</option>
-                      </select>
-                    </div>
-                    
-                    <Button className="w-full mt-4">
-                      Add to Cart
-                    </Button>
-                    
-                    <p className="text-xs text-muted-foreground text-center mt-2">
-                      Free shipping on orders over $50
+                ) : (
+                  <div className="flex flex-col items-center">
+                    <Upload className="h-12 w-12 text-gray-400 mb-4" />
+                    <p className="text-sm text-gray-500 mb-2">
+                      Drag and drop your files here or click to browse
                     </p>
+                    <Button 
+                      variant="secondary" 
+                      onClick={() => document.getElementById('file-upload')?.click()}
+                    >
+                      <PlusCircle className="h-4 w-4 mr-2" /> Select Files
+                    </Button>
                   </div>
+                )}
+                <input
+                  id="file-upload"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  className="hidden"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="design-name">Design Name</Label>
+                <Input
+                  id="design-name"
+                  value={designName}
+                  onChange={(e) => setDesignName(e.target.value)}
+                  placeholder="Enter a name for your design"
+                />
+              </div>
+            </div>
+          </CardContent>
+          <CardFooter>
+            <Button 
+              className="w-full" 
+              onClick={handleUpload} 
+              disabled={files.length === 0 || !designName || uploading}
+            >
+              {uploading ? (
+                <>
+                  <RotateCw className="h-4 w-4 mr-2 animate-spin" /> Uploading...
+                </>
+              ) : (
+                <>
+                  <Check className="h-4 w-4 mr-2" /> Upload Design
+                </>
+              )}
+            </Button>
+          </CardFooter>
+        </Card>
+        
+        <Card>
+          <CardHeader>
+            <CardTitle>Design Guidelines</CardTitle>
+            <CardDescription>
+              Tips to ensure your print design comes out perfect
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-start gap-3">
+                <ImageIcon className="h-5 w-5 text-primary mt-0.5" />
+                <div>
+                  <h3 className="font-medium">High Resolution</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Use at least 300dpi images for best print quality.
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex items-start gap-3">
+                <ImageIcon className="h-5 w-5 text-primary mt-0.5" />
+                <div>
+                  <h3 className="font-medium">File Format</h3>
+                  <p className="text-sm text-muted-foreground">
+                    We recommend PNG or JPEG files for photos and SVG for graphics.
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex items-start gap-3">
+                <ImageIcon className="h-5 w-5 text-primary mt-0.5" />
+                <div>
+                  <h3 className="font-medium">Colors</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Use RGB color mode for digital printing.
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex items-start gap-3">
+                <ImageIcon className="h-5 w-5 text-primary mt-0.5" />
+                <div>
+                  <h3 className="font-medium">Size</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Ensure your image is sized correctly for the product.
+                  </p>
                 </div>
               </div>
             </div>
-          </div>
-        </section>
-      </main>
-      <Footer />
+          </CardContent>
+        </Card>
+      </div>
+      
+      <div className="mt-8">
+        <Card>
+          <CardHeader>
+            <CardTitle>Our Printing Process</CardTitle>
+            <CardDescription>
+              How we bring your designs to life
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="p-4 bg-muted rounded-lg text-center">
+                <div className="h-12 w-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <Upload className="h-6 w-6 text-primary" />
+                </div>
+                <h3 className="font-medium mb-1">Upload</h3>
+                <p className="text-sm text-muted-foreground">
+                  Submit your design files through our system
+                </p>
+              </div>
+              
+              <div className="p-4 bg-muted rounded-lg text-center">
+                <div className="h-12 w-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <ImageIcon className="h-6 w-6 text-primary" />
+                </div>
+                <h3 className="font-medium mb-1">Process</h3>
+                <p className="text-sm text-muted-foreground">
+                  Our team optimizes your design for printing
+                </p>
+              </div>
+              
+              <div className="p-4 bg-muted rounded-lg text-center">
+                <div className="h-12 w-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <Check className="h-6 w-6 text-primary" />
+                </div>
+                <h3 className="font-medium mb-1">Print</h3>
+                <p className="text-sm text-muted-foreground">
+                  High-quality printing on your chosen products
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 };
 
-export default PrintDesigner;
+export default PrintDesignPage;

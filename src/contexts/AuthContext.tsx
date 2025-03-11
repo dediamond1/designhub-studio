@@ -44,15 +44,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const checkAuth = async () => {
       try {
         setLoading(true);
-        const token = localStorage.getItem('auth_token');
+        const sessionUser = sessionStorage.getItem('user');
         
-        if (token) {
-          const currentUser = await getCurrentUser(token);
-          setUser(currentUser);
+        if (sessionUser) {
+          setUser(JSON.parse(sessionUser));
         }
       } catch (error) {
         console.error('Authentication check failed:', error);
-        localStorage.removeItem('auth_token');
+        sessionStorage.removeItem('user');
       } finally {
         setLoading(false);
       }
@@ -69,8 +68,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (result.user) {
         setUser(result.user);
         
-        // Store token in localStorage
-        localStorage.setItem('auth_token', result.token);
+        // Store user in sessionStorage
+        sessionStorage.setItem('user', JSON.stringify(result.user));
         
         toast({
           title: 'Login successful',
@@ -101,8 +100,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (result.user) {
         setUser(result.user);
         
-        // Store token in localStorage
-        localStorage.setItem('auth_token', result.token);
+        // Store user in sessionStorage
+        sessionStorage.setItem('user', JSON.stringify(result.user));
         
         toast({
           title: 'Registration successful',
@@ -125,7 +124,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem('auth_token');
+    sessionStorage.removeItem('user');
     toast({
       title: 'Logged out',
       description: 'You have been logged out successfully.',
@@ -244,8 +243,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (result.user) {
         setUser(result.user);
         
-        // Store token in localStorage
-        localStorage.setItem('auth_token', result.token);
+        // Store user in sessionStorage
+        sessionStorage.setItem('user', JSON.stringify(result.user));
         
         toast({
           title: 'Invitation accepted',
@@ -275,6 +274,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const updatedUser = await updateUserProfile(user.id, updates);
       
       setUser(updatedUser);
+      
+      // Update user in sessionStorage
+      sessionStorage.setItem('user', JSON.stringify(updatedUser));
       
       toast({
         title: 'Profile updated',

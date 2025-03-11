@@ -1,19 +1,14 @@
 
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
 import { ObjectId } from 'mongodb';
 import { dbConnect } from '@/lib/db';
 import { sendEmail } from './emailService';
-
-// Define JWT configuration
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-me-in-production';
-const JWT_EXPIRES_IN = '7d';
-const RESET_TOKEN_EXPIRES_IN = '1h';
+import * as crypto from 'crypto';
 
 // Define User interface
 export interface User {
   _id?: string | ObjectId;
-  id?: string;
+  id: string;
   email: string;
   password?: string;
   name: string;
@@ -29,11 +24,12 @@ export interface User {
 
 export interface AuthResponse {
   user: Omit<User, 'password' | 'resetPasswordToken' | 'resetPasswordExpires' | 'verificationToken'>;
-  token: string;
+  success: boolean;
+  message?: string;
 }
 
 // User sanitization (remove sensitive fields)
-const sanitizeUser = (user: User): Omit<User, 'password' | 'resetPasswordToken' | 'resetPasswordExpires' | 'verificationToken'> => {
+const sanitizeUser = (user: any): Omit<User, 'password' | 'resetPasswordToken' | 'resetPasswordExpires' | 'verificationToken'> => {
   const { password, resetPasswordToken, resetPasswordExpires, verificationToken, ...sanitizedUser } = user;
   
   // Convert MongoDB ObjectId to string
@@ -41,9 +37,16 @@ const sanitizeUser = (user: User): Omit<User, 'password' | 'resetPasswordToken' 
     sanitizedUser.id = sanitizedUser._id.toString();
   } else if (typeof sanitizedUser._id === 'string') {
     sanitizedUser.id = sanitizedUser._id;
+  } else if (sanitizedUser._id) {
+    sanitizedUser.id = sanitizedUser._id.toString();
   }
   
   return sanitizedUser;
+};
+
+// Generate a random token
+const generateToken = () => {
+  return crypto.randomBytes(32).toString('hex');
 };
 
 // Register a new user
@@ -58,14 +61,14 @@ export const registerUser = async (name: string, email: string, password: string
   }
   
   // Generate verification token
-  const verificationToken = jwt.sign({ email }, JWT_SECRET, { expiresIn: '24h' });
+  const verificationToken = generateToken();
   
   // Hash password
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
   
   // Create new user
-  const newUser: User = {
+  const newUser = {
     email,
     password: hashedPassword,
     name,
@@ -77,20 +80,16 @@ export const registerUser = async (name: string, email: string, password: string
   };
   
   const result = await usersCollection.insertOne(newUser);
-  newUser._id = result.insertedId;
-  newUser.id = result.insertedId.toString();
-  
-  // Generate JWT
-  const token = jwt.sign(
-    { id: newUser.id, email: newUser.email, role: newUser.role },
-    JWT_SECRET,
-    { expiresIn: JWT_EXPIRES_IN }
-  );
+  const insertedUser = {
+    ...newUser,
+    _id: result.insertedId,
+    id: result.insertedId.toString()
+  };
   
   // Send verification email
   await sendVerificationEmail(email, name, verificationToken);
   
-  return { user: sanitizeUser(newUser), token };
+  return { user: sanitizeUser(insertedUser), success: true };
 };
 
 // Login user
@@ -115,33 +114,31 @@ export const loginUser = async (email: string, password: string): Promise<AuthRe
     { _id: user._id },
     { $set: { lastLogin: new Date(), updatedAt: new Date() } }
   );
+
+  // Ensure user has an id field
+  const userWithId = {
+    ...user,
+    id: user._id.toString()
+  };
   
-  // Generate JWT
-  const token = jwt.sign(
-    { id: user._id.toString(), email: user.email, role: user.role },
-    JWT_SECRET,
-    { expiresIn: JWT_EXPIRES_IN }
-  );
-  
-  return { user: sanitizeUser(user), token };
+  return { user: sanitizeUser(userWithId), success: true };
 };
 
 // Get current user
-export const getCurrentUser = async (token: string): Promise<User | null> => {
+export const getCurrentUser = async (userId: string): Promise<User | null> => {
   try {
-    // Verify token
-    const decoded = jwt.verify(token, JWT_SECRET) as { id: string; email: string; role: string };
-    
-    // Get user from database
     const { db } = await dbConnect();
     const usersCollection = db.collection('users');
     
-    const user = await usersCollection.findOne({ _id: new ObjectId(decoded.id) });
+    const user = await usersCollection.findOne({ _id: new ObjectId(userId) });
     if (!user) {
       return null;
     }
     
-    return sanitizeUser(user);
+    return sanitizeUser({
+      ...user,
+      id: user._id.toString()
+    });
   } catch (error) {
     return null;
   }
@@ -160,7 +157,7 @@ export const requestPasswordReset = async (email: string): Promise<boolean> => {
   }
   
   // Generate reset token
-  const resetToken = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: RESET_TOKEN_EXPIRES_IN });
+  const resetToken = generateToken();
   
   // Update user with reset token and expiry
   const resetPasswordExpires = new Date();
@@ -226,12 +223,8 @@ export const verifyEmail = async (token: string): Promise<boolean> => {
   const usersCollection = db.collection('users');
   
   try {
-    // Verify token
-    const decoded = jwt.verify(token, JWT_SECRET) as { email: string };
-    
-    // Find user by email and verification token
+    // Find user by verification token
     const user = await usersCollection.findOne({
-      email: decoded.email,
       verificationToken: token
     });
     
@@ -276,7 +269,7 @@ export const inviteTeamMember = async (email: string, name: string, role: 'admin
   }
   
   // Generate invite token
-  const inviteToken = jwt.sign({ email, role }, JWT_SECRET, { expiresIn: '7d' });
+  const inviteToken = generateToken();
   
   // Store invitation
   await invitesCollection.insertOne({
@@ -301,9 +294,6 @@ export const acceptInvitation = async (token: string, password: string): Promise
   const invitesCollection = db.collection('invites');
   
   try {
-    // Verify token
-    const decoded = jwt.verify(token, JWT_SECRET) as { email: string; role: 'admin' | 'team-member' };
-    
     // Find invitation
     const invitation = await invitesCollection.findOne({ token });
     if (!invitation) {
@@ -315,31 +305,27 @@ export const acceptInvitation = async (token: string, password: string): Promise
     const hashedPassword = await bcrypt.hash(password, salt);
     
     // Create user
-    const newUser: User = {
-      email: decoded.email,
+    const newUser = {
+      email: invitation.email,
       password: hashedPassword,
       name: invitation.name,
-      role: decoded.role,
+      role: invitation.role,
       verified: true,
       createdAt: new Date(),
       updatedAt: new Date()
     };
     
     const result = await usersCollection.insertOne(newUser);
-    newUser._id = result.insertedId;
-    newUser.id = result.insertedId.toString();
+    const insertedUser = {
+      ...newUser,
+      _id: result.insertedId,
+      id: result.insertedId.toString()
+    };
     
     // Delete invitation
     await invitesCollection.deleteOne({ token });
     
-    // Generate JWT
-    const authToken = jwt.sign(
-      { id: newUser.id, email: newUser.email, role: newUser.role },
-      JWT_SECRET,
-      { expiresIn: JWT_EXPIRES_IN }
-    );
-    
-    return { user: sanitizeUser(newUser), token: authToken };
+    return { user: sanitizeUser(insertedUser), success: true };
   } catch (error) {
     throw new Error('Invalid or expired invitation token');
   }
@@ -366,7 +352,10 @@ export const updateUserProfile = async (userId: string, updates: Partial<User>):
     throw new Error('User not found');
   }
   
-  return sanitizeUser(updatedUser);
+  return sanitizeUser({
+    ...updatedUser,
+    id: updatedUser._id.toString()
+  });
 };
 
 // Admin: update user role
@@ -391,7 +380,10 @@ export const updateUserRole = async (adminId: string, userId: string, newRole: '
     throw new Error('User not found');
   }
   
-  return sanitizeUser(updatedUser);
+  return sanitizeUser({
+    ...updatedUser,
+    id: updatedUser._id.toString()
+  });
 };
 
 // Admin: get all users
@@ -408,7 +400,10 @@ export const getAllUsers = async (adminId: string): Promise<User[]> => {
   const users = await usersCollection.find().toArray();
   
   // Sanitize all users
-  return users.map(sanitizeUser);
+  return users.map(user => sanitizeUser({
+    ...user,
+    id: user._id.toString()
+  }));
 };
 
 // Admin: delete user
