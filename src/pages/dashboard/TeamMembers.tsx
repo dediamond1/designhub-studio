@@ -1,466 +1,350 @@
 
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
-import { useToast } from '@/hooks/use-toast';
-import { User } from '@/services/authService';
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardHeader, 
-  CardTitle 
-} from '@/components/ui/card';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { getUsers, updateRole, removeUser, invite } from '@/api/auth';
-import { Loader2, PlusCircle, UserPlus, UserX, UserCheck, UserCog } from 'lucide-react';
-import DashboardHeader from '@/components/dashboard/DashboardHeader';
-import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { useToast } from '@/hooks/use-toast';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
+import { auth } from '@/lib/auth';
+import { invite, getUsers, updateRole, removeUser } from '@/api/auth';
 
-interface TeamMembersPageProps {}
+// Define the form schema for inviting a team member
+const inviteSchema = z.object({
+  name: z.string().min(2, 'Name must be at least 2 characters'),
+  email: z.string().email('Please enter a valid email'),
+  role: z.enum(['admin', 'team-member'], {
+    required_error: 'Please select a role',
+  }),
+});
 
-const TeamMembersPage: React.FC<TeamMembersPageProps> = () => {
-  const { user } = useAuth();
+type InviteFormValues = z.infer<typeof inviteSchema>;
+
+// Define the User type
+type User = {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  lastLogin?: Date;
+};
+
+const TeamMembers = () => {
   const { toast } = useToast();
+  const [isInviteOpen, setIsInviteOpen] = useState(false);
+  const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
+  const [userToDelete, setUserToDelete] = useState<string | null>(null);
   const [teamMembers, setTeamMembers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
-  const [inviteOpen, setInviteOpen] = useState(false);
-  const [roleDialogOpen, setRoleDialogOpen] = useState(false);
-  const [selectedMember, setSelectedMember] = useState<User | null>(null);
-  const [newRole, setNewRole] = useState<'admin' | 'team-member'>('team-member');
+  const [error, setError] = useState<string | null>(null);
+  const [selectedRole, setSelectedRole] = useState<'admin' | 'team-member'>('team-member');
   
-  // Invite form state
-  const [inviteEmail, setInviteEmail] = useState('');
-  const [inviteName, setInviteName] = useState('');
-  const [inviteRole, setInviteRole] = useState<'admin' | 'team-member'>('team-member');
-  const [inviteLoading, setInviteLoading] = useState(false);
+  const form = useForm<InviteFormValues>({
+    resolver: zodResolver(inviteSchema),
+    defaultValues: {
+      name: '',
+      email: '',
+      role: 'team-member',
+    },
+  });
   
-  // Role update state
-  const [updateLoading, setUpdateLoading] = useState(false);
-  
-  // Delete state
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [deleteLoading, setDeleteLoading] = useState(false);
+  // Fetch team members
+  const fetchTeamMembers = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const currentUser = auth.getCurrentUser();
+      if (!currentUser) {
+        throw new Error('You must be logged in to view team members');
+      }
+      
+      const users = await getUsers(currentUser.id);
+      setTeamMembers(users);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to load team members';
+      setError(errorMessage);
+      toast({
+        title: 'Error',
+        description: errorMessage,
+        variant: 'destructive',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
   
   useEffect(() => {
-    const fetchTeamMembers = async () => {
-      try {
-        setLoading(true);
-        if (user?.id) {
-          const result = await getUsers(user.id);
-          setTeamMembers(result);
-        }
-      } catch (error) {
-        console.error('Error fetching team members:', error);
-        toast({
-          title: 'Error',
-          description: 'Failed to load team members. Please try again.',
-          variant: 'destructive',
-        });
-      } finally {
-        setLoading(false);
-      }
-    };
-    
     fetchTeamMembers();
-  }, [user, toast]);
+  }, []);
   
-  const handleInvite = async () => {
-    if (!inviteEmail || !inviteName || !inviteRole) {
-      toast({
-        title: 'Missing information',
-        description: 'Please fill out all fields to send an invitation.',
-        variant: 'destructive',
-      });
-      return;
-    }
-    
+  // Handle invite submission
+  const onInviteSubmit = async (values: InviteFormValues) => {
     try {
-      setInviteLoading(true);
-      
-      if (user?.id) {
-        await invite(user.id, inviteEmail, inviteName, inviteRole);
-        
-        toast({
-          title: 'Invitation sent',
-          description: `Successfully sent invitation to ${inviteEmail}`,
-        });
-        
-        // Reset form
-        setInviteEmail('');
-        setInviteName('');
-        setInviteRole('team-member');
-        setInviteOpen(false);
+      const currentUser = auth.getCurrentUser();
+      if (!currentUser) {
+        throw new Error('You must be logged in to invite team members');
       }
-    } catch (error) {
-      console.error('Error sending invitation:', error);
+      
+      await invite(currentUser.id, values.email, values.name, values.role);
+      
       toast({
-        title: 'Invitation failed',
-        description: error instanceof Error ? error.message : 'Failed to send invitation',
+        title: 'Invitation Sent',
+        description: `An invitation has been sent to ${values.email}`,
+      });
+      
+      setIsInviteOpen(false);
+      form.reset();
+      await fetchTeamMembers();
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to send invitation';
+      toast({
+        title: 'Error',
+        description: errorMessage,
         variant: 'destructive',
       });
-    } finally {
-      setInviteLoading(false);
     }
   };
   
-  const handleRoleUpdate = async () => {
-    if (!selectedMember || !newRole || !user?.id) return;
-    
+  // Handle role change
+  const handleRoleChange = async (userId: string, newRole: 'admin' | 'team-member' | 'user') => {
     try {
-      setUpdateLoading(true);
+      const currentUser = auth.getCurrentUser();
+      if (!currentUser) {
+        throw new Error('You must be logged in to update roles');
+      }
       
-      await updateRole(user.id, selectedMember.id, newRole);
-      
-      // Update local state
-      setTeamMembers(prev => 
-        prev.map(member => 
-          member.id === selectedMember.id 
-            ? { ...member, role: newRole } 
-            : member
-        )
-      );
+      await updateRole(currentUser.id, userId, newRole);
       
       toast({
-        title: 'Role updated',
-        description: `${selectedMember.name}'s role has been updated to ${newRole}`,
+        title: 'Role Updated',
+        description: 'User role has been updated successfully',
       });
       
-      setRoleDialogOpen(false);
-    } catch (error) {
-      console.error('Error updating role:', error);
+      await fetchTeamMembers();
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to update role';
       toast({
-        title: 'Update failed',
-        description: error instanceof Error ? error.message : 'Failed to update user role',
+        title: 'Error',
+        description: errorMessage,
         variant: 'destructive',
       });
-    } finally {
-      setUpdateLoading(false);
     }
   };
   
-  const handleDelete = async () => {
-    if (!selectedMember || !user?.id) return;
-    
+  // Handle user deletion
+  const handleDeleteUser = async () => {
     try {
-      setDeleteLoading(true);
+      if (!userToDelete) return;
       
-      await removeUser(user.id, selectedMember.id);
+      const currentUser = auth.getCurrentUser();
+      if (!currentUser) {
+        throw new Error('You must be logged in to delete users');
+      }
       
-      // Update local state
-      setTeamMembers(prev => prev.filter(member => member.id !== selectedMember.id));
+      await removeUser(currentUser.id, userToDelete);
       
       toast({
-        title: 'User removed',
-        description: `${selectedMember.name} has been removed from the team`,
+        title: 'User Deleted',
+        description: 'User has been removed from the team',
       });
       
-      setDeleteDialogOpen(false);
-    } catch (error) {
-      console.error('Error deleting user:', error);
+      setIsConfirmDeleteOpen(false);
+      setUserToDelete(null);
+      await fetchTeamMembers();
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to delete user';
       toast({
-        title: 'Deletion failed',
-        description: error instanceof Error ? error.message : 'Failed to remove user',
+        title: 'Error',
+        description: errorMessage,
         variant: 'destructive',
       });
-    } finally {
-      setDeleteLoading(false);
     }
   };
   
-  const openRoleDialog = (member: User) => {
-    setSelectedMember(member);
-    setNewRole(member.role);
-    setRoleDialogOpen(true);
+  // Opening delete confirmation dialog
+  const confirmDelete = (userId: string) => {
+    setUserToDelete(userId);
+    setIsConfirmDeleteOpen(true);
   };
-  
-  const openDeleteDialog = (member: User) => {
-    setSelectedMember(member);
-    setDeleteDialogOpen(true);
-  };
-  
-  if (!user || user.role !== 'admin') {
-    return (
-      <div className="min-h-screen flex">
-        <DashboardSidebar />
-        <div className="flex-1">
-          <DashboardHeader />
-          <main className="p-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Access Denied</CardTitle>
-                <CardDescription>
-                  You don't have permission to access this page.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p>This page is only accessible to administrators.</p>
-              </CardContent>
-            </Card>
-          </main>
-        </div>
-      </div>
-    );
-  }
   
   return (
-    <div className="min-h-screen flex">
-      <DashboardSidebar />
-      <div className="flex-1">
-        <DashboardHeader />
-        <main className="p-6">
-          <div className="mb-6 flex justify-between items-center">
-            <div>
-              <h1 className="text-2xl font-bold">Team Management</h1>
-              <p className="text-muted-foreground">
-                Manage your team members and their roles
-              </p>
-            </div>
-            <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
-              <DialogTrigger asChild>
-                <Button>
-                  <UserPlus className="mr-2 h-4 w-4" /> Invite Team Member
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Invite a Team Member</DialogTitle>
-                  <DialogDescription>
-                    Send an invitation to join your team. They'll receive an email with instructions.
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="space-y-4 py-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="name">Name</Label>
-                    <Input
-                      id="name"
-                      placeholder="John Doe"
-                      value={inviteName}
-                      onChange={(e) => setInviteName(e.target.value)}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="john@example.com"
-                      value={inviteEmail}
-                      onChange={(e) => setInviteEmail(e.target.value)}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="role">Role</Label>
-                    <Select 
-                      value={inviteRole} 
-                      onValueChange={(value) => setInviteRole(value as 'admin' | 'team-member')}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a role" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="admin">Administrator</SelectItem>
-                        <SelectItem value="team-member">Team Member</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold tracking-tight">Team Members</h1>
+        <Dialog open={isInviteOpen} onOpenChange={setIsInviteOpen}>
+          <DialogTrigger asChild>
+            <Button>Invite Team Member</Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Invite Team Member</DialogTitle>
+              <DialogDescription>
+                Send an invitation to join your team. They'll receive an email with instructions.
+              </DialogDescription>
+            </DialogHeader>
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onInviteSubmit)} className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="John Doe" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl>
+                        <Input placeholder="john.doe@example.com" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="role"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Role</FormLabel>
+                      <Select 
+                        onValueChange={(value: 'admin' | 'team-member') => {
+                          field.onChange(value);
+                          setSelectedRole(value);
+                        }} 
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a role" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="admin">Admin</SelectItem>
+                          <SelectItem value="team-member">Team Member</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 <DialogFooter>
-                  <Button
-                    onClick={handleInvite}
-                    disabled={inviteLoading || !inviteEmail || !inviteName}
-                  >
-                    {inviteLoading ? (
-                      <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Sending...
-                      </>
-                    ) : (
-                      <>
-                        <PlusCircle className="mr-2 h-4 w-4" />
-                        Send Invitation
-                      </>
-                    )}
-                  </Button>
+                  <Button type="submit">Send Invitation</Button>
                 </DialogFooter>
-              </DialogContent>
-            </Dialog>
-          </div>
-          
-          <Card>
-            <CardHeader>
-              <CardTitle>Team Members</CardTitle>
-              <CardDescription>
-                View and manage your team members
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              {loading ? (
-                <div className="flex justify-center py-8">
-                  <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-                </div>
-              ) : teamMembers.length === 0 ? (
-                <div className="text-center py-8">
-                  <UserX className="h-12 w-12 mx-auto text-muted-foreground" />
-                  <p className="mt-4 text-lg font-medium">No team members yet</p>
-                  <p className="text-muted-foreground">
-                    Use the "Invite Team Member" button to add someone to your team
-                  </p>
-                </div>
-              ) : (
-                <div className="divide-y">
-                  {teamMembers.map((teamMember) => (
-                    <div key={teamMember.id} className="py-4 flex items-center justify-between">
-                      <div className="flex items-center">
-                        <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
-                          <span className="text-primary font-medium">
-                            {teamMember.name.charAt(0)}
-                          </span>
-                        </div>
-                        <div className="ml-4">
-                          <p className="font-medium">{teamMember.name}</p>
-                          <p className="text-sm text-muted-foreground">{teamMember.email}</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className="bg-primary/10 text-primary text-xs py-1 px-2 rounded-full">
-                          {teamMember.role === 'admin' ? 'Administrator' : 'Team Member'}
-                        </div>
-                        {teamMember.id !== user?.id && (
-                          <div className="flex gap-2">
-                            <Button 
-                              variant="outline" 
-                              size="sm"
-                              onClick={() => openRoleDialog(teamMember)}
-                            >
-                              <UserCog className="h-4 w-4" />
-                              <span className="sr-only">Change Role</span>
-                            </Button>
-                            <Button 
-                              variant="outline"
-                              size="sm"
-                              onClick={() => openDeleteDialog(teamMember)}
-                            >
-                              <UserX className="h-4 w-4" />
-                              <span className="sr-only">Remove</span>
-                            </Button>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </CardContent>
-          </Card>
-          
-          {/* Role Update Dialog */}
-          <Dialog open={roleDialogOpen} onOpenChange={setRoleDialogOpen}>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Change User Role</DialogTitle>
-                <DialogDescription>
-                  Update the role for {selectedMember?.name}
-                </DialogDescription>
-              </DialogHeader>
-              <div className="py-4">
-                <div className="space-y-2">
-                  <Label htmlFor="new-role">Select a new role</Label>
-                  <Select 
-                    value={newRole} 
-                    onValueChange={(value) => setNewRole(value as 'admin' | 'team-member')}
-                  >
-                    <SelectTrigger id="new-role">
-                      <SelectValue placeholder="Select a role" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="admin">Administrator</SelectItem>
-                      <SelectItem value="team-member">Team Member</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-              <DialogFooter>
-                <Button variant="outline" onClick={() => setRoleDialogOpen(false)}>
-                  Cancel
-                </Button>
-                <Button 
-                  onClick={handleRoleUpdate}
-                  disabled={updateLoading || !selectedMember || selectedMember.role === newRole}
-                >
-                  {updateLoading ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Updating...
-                    </>
-                  ) : (
-                    'Update Role'
-                  )}
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-          
-          {/* Delete Confirmation Dialog */}
-          <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Remove Team Member</AlertDialogTitle>
-                <AlertDialogDescription>
-                  Are you sure you want to remove {selectedMember?.name} from your team?
-                  This action cannot be undone.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction 
-                  onClick={handleDelete}
-                  disabled={deleteLoading}
-                >
-                  {deleteLoading ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Removing...
-                    </>
-                  ) : (
-                    'Remove'
-                  )}
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        </main>
+              </form>
+            </Form>
+          </DialogContent>
+        </Dialog>
       </div>
+      
+      <Card>
+        <CardHeader>
+          <CardTitle>Team Members</CardTitle>
+          <CardDescription>
+            Manage your team members and their access levels.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {loading ? (
+            <div className="text-center py-4">Loading team members...</div>
+          ) : error ? (
+            <div className="text-center text-red-500 py-4">{error}</div>
+          ) : teamMembers.length === 0 ? (
+            <div className="text-center py-4">No team members found.</div>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Email</TableHead>
+                  <TableHead>Role</TableHead>
+                  <TableHead>Last Login</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {teamMembers.map((member) => (
+                  <TableRow key={member.id}>
+                    <TableCell className="font-medium">{member.name}</TableCell>
+                    <TableCell>{member.email}</TableCell>
+                    <TableCell>
+                      <Select 
+                        defaultValue={member.role}
+                        onValueChange={(value) => {
+                          // Only update if the value is a valid role
+                          if (value === 'admin' || value === 'team-member' || value === 'user') {
+                            handleRoleChange(member.id, value as 'admin' | 'team-member' | 'user');
+                          }
+                        }}
+                      >
+                        <SelectTrigger className="w-[130px]">
+                          <SelectValue placeholder={member.role} />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="admin">Admin</SelectItem>
+                          <SelectItem value="team-member">Team Member</SelectItem>
+                          <SelectItem value="user">User</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </TableCell>
+                    <TableCell>
+                      {member.lastLogin 
+                        ? new Date(member.lastLogin).toLocaleDateString() 
+                        : 'Never'}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <Button 
+                        variant="ghost" 
+                        onClick={() => confirmDelete(member.id)}
+                        className="text-red-500 hover:text-red-700"
+                      >
+                        Delete
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
+        </CardContent>
+      </Card>
+      
+      {/* Delete confirmation dialog */}
+      <AlertDialog open={isConfirmDeleteOpen} onOpenChange={setIsConfirmDeleteOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently remove the user
+              from your team and revoke their access.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setUserToDelete(null)}>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeleteUser} className="bg-red-500 hover:bg-red-700">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
 
-export default TeamMembersPage;
+export default TeamMembers;

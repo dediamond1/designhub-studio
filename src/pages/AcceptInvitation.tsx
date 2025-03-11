@@ -4,12 +4,12 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useAuth } from '@/contexts/AuthContext';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { useToast } from '@/hooks/use-toast';
+import { acceptTeamInvitation } from '@/api/auth';
 
 const formSchema = z.object({
   password: z.string()
@@ -27,7 +27,7 @@ const AcceptInvitation = () => {
   const [searchParams] = useSearchParams();
   const token = searchParams.get('token');
   const navigate = useNavigate();
-  const { acceptInvitation } = useAuth();
+  const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
@@ -49,10 +49,26 @@ const AcceptInvitation = () => {
     setError(null);
 
     try {
-      await acceptInvitation(token, values.password);
-      // Redirect will happen in the auth context
+      const result = await acceptTeamInvitation(token, values.password);
+      
+      toast({
+        title: 'Welcome to the team!',
+        description: 'Your account has been created successfully.',
+      });
+      
+      // Store session data
+      sessionStorage.setItem('user', JSON.stringify(result.user));
+      sessionStorage.setItem('isLoggedIn', 'true');
+      
+      // Redirect to dashboard
+      navigate('/dashboard');
     } catch (error) {
       setError(error instanceof Error ? error.message : 'An error occurred while accepting the invitation');
+      toast({
+        title: 'Error',
+        description: error instanceof Error ? error.message : 'Failed to accept invitation',
+        variant: 'destructive',
+      });
     } finally {
       setLoading(false);
     }

@@ -1,8 +1,6 @@
 
-import bcrypt from 'bcryptjs';
-import { ObjectId } from 'mongodb';
 import { dbConnect } from '@/lib/db';
-import { sendEmail } from './emailService';
+import { ObjectId } from 'mongodb';
 import * as crypto from 'crypto';
 
 // Define User interface
@@ -28,6 +26,20 @@ export interface AuthResponse {
   message?: string;
 }
 
+// Mock password hashing functions
+const hashPassword = async (password: string): Promise<string> => {
+  // In browser environment, we can't use bcrypt
+  // This is a simplified hash for demonstration purposes only
+  // In a real application, NEVER use this approach!
+  return crypto.createHash('sha256').update(password).digest('hex');
+};
+
+const comparePassword = async (plainPassword: string, hashedPassword: string): Promise<boolean> => {
+  // Again, this is only for demonstration
+  const hashedPlainPassword = crypto.createHash('sha256').update(plainPassword).digest('hex');
+  return hashedPlainPassword === hashedPassword;
+};
+
 // User sanitization (remove sensitive fields)
 const sanitizeUser = (user: any): Omit<User, 'password' | 'resetPasswordToken' | 'resetPasswordExpires' | 'verificationToken'> => {
   const { password, resetPasswordToken, resetPasswordExpires, verificationToken, ...sanitizedUser } = user;
@@ -45,83 +57,92 @@ const sanitizeUser = (user: any): Omit<User, 'password' | 'resetPasswordToken' |
 };
 
 // Generate a random token
-const generateToken = () => {
-  return crypto.randomBytes(32).toString('hex');
+const generateToken = (): string => {
+  return crypto.randomBytes(16).toString('hex');
 };
 
 // Register a new user
 export const registerUser = async (name: string, email: string, password: string, role: 'admin' | 'user' | 'team-member' = 'user'): Promise<AuthResponse> => {
-  const { db } = await dbConnect();
-  const usersCollection = db.collection('users');
-  
-  // Check if email already exists
-  const existingUser = await usersCollection.findOne({ email });
-  if (existingUser) {
-    throw new Error('Email already in use');
+  try {
+    const { db } = await dbConnect();
+    const usersCollection = db.collection('users');
+    
+    // Check if email already exists
+    const existingUser = await usersCollection.findOne({ email });
+    if (existingUser) {
+      throw new Error('Email already in use');
+    }
+    
+    // Generate verification token
+    const verificationToken = generateToken();
+    
+    // Hash password
+    const hashedPassword = await hashPassword(password);
+    
+    // Create new user
+    const newUser = {
+      email,
+      password: hashedPassword,
+      name,
+      role,
+      verificationToken,
+      verified: false,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+    
+    const result = await usersCollection.insertOne(newUser);
+    const insertedUser = {
+      ...newUser,
+      _id: result.insertedId,
+      id: result.insertedId.toString()
+    };
+    
+    // Send verification email
+    await sendVerificationEmail(email, name, verificationToken);
+    
+    return { user: sanitizeUser(insertedUser), success: true };
+  } catch (error) {
+    console.error("Registration error:", error);
+    throw error;
   }
-  
-  // Generate verification token
-  const verificationToken = generateToken();
-  
-  // Hash password
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(password, salt);
-  
-  // Create new user
-  const newUser = {
-    email,
-    password: hashedPassword,
-    name,
-    role,
-    verificationToken,
-    verified: false,
-    createdAt: new Date(),
-    updatedAt: new Date()
-  };
-  
-  const result = await usersCollection.insertOne(newUser);
-  const insertedUser = {
-    ...newUser,
-    _id: result.insertedId,
-    id: result.insertedId.toString()
-  };
-  
-  // Send verification email
-  await sendVerificationEmail(email, name, verificationToken);
-  
-  return { user: sanitizeUser(insertedUser), success: true };
 };
 
 // Login user
 export const loginUser = async (email: string, password: string): Promise<AuthResponse> => {
-  const { db } = await dbConnect();
-  const usersCollection = db.collection('users');
-  
-  // Find user by email
-  const user = await usersCollection.findOne({ email });
-  if (!user) {
-    throw new Error('Invalid credentials');
-  }
-  
-  // Validate password
-  const isPasswordValid = await bcrypt.compare(password, user.password as string);
-  if (!isPasswordValid) {
-    throw new Error('Invalid credentials');
-  }
-  
-  // Update last login
-  await usersCollection.updateOne(
-    { _id: user._id },
-    { $set: { lastLogin: new Date(), updatedAt: new Date() } }
-  );
+  try {
+    const { db } = await dbConnect();
+    const usersCollection = db.collection('users');
+    
+    // Find user by email
+    const user = await usersCollection.findOne({ email });
+    if (!user) {
+      throw new Error('Invalid credentials');
+    }
+    
+    // Validate password
+    const isPasswordValid = await comparePassword(password, user.password as string);
+    if (!isPasswordValid) {
+      throw new Error('Invalid credentials');
+    }
+    
+    // Update last login
+    await usersCollection.updateOne(
+      { _id: user._id },
+      { $set: { lastLogin: new Date(), updatedAt: new Date() } }
+    );
 
-  // Ensure user has an id field
-  const userWithId = {
-    ...user,
-    id: user._id.toString()
-  };
-  
-  return { user: sanitizeUser(userWithId), success: true };
+    // Ensure user has an id field
+    const userWithId = {
+      ...user,
+      id: user._id.toString()
+    };
+    
+    return { user: sanitizeUser(userWithId), success: true };
+  } catch (error) {
+    console.error("Login error:", error);
+    throw error;
+  }
 };
 
 // Get current user
@@ -140,89 +161,99 @@ export const getCurrentUser = async (userId: string): Promise<User | null> => {
       id: user._id.toString()
     });
   } catch (error) {
+    console.error("Get user error:", error);
     return null;
   }
 };
 
 // Request password reset
 export const requestPasswordReset = async (email: string): Promise<boolean> => {
-  const { db } = await dbConnect();
-  const usersCollection = db.collection('users');
-  
-  // Find user by email
-  const user = await usersCollection.findOne({ email });
-  if (!user) {
-    // Don't reveal that email doesn't exist
-    return false;
-  }
-  
-  // Generate reset token
-  const resetToken = generateToken();
-  
-  // Update user with reset token and expiry
-  const resetPasswordExpires = new Date();
-  resetPasswordExpires.setHours(resetPasswordExpires.getHours() + 1); // 1 hour expiry
-  
-  await usersCollection.updateOne(
-    { _id: user._id },
-    { 
-      $set: { 
-        resetPasswordToken: resetToken, 
-        resetPasswordExpires, 
-        updatedAt: new Date() 
-      } 
+  try {
+    const { db } = await dbConnect();
+    const usersCollection = db.collection('users');
+    
+    // Find user by email
+    const user = await usersCollection.findOne({ email });
+    if (!user) {
+      // Don't reveal that email doesn't exist
+      return false;
     }
-  );
-  
-  // Send password reset email
-  await sendPasswordResetEmail(email, user.name, resetToken);
-  
-  return true;
+    
+    // Generate reset token
+    const resetToken = generateToken();
+    
+    // Update user with reset token and expiry
+    const resetPasswordExpires = new Date();
+    resetPasswordExpires.setHours(resetPasswordExpires.getHours() + 1); // 1 hour expiry
+    
+    await usersCollection.updateOne(
+      { _id: user._id },
+      { 
+        $set: { 
+          resetPasswordToken: resetToken, 
+          resetPasswordExpires, 
+          updatedAt: new Date() 
+        } 
+      }
+    );
+    
+    // Send password reset email
+    await sendPasswordResetEmail(email, user.name, resetToken);
+    
+    return true;
+  } catch (error) {
+    console.error("Request password reset error:", error);
+    throw error;
+  }
 };
 
 // Reset password
 export const resetPassword = async (token: string, newPassword: string): Promise<boolean> => {
-  const { db } = await dbConnect();
-  const usersCollection = db.collection('users');
-  
-  // Find user by reset token and check expiry
-  const user = await usersCollection.findOne({
-    resetPasswordToken: token,
-    resetPasswordExpires: { $gt: new Date() }
-  });
-  
-  if (!user) {
-    throw new Error('Invalid or expired reset token');
-  }
-  
-  // Hash new password
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(newPassword, salt);
-  
-  // Update user with new password and clear reset token
-  await usersCollection.updateOne(
-    { _id: user._id },
-    { 
-      $set: { 
-        password: hashedPassword,
-        updatedAt: new Date()
-      },
-      $unset: { 
-        resetPasswordToken: "",
-        resetPasswordExpires: ""
-      }
+  try {
+    const { db } = await dbConnect();
+    const usersCollection = db.collection('users');
+    
+    // Find user by reset token and check expiry
+    const user = await usersCollection.findOne({
+      resetPasswordToken: token,
+      resetPasswordExpires: { $gt: new Date() }
+    });
+    
+    if (!user) {
+      throw new Error('Invalid or expired reset token');
     }
-  );
-  
-  return true;
+    
+    // Hash new password
+    const hashedPassword = await hashPassword(newPassword);
+    
+    // Update user with new password and clear reset token
+    await usersCollection.updateOne(
+      { _id: user._id },
+      { 
+        $set: { 
+          password: hashedPassword,
+          updatedAt: new Date()
+        },
+        $unset: { 
+          resetPasswordToken: "",
+          resetPasswordExpires: ""
+        }
+      }
+    );
+    
+    return true;
+  } catch (error) {
+    console.error("Reset password error:", error);
+    throw error;
+  }
 };
 
 // Verify email
 export const verifyEmail = async (token: string): Promise<boolean> => {
-  const { db } = await dbConnect();
-  const usersCollection = db.collection('users');
-  
   try {
+    const { db } = await dbConnect();
+    const usersCollection = db.collection('users');
+    
     // Find user by verification token
     const user = await usersCollection.findOne({
       verificationToken: token
@@ -246,54 +277,60 @@ export const verifyEmail = async (token: string): Promise<boolean> => {
     
     return true;
   } catch (error) {
+    console.error("Verify email error:", error);
     throw new Error('Invalid or expired verification token');
   }
 };
 
 // Invite team member
 export const inviteTeamMember = async (email: string, name: string, role: 'admin' | 'team-member', invitedBy: string): Promise<boolean> => {
-  const { db } = await dbConnect();
-  const usersCollection = db.collection('users');
-  const invitesCollection = db.collection('invites');
-  
-  // Check if user already exists
-  const existingUser = await usersCollection.findOne({ email });
-  if (existingUser) {
-    throw new Error('User with this email already exists');
+  try {
+    const { db } = await dbConnect();
+    const usersCollection = db.collection('users');
+    const invitesCollection = db.collection('invites');
+    
+    // Check if user already exists
+    const existingUser = await usersCollection.findOne({ email });
+    if (existingUser) {
+      throw new Error('User with this email already exists');
+    }
+    
+    // Check if invite already exists
+    const existingInvite = await invitesCollection.findOne({ email });
+    if (existingInvite) {
+      throw new Error('Invitation has already been sent to this email');
+    }
+    
+    // Generate invite token
+    const inviteToken = generateToken();
+    
+    // Store invitation
+    await invitesCollection.insertOne({
+      email,
+      name,
+      role,
+      invitedBy,
+      token: inviteToken,
+      createdAt: new Date()
+    });
+    
+    // Send invitation email
+    await sendInvitationEmail(email, name, inviteToken);
+    
+    return true;
+  } catch (error) {
+    console.error("Invite team member error:", error);
+    throw error;
   }
-  
-  // Check if invite already exists
-  const existingInvite = await invitesCollection.findOne({ email });
-  if (existingInvite) {
-    throw new Error('Invitation has already been sent to this email');
-  }
-  
-  // Generate invite token
-  const inviteToken = generateToken();
-  
-  // Store invitation
-  await invitesCollection.insertOne({
-    email,
-    name,
-    role,
-    invitedBy,
-    token: inviteToken,
-    createdAt: new Date()
-  });
-  
-  // Send invitation email
-  await sendInvitationEmail(email, name, inviteToken);
-  
-  return true;
 };
 
 // Accept team invitation
 export const acceptInvitation = async (token: string, password: string): Promise<AuthResponse> => {
-  const { db } = await dbConnect();
-  const usersCollection = db.collection('users');
-  const invitesCollection = db.collection('invites');
-  
   try {
+    const { db } = await dbConnect();
+    const usersCollection = db.collection('users');
+    const invitesCollection = db.collection('invites');
+    
     // Find invitation
     const invitation = await invitesCollection.findOne({ token });
     if (!invitation) {
@@ -301,8 +338,7 @@ export const acceptInvitation = async (token: string, password: string): Promise
     }
     
     // Hash password
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    const hashedPassword = await hashPassword(password);
     
     // Create user
     const newUser = {
@@ -327,164 +363,151 @@ export const acceptInvitation = async (token: string, password: string): Promise
     
     return { user: sanitizeUser(insertedUser), success: true };
   } catch (error) {
+    console.error("Accept invitation error:", error);
     throw new Error('Invalid or expired invitation token');
   }
 };
 
 // Update user profile
 export const updateUserProfile = async (userId: string, updates: Partial<User>): Promise<User> => {
-  const { db } = await dbConnect();
-  const usersCollection = db.collection('users');
-  
-  // Don't allow updating sensitive fields
-  const { password, resetPasswordToken, resetPasswordExpires, verificationToken, role, ...safeUpdates } = updates;
-  
-  // Add updated timestamp
-  safeUpdates.updatedAt = new Date();
-  
-  await usersCollection.updateOne(
-    { _id: new ObjectId(userId) },
-    { $set: safeUpdates }
-  );
-  
-  const updatedUser = await usersCollection.findOne({ _id: new ObjectId(userId) });
-  if (!updatedUser) {
-    throw new Error('User not found');
+  try {
+    const { db } = await dbConnect();
+    const usersCollection = db.collection('users');
+    
+    // Don't allow updating sensitive fields
+    const { password, resetPasswordToken, resetPasswordExpires, verificationToken, role, ...safeUpdates } = updates;
+    
+    // Add updated timestamp
+    safeUpdates.updatedAt = new Date();
+    
+    await usersCollection.updateOne(
+      { _id: new ObjectId(userId) },
+      { $set: safeUpdates }
+    );
+    
+    const updatedUser = await usersCollection.findOne({ _id: new ObjectId(userId) });
+    if (!updatedUser) {
+      throw new Error('User not found');
+    }
+    
+    return sanitizeUser({
+      ...updatedUser,
+      id: updatedUser._id.toString()
+    });
+  } catch (error) {
+    console.error("Update user profile error:", error);
+    throw error;
   }
-  
-  return sanitizeUser({
-    ...updatedUser,
-    id: updatedUser._id.toString()
-  });
 };
 
 // Admin: update user role
 export const updateUserRole = async (adminId: string, userId: string, newRole: 'admin' | 'user' | 'team-member'): Promise<User> => {
-  const { db } = await dbConnect();
-  const usersCollection = db.collection('users');
-  
-  // Verify admin
-  const admin = await usersCollection.findOne({ _id: new ObjectId(adminId) });
-  if (!admin || admin.role !== 'admin') {
-    throw new Error('Unauthorized: Admin privileges required');
+  try {
+    const { db } = await dbConnect();
+    const usersCollection = db.collection('users');
+    
+    // Verify admin
+    const admin = await usersCollection.findOne({ _id: new ObjectId(adminId) });
+    if (!admin || admin.role !== 'admin') {
+      throw new Error('Unauthorized: Admin privileges required');
+    }
+    
+    // Update user role
+    await usersCollection.updateOne(
+      { _id: new ObjectId(userId) },
+      { $set: { role: newRole, updatedAt: new Date() } }
+    );
+    
+    const updatedUser = await usersCollection.findOne({ _id: new ObjectId(userId) });
+    if (!updatedUser) {
+      throw new Error('User not found');
+    }
+    
+    return sanitizeUser({
+      ...updatedUser,
+      id: updatedUser._id.toString()
+    });
+  } catch (error) {
+    console.error("Update user role error:", error);
+    throw error;
   }
-  
-  // Update user role
-  await usersCollection.updateOne(
-    { _id: new ObjectId(userId) },
-    { $set: { role: newRole, updatedAt: new Date() } }
-  );
-  
-  const updatedUser = await usersCollection.findOne({ _id: new ObjectId(userId) });
-  if (!updatedUser) {
-    throw new Error('User not found');
-  }
-  
-  return sanitizeUser({
-    ...updatedUser,
-    id: updatedUser._id.toString()
-  });
 };
 
 // Admin: get all users
 export const getAllUsers = async (adminId: string): Promise<User[]> => {
-  const { db } = await dbConnect();
-  const usersCollection = db.collection('users');
-  
-  // Verify admin
-  const admin = await usersCollection.findOne({ _id: new ObjectId(adminId) });
-  if (!admin || admin.role !== 'admin') {
-    throw new Error('Unauthorized: Admin privileges required');
+  try {
+    const { db } = await dbConnect();
+    const usersCollection = db.collection('users');
+    
+    // Verify admin
+    const admin = await usersCollection.findOne({ _id: new ObjectId(adminId) });
+    if (!admin || admin.role !== 'admin') {
+      throw new Error('Unauthorized: Admin privileges required');
+    }
+    
+    const users = await usersCollection.find().toArray();
+    
+    // Sanitize all users
+    return users.map(user => sanitizeUser({
+      ...user,
+      id: user._id.toString()
+    }));
+  } catch (error) {
+    console.error("Get all users error:", error);
+    throw error;
   }
-  
-  const users = await usersCollection.find().toArray();
-  
-  // Sanitize all users
-  return users.map(user => sanitizeUser({
-    ...user,
-    id: user._id.toString()
-  }));
 };
 
 // Admin: delete user
 export const deleteUser = async (adminId: string, userId: string): Promise<boolean> => {
-  const { db } = await dbConnect();
-  const usersCollection = db.collection('users');
-  
-  // Verify admin
-  const admin = await usersCollection.findOne({ _id: new ObjectId(adminId) });
-  if (!admin || admin.role !== 'admin') {
-    throw new Error('Unauthorized: Admin privileges required');
+  try {
+    const { db } = await dbConnect();
+    const usersCollection = db.collection('users');
+    
+    // Verify admin
+    const admin = await usersCollection.findOne({ _id: new ObjectId(adminId) });
+    if (!admin || admin.role !== 'admin') {
+      throw new Error('Unauthorized: Admin privileges required');
+    }
+    
+    // Don't allow deleting self
+    if (adminId === userId) {
+      throw new Error('Cannot delete your own account');
+    }
+    
+    const result = await usersCollection.deleteOne({ _id: new ObjectId(userId) });
+    
+    return result.deletedCount === 1;
+  } catch (error) {
+    console.error("Delete user error:", error);
+    throw error;
   }
-  
-  // Don't allow deleting self
-  if (adminId === userId) {
-    throw new Error('Cannot delete your own account');
+};
+
+// Helper email functions - mocked for browser environment
+const sendVerificationEmail = async (email: string, name: string, token: string): Promise<void> => {
+  try {
+    console.log(`[MOCK] Sending verification email to ${email} with token ${token}`);
+    // In a real application, this would send an actual email
+  } catch (error) {
+    console.error("Send verification email error:", error);
   }
-  
-  const result = await usersCollection.deleteOne({ _id: new ObjectId(userId) });
-  
-  return result.deletedCount === 1;
 };
 
-// Helper email functions
-const sendVerificationEmail = async (email: string, name: string, token: string) => {
-  const subject = 'Verify Your Email - Kalmar Studio';
-  const verificationUrl = `${process.env.APP_URL || 'http://localhost:5173'}/verify-email?token=${token}`;
-  
-  const html = `
-    <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
-      <h2>Welcome to Kalmar Studio!</h2>
-      <p>Hello ${name},</p>
-      <p>Thank you for registering. Please verify your email address by clicking the button below:</p>
-      <div style="text-align: center; margin: 30px 0;">
-        <a href="${verificationUrl}" style="background-color: #4f46e5; color: white; padding: 12px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">Verify Email</a>
-      </div>
-      <p>If you didn't create this account, please ignore this email.</p>
-      <p>Thanks,<br>The Kalmar Studio Team</p>
-    </div>
-  `;
-  
-  await sendEmail(email, subject, html);
+const sendPasswordResetEmail = async (email: string, name: string, token: string): Promise<void> => {
+  try {
+    console.log(`[MOCK] Sending password reset email to ${email} with token ${token}`);
+    // In a real application, this would send an actual email
+  } catch (error) {
+    console.error("Send password reset email error:", error);
+  }
 };
 
-const sendPasswordResetEmail = async (email: string, name: string, token: string) => {
-  const subject = 'Reset Your Password - Kalmar Studio';
-  const resetUrl = `${process.env.APP_URL || 'http://localhost:5173'}/reset-password?token=${token}`;
-  
-  const html = `
-    <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
-      <h2>Password Reset Request</h2>
-      <p>Hello ${name},</p>
-      <p>You requested a password reset. Click the button below to set a new password:</p>
-      <div style="text-align: center; margin: 30px 0;">
-        <a href="${resetUrl}" style="background-color: #4f46e5; color: white; padding: 12px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">Reset Password</a>
-      </div>
-      <p>If you didn't request this, please ignore this email and your password will remain unchanged.</p>
-      <p>This link will expire in 1 hour.</p>
-      <p>Thanks,<br>The Kalmar Studio Team</p>
-    </div>
-  `;
-  
-  await sendEmail(email, subject, html);
-};
-
-const sendInvitationEmail = async (email: string, name: string, token: string) => {
-  const subject = 'You\'re Invited to Join Kalmar Studio';
-  const inviteUrl = `${process.env.APP_URL || 'http://localhost:5173'}/accept-invitation?token=${token}`;
-  
-  const html = `
-    <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
-      <h2>You're Invited to Join Kalmar Studio!</h2>
-      <p>Hello ${name},</p>
-      <p>You've been invited to join the Kalmar Studio team. Click the button below to accept the invitation and set up your account:</p>
-      <div style="text-align: center; margin: 30px 0;">
-        <a href="${inviteUrl}" style="background-color: #4f46e5; color: white; padding: 12px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">Accept Invitation</a>
-      </div>
-      <p>If you believe this was sent by mistake, please ignore this email.</p>
-      <p>Thanks,<br>The Kalmar Studio Team</p>
-    </div>
-  `;
-  
-  await sendEmail(email, subject, html);
+const sendInvitationEmail = async (email: string, name: string, token: string): Promise<void> => {
+  try {
+    console.log(`[MOCK] Sending invitation email to ${email} with token ${token}`);
+    // In a real application, this would send an actual email
+  } catch (error) {
+    console.error("Send invitation email error:", error);
+  }
 };
