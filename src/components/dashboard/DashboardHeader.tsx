@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger 
 } from '@/components/ui/dropdown-menu';
 import { useNavigate } from 'react-router-dom';
+import { useAuthContext } from '@/contexts/AuthContext';
 
 interface DashboardHeaderProps {
   toggleSidebar?: () => void;
@@ -18,17 +19,10 @@ interface DashboardHeaderProps {
 
 const DashboardHeader = ({ toggleSidebar }: DashboardHeaderProps) => {
   const navigate = useNavigate();
-
-  // Mock user data instead of using AuthContext
-  const mockUser = {
-    name: 'Demo User',
-    email: 'demo@example.com',
-    role: 'admin'
-  };
+  const { user, logout } = useAuthContext();
 
   const handleLogout = async () => {
-    console.log('Mock logout');
-    navigate('/login');
+    logout();
   };
 
   return (
@@ -60,7 +54,7 @@ const DashboardHeader = ({ toggleSidebar }: DashboardHeaderProps) => {
               <DropdownMenuSeparator />
               <DropdownMenuItem>
                 <User className="h-4 w-4 mr-2" />
-                <span>{mockUser.name || 'Profile'}</span>
+                <span>{user?.name || 'Profile'}</span>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => navigate('/dashboard/settings')}>
                 <Settings className="h-4 w-4 mr-2" />

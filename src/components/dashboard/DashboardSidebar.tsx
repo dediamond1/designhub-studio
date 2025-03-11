@@ -2,113 +2,99 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { 
-  BarChart3, 
-  Box, 
   Home, 
-  Package, 
-  Settings, 
   ShoppingCart, 
+  Package, 
   Users, 
-  PaintBucket,
+  PencilRuler, 
+  BarChart, 
+  Settings,
   ChevronLeft,
   ChevronRight,
   LogOut,
   UserPlus
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useAuthContext } from '@/contexts/AuthContext';
 
 const DashboardSidebar = () => {
   const [collapsed, setCollapsed] = useState(false);
-  
-  // Mock user data instead of using AuthContext
-  const mockUser = {
-    name: 'Demo User',
-    email: 'demo@example.com',
-    role: 'admin'
-  };
+  const { user, logout } = useAuthContext();
 
   const sidebarItems = [
     { name: 'Overview', path: '/dashboard', icon: Home },
     { name: 'Orders', path: '/dashboard/orders', icon: ShoppingCart },
     { name: 'Products', path: '/dashboard/products', icon: Package },
     { name: 'Customers', path: '/dashboard/customers', icon: Users },
-    { name: 'Designs', path: '/dashboard/designs', icon: PaintBucket },
-    { name: 'Analytics', path: '/dashboard/analytics', icon: BarChart3 },
-  ];
-  
-  const adminItems = [
-    { name: 'Team Members', path: '/dashboard/team', icon: UserPlus },
+    { name: 'Designs', path: '/dashboard/designs', icon: PencilRuler },
+    { name: 'Analytics', path: '/dashboard/analytics', icon: BarChart },
     { name: 'Settings', path: '/dashboard/settings', icon: Settings },
   ];
 
-  const displayItems = [...sidebarItems, ...(mockUser.role === 'admin' ? adminItems : [])];
+  const adminItems = [
+    { name: 'Team Members', path: '/dashboard/team', icon: UserPlus },
+  ];
 
-  const handleLogout = () => {
-    console.log('Mock logout');
-    // Use window.location instead of navigate since we're not in a component using Router
-    window.location.href = '/login';
-  };
+  const displayItems = [...sidebarItems, ...(user?.role === 'admin' ? adminItems : [])];
 
   return (
     <aside 
       className={cn(
-        "bg-sidebar-background border-r border-border flex flex-col h-full transition-all duration-300",
+        "bg-sidebar border-r border-border transition-all duration-300 ease-in-out flex flex-col h-screen",
         collapsed ? "w-[70px]" : "w-[250px]"
       )}
     >
-      <div className="p-4 flex items-center justify-between h-[64px] border-b border-border">
-        <NavLink 
-          to="/" 
-          className={cn(
-            "font-bold text-lg transition-opacity",
-            collapsed ? "opacity-0 w-0" : "opacity-100"
-          )}
-        >
+      <div className="p-4 border-b border-border flex items-center justify-between">
+        <h2 className={cn(
+          "font-bold transition-opacity duration-200",
+          collapsed ? "opacity-0 w-0" : "opacity-100"
+        )}>
           Kalmar Studio
-        </NavLink>
-        {!collapsed && <Box className="h-5 w-5" />}
-        <button 
-          onClick={() => setCollapsed(!collapsed)} 
-          className="p-1 rounded-sm hover:bg-sidebar-accent text-sidebar-foreground"
-          aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+        </h2>
+        <button
+          onClick={() => setCollapsed(!collapsed)}
+          className="p-1 rounded-md hover:bg-sidebar-accent/80 transition-colors"
         >
-          {collapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
+          {collapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
         </button>
       </div>
       
-      <nav className="flex-1 py-4 px-2 space-y-1 overflow-y-auto">
-        {displayItems.map((item) => (
-          <NavLink
-            key={item.path}
-            to={item.path}
-            className={({ isActive }) => cn(
-              "flex items-center p-2 rounded-md text-sm group transition-colors",
-              isActive 
-                ? "bg-sidebar-accent text-sidebar-primary font-medium" 
-                : "text-sidebar-foreground hover:bg-sidebar-accent/80",
-              collapsed ? "justify-center" : "space-x-3"
-            )}
-          >
-            <item.icon size={20} />
-            <span className={cn(
-              "transition-all duration-300",
-              collapsed ? "opacity-0 w-0 hidden" : "opacity-100"
-            )}>
-              {item.name}
-            </span>
-          </NavLink>
-        ))}
+      <nav className="p-2 flex-1 overflow-y-auto">
+        <ul className="space-y-1">
+          {displayItems.map((item) => (
+            <li key={item.path}>
+              <NavLink
+                to={item.path}
+                className={({ isActive }) => cn(
+                  "flex items-center p-2 rounded-md text-sm group transition-colors",
+                  isActive 
+                    ? "bg-sidebar-accent text-sidebar-active-foreground" 
+                    : "text-sidebar-foreground hover:bg-sidebar-accent/80",
+                  collapsed && "justify-center"
+                )}
+              >
+                <item.icon size={20} className={cn(collapsed ? "" : "mr-3")} />
+                <span className={cn(
+                  "transition-opacity duration-200",
+                  collapsed ? "opacity-0 w-0 overflow-hidden" : "opacity-100"
+                )}>
+                  {item.name}
+                </span>
+              </NavLink>
+            </li>
+          ))}
+        </ul>
       </nav>
       
       <div className="p-4 border-t border-border">
         <button
-          onClick={handleLogout}
+          onClick={logout}
           className="flex items-center w-full p-2 rounded-md text-sm group transition-colors text-sidebar-foreground hover:bg-sidebar-accent/80"
         >
           <LogOut size={20} className={cn(collapsed ? "" : "mr-3")} />
           <span className={cn(
-            "transition-all duration-300",
-            collapsed ? "opacity-0 w-0 hidden" : "opacity-100"
+            "transition-opacity duration-200",
+            collapsed ? "opacity-0 w-0 overflow-hidden" : "opacity-100"
           )}>
             Logout
           </span>

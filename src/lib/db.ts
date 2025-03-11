@@ -1,66 +1,42 @@
 
 import mongoose from 'mongoose';
 
-/**
- * Connect to MongoDB using mongoose (mock version for browser)
- */
-export async function dbConnect(): Promise<typeof mongoose> {
-  console.log('Mock database connection for UI demo');
-  return createMockConnection();
-}
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/kalmar-studio';
 
 /**
- * Create a mock mongoose connection for browser environment
+ * Global is used here to maintain a cached connection across hot reloads
+ * in development. This prevents connections growing exponentially
+ * during API Route usage.
  */
-function createMockConnection() {
-  // Create mock mongoose for browser
-  const mockMongoose = {
-    ...mongoose,
-    connection: {
-      ...mongoose.connection,
-      db: {
-        collection: () => ({
-          createIndex: async () => Promise.resolve(),
-          createIndexes: async () => Promise.resolve(),
-          indexes: async () => Promise.resolve([]),
-          find: () => ({ toArray: async () => [] }),
-          findOne: async () => null,
-          insertOne: async () => ({ insertedId: "mock-id" }),
-          updateOne: async () => ({ modifiedCount: 1 }),
-          deleteOne: async () => ({ deletedCount: 1 })
-        })
-      }
-    },
-    model: function mockModel(name: string) {
-      return {
-        find: () => ({ exec: async () => [] }),
-        findOne: () => ({ exec: async () => null }),
-        findById: () => ({ exec: async () => null }),
-        create: async () => ({ _id: 'mock-id', id: 'mock-id' }),
-        updateOne: async () => ({ modifiedCount: 1 }),
-        deleteOne: async () => ({ deletedCount: 1 })
-      };
-    }
-  } as unknown as typeof mongoose;
+let cached = global.mongoose;
+
+if (!cached) {
+  cached = global.mongoose = { conn: null, promise: null };
+}
+
+export async function connectDB() {
+  if (cached.conn) {
+    return cached.conn;
+  }
+
+  if (!cached.promise) {
+    const opts = {
+      bufferCommands: false,
+    };
+
+    cached.promise = mongoose.connect(MONGODB_URI, opts)
+      .then((mongoose) => {
+        console.log('Connected to MongoDB');
+        return mongoose;
+      })
+      .catch((error) => {
+        console.error('Error connecting to MongoDB:', error);
+        throw error;
+      });
+  }
   
-  return mockMongoose;
+  cached.conn = await cached.promise;
+  return cached.conn;
 }
 
-// Export connectToDatabase as alias for backward compatibility
-export const connectToDatabase = dbConnect;
-
-/**
- * Disconnect from MongoDB
- */
-export async function dbDisconnect(): Promise<void> {
-  console.log('Mock database disconnection');
-  return Promise.resolve();
-}
-
-/**
- * Create indexes for the application collections
- */
-export async function ensureIndexes(): Promise<void> {
-  console.log('Mock indexes creation');
-  return Promise.resolve();
-}
+export default connectDB;
