@@ -11,7 +11,7 @@ interface ProductPreviewProps {
 }
 
 const ProductPreview: React.FC<ProductPreviewProps> = ({ className }) => {
-  const { designState, exportDesign, saveDesign } = useDesign();
+  const { designState, dispatch, exportDesign, saveDesign } = useDesign();
   const [view, setView] = React.useState<'front' | 'back' | '3d'>('front');
   const [isLoading, setIsLoading] = React.useState(false);
 
@@ -56,6 +56,7 @@ const ProductPreview: React.FC<ProductPreviewProps> = ({ className }) => {
       name: 'Custom Sticker',
       description: 'Waterproof vinyl, UV resistant, perfect for outdoor use',
       price: 3.99,
+      colors: [],
       sizes: ['2"x2"', '3"x3"', '4"x4"', '5"x5"', 'Custom'],
       types: ['Matte', 'Glossy', 'Holographic', 'Clear'],
       mockups: {
@@ -68,6 +69,7 @@ const ProductPreview: React.FC<ProductPreviewProps> = ({ className }) => {
       name: 'Business Card',
       description: 'Premium 350gsm paper with smooth matte finish',
       price: 19.99,
+      colors: [],
       sizes: ['Standard (3.5"x2")', 'Square (2.5"x2.5")', 'Mini (2.75"x1.5")'],
       types: ['Matte', 'Glossy', 'Spot UV', 'Silk'],
       mockups: {
@@ -219,7 +221,7 @@ const ProductPreview: React.FC<ProductPreviewProps> = ({ className }) => {
           <TabsContent value="options" className="pt-4">
             <div className="space-y-4">
               {/* Color selection */}
-              {product.colors && (
+              {'colors' in product && product.colors.length > 0 && (
                 <div>
                   <label className="block text-sm font-medium mb-2">Color</label>
                   <div className="flex flex-wrap gap-2">
@@ -260,7 +262,7 @@ const ProductPreview: React.FC<ProductPreviewProps> = ({ className }) => {
               </div>
               
               {/* Material/type selection if available */}
-              {product.types && (
+              {'types' in product && product.types.length > 0 && (
                 <div>
                   <label className="block text-sm font-medium mb-2">Material</label>
                   <select
