@@ -12,7 +12,7 @@ const VerifyEmail = () => {
   const [message, setMessage] = useState<string>('Verifying your email...');
 
   useEffect(() => {
-    // Simulate verification process
+    // Simulate verification process with no API call
     const timeout = setTimeout(() => {
       if (!token) {
         setVerificationStatus('error');

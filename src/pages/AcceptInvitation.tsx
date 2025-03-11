@@ -42,7 +42,7 @@ const AcceptInvitation = () => {
     setLoading(true);
     setError(null);
 
-    // Simulate accepting invitation
+    // Simulate accepting invitation without API calls
     setTimeout(() => {
       setLoading(false);
       

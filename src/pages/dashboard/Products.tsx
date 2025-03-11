@@ -2,12 +2,10 @@
 import React, { useState } from 'react';
 import DashboardSidebar from '../../components/dashboard/DashboardSidebar';
 import DashboardHeader from '../../components/dashboard/DashboardHeader';
-import { Search, Plus, Edit, Trash2 } from 'lucide-react';
-import { useFetch, useDelete } from '@/hooks/useApi';
+import { Search, Plus, Edit, Trash2, Loader2 } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2 } from 'lucide-react';
 
 interface Product {
   id: string;
@@ -18,18 +16,67 @@ interface Product {
   status: string;
 }
 
+// Dummy products data
+const dummyProducts: Product[] = [
+  {
+    id: '1',
+    name: 'Product 1',
+    category: 'Category A',
+    price: '99.99',
+    stock: 50,
+    status: 'Active'
+  },
+  {
+    id: '2',
+    name: 'Product 2',
+    category: 'Category B',
+    price: '149.99',
+    stock: 25,
+    status: 'Active'
+  },
+  {
+    id: '3',
+    name: 'Product 3',
+    category: 'Category A',
+    price: '79.99',
+    stock: 5,
+    status: 'Low Stock'
+  },
+  {
+    id: '4',
+    name: 'Product 4',
+    category: 'Category C',
+    price: '199.99',
+    stock: 0,
+    status: 'Out of Stock'
+  }
+];
+
 const Products = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
-  
-  const { data: products = [], isLoading, error, refetch } = useFetch<Product[]>('/api/products', ['products']);
-  const deleteProduct = useDelete('/api/products', ['products']);
+  const [products, setProducts] = useState<Product[]>(dummyProducts);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
 
   const handleDelete = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this product?')) {
-      await deleteProduct.mutateAsync(id);
+      setLoading(true);
+      
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 800));
+      
+      // Remove the product from the state
+      setProducts(prevProducts => prevProducts.filter(product => product.id !== id));
+      
+      toast({
+        title: 'Product Deleted',
+        description: 'Product has been successfully removed.',
+      });
+      
+      setLoading(false);
     }
   };
 
@@ -43,6 +90,15 @@ const Products = () => {
   const categories = Array.from(new Set(products.map(product => product.category)));
   const statuses = Array.from(new Set(products.map(product => product.status)));
 
+  const handleRetry = () => {
+    setError(null);
+    // Simulate loading products
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+  };
+
   if (error) {
     return (
       <div className="flex h-screen bg-background">
@@ -53,7 +109,7 @@ const Products = () => {
             <div className="mx-auto max-w-7xl">
               <div className="bg-destructive/10 p-4 rounded-md text-destructive">
                 <p>Failed to load products. Please try again later.</p>
-                <Button variant="outline" className="mt-2" onClick={() => refetch()}>
+                <Button variant="outline" className="mt-2" onClick={handleRetry}>
                   Retry
                 </Button>
               </div>
@@ -128,7 +184,7 @@ const Products = () => {
               </div>
             </div>
 
-            {isLoading ? (
+            {loading ? (
               <div className="flex justify-center items-center h-64">
                 <Loader2 className="h-8 w-8 animate-spin text-primary" />
               </div>
@@ -180,9 +236,9 @@ const Products = () => {
                                   variant="outline" 
                                   size="icon"
                                   onClick={() => handleDelete(product.id)}
-                                  disabled={deleteProduct.isLoading}
+                                  disabled={loading}
                                 >
-                                  {deleteProduct.isLoading ? (
+                                  {loading ? (
                                     <Loader2 className="h-4 w-4 animate-spin" />
                                   ) : (
                                     <Trash2 className="h-4 w-4" />

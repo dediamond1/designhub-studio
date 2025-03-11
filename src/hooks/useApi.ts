@@ -1,179 +1,106 @@
 
 import { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useToast } from '@/hooks/use-toast';
 
-// Helper to get the auth token
-const getAuthToken = () => localStorage.getItem('auth_token') || '';
+// Mocked API hooks for UI demo
 
-// Generic GET hook
+// Generic GET hook with dummy data
 export const useFetch = <T>(url: string, queryKey: string[]) => {
   const { toast } = useToast();
-  
-  return useQuery({
-    queryKey,
-    queryFn: async (): Promise<T> => {
-      const response = await fetch(url, {
-        headers: {
-          'Authorization': `Bearer ${getAuthToken()}`,
-        },
-      });
-      
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Failed to fetch data');
-      }
-      
-      return response.json();
-    },
-    meta: {
-      onError: (error: Error) => {
-        toast({
-          title: 'Error',
-          description: error.message || 'Failed to fetch data',
-          variant: 'destructive',
-        });
-      },
-    },
-  });
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+
+  // Return dummy successful response
+  return {
+    data: undefined as unknown as T,
+    isLoading: false,
+    error: null,
+    refetch: () => {
+      console.log('Mock refetch for:', url, queryKey);
+      return Promise.resolve();
+    }
+  };
 };
 
-// Generic POST hook
+// Generic POST hook with dummy implementation
 export const useCreate = <T, U>(url: string, queryKey: string[]) => {
-  const queryClient = useQueryClient();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   
-  const mutation = useMutation({
-    mutationFn: async (data: T): Promise<U> => {
-      setIsLoading(true);
-      try {
-        const response = await fetch(url, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${getAuthToken()}`,
-          },
-          body: JSON.stringify(data),
-        });
-        
-        if (!response.ok) {
-          const error = await response.json();
-          throw new Error(error.message || 'Operation failed');
-        }
-        
-        return response.json();
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey });
+  return {
+    mutate: (data: T) => {
+      console.log('Mock create:', url, data);
       toast({
         title: 'Success',
         description: 'Operation completed successfully',
       });
     },
-    onError: (error) => {
+    mutateAsync: async (data: T): Promise<U> => {
+      console.log('Mock create async:', url, data);
       toast({
-        title: 'Error',
-        description: error instanceof Error ? error.message : 'Operation failed',
-        variant: 'destructive',
+        title: 'Success',
+        description: 'Operation completed successfully',
       });
+      return {} as U;
     },
-  });
-  
-  return { ...mutation, isLoading };
+    isLoading,
+    isSuccess: false,
+    isError: false,
+    error: null
+  };
 };
 
-// Generic PUT hook
+// Generic PUT hook with dummy implementation
 export const useUpdate = <T, U>(baseUrl: string, queryKey: string[]) => {
-  const queryClient = useQueryClient();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   
-  const mutation = useMutation({
-    mutationFn: async ({ id, data }: { id: string; data: T }): Promise<U> => {
-      setIsLoading(true);
-      try {
-        const response = await fetch(`${baseUrl}/${id}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${getAuthToken()}`,
-          },
-          body: JSON.stringify(data),
-        });
-        
-        if (!response.ok) {
-          const error = await response.json();
-          throw new Error(error.message || 'Update failed');
-        }
-        
-        return response.json();
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey });
+  return {
+    mutate: ({ id, data }: { id: string; data: T }) => {
+      console.log('Mock update:', `${baseUrl}/${id}`, data);
       toast({
         title: 'Success',
         description: 'Update completed successfully',
       });
     },
-    onError: (error) => {
+    mutateAsync: async ({ id, data }: { id: string; data: T }): Promise<U> => {
+      console.log('Mock update async:', `${baseUrl}/${id}`, data);
       toast({
-        title: 'Error',
-        description: error instanceof Error ? error.message : 'Update failed',
-        variant: 'destructive',
+        title: 'Success',
+        description: 'Update completed successfully',
       });
+      return {} as U;
     },
-  });
-  
-  return { ...mutation, isLoading };
+    isLoading,
+    isSuccess: false,
+    isError: false,
+    error: null
+  };
 };
 
-// Generic DELETE hook
+// Generic DELETE hook with dummy implementation
 export const useDelete = (baseUrl: string, queryKey: string[]) => {
-  const queryClient = useQueryClient();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   
-  const mutation = useMutation({
-    mutationFn: async (id: string): Promise<void> => {
-      setIsLoading(true);
-      try {
-        const response = await fetch(`${baseUrl}/${id}`, {
-          method: 'DELETE',
-          headers: {
-            'Authorization': `Bearer ${getAuthToken()}`,
-          },
-        });
-        
-        if (!response.ok) {
-          const error = await response.json();
-          throw new Error(error.message || 'Delete failed');
-        }
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey });
+  return {
+    mutate: (id: string) => {
+      console.log('Mock delete:', `${baseUrl}/${id}`);
       toast({
         title: 'Success',
         description: 'Item deleted successfully',
       });
     },
-    onError: (error) => {
+    mutateAsync: async (id: string): Promise<void> => {
+      console.log('Mock delete async:', `${baseUrl}/${id}`);
       toast({
-        title: 'Error',
-        description: error instanceof Error ? error.message : 'Delete failed',
-        variant: 'destructive',
+        title: 'Success',
+        description: 'Item deleted successfully',
       });
     },
-  });
-  
-  return { ...mutation, isLoading };
+    isLoading,
+    isSuccess: false,
+    isError: false,
+    error: null
+  };
 };

@@ -39,7 +39,7 @@ const RegisterForm = () => {
 
   const onSubmit = async (data: RegisterFormValues) => {
     setLoading(true);
-    // Simulate registration process
+    // Simulate registration process with no API call
     setTimeout(() => {
       setLoading(false);
       toast({

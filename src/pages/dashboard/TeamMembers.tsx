@@ -12,8 +12,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { useToast } from '@/hooks/use-toast';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
-import { auth } from '@/lib/auth';
-import { invite, getUsers, updateRole, removeUser } from '@/api/auth';
 
 // Define the form schema for inviting a team member
 const inviteSchema = z.object({
@@ -35,13 +33,38 @@ type User = {
   lastLogin?: Date;
 };
 
+// Dummy team members data
+const dummyTeamMembers: User[] = [
+  {
+    id: '1',
+    name: 'Demo User',
+    email: 'user@example.com',
+    role: 'admin',
+    lastLogin: new Date()
+  },
+  {
+    id: '2',
+    name: 'Another User',
+    email: 'another@example.com',
+    role: 'user',
+    lastLogin: new Date(Date.now() - 86400000) // yesterday
+  },
+  {
+    id: '3',
+    name: 'Team Member',
+    email: 'team@example.com',
+    role: 'team-member',
+    lastLogin: new Date(Date.now() - 86400000 * 7) // a week ago
+  }
+];
+
 const TeamMembers = () => {
   const { toast } = useToast();
   const [isInviteOpen, setIsInviteOpen] = useState(false);
   const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
   const [userToDelete, setUserToDelete] = useState<string | null>(null);
-  const [teamMembers, setTeamMembers] = useState<User[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [teamMembers, setTeamMembers] = useState<User[]>(dummyTeamMembers);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedRole, setSelectedRole] = useState<'admin' | 'team-member'>('team-member');
   
@@ -54,45 +77,24 @@ const TeamMembers = () => {
     },
   });
   
-  // Fetch team members
-  const fetchTeamMembers = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      
-      const currentUser = auth.getCurrentUser();
-      if (!currentUser) {
-        throw new Error('You must be logged in to view team members');
-      }
-      
-      const users = await getUsers(currentUser.id);
-      setTeamMembers(users);
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to load team members';
-      setError(errorMessage);
-      toast({
-        title: 'Error',
-        description: errorMessage,
-        variant: 'destructive',
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-  
-  useEffect(() => {
-    fetchTeamMembers();
-  }, []);
-  
   // Handle invite submission
   const onInviteSubmit = async (values: InviteFormValues) => {
     try {
-      const currentUser = auth.getCurrentUser();
-      if (!currentUser) {
-        throw new Error('You must be logged in to invite team members');
-      }
+      setLoading(true);
       
-      await invite(currentUser.id, values.email, values.name, values.role);
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Add the new team member to the state
+      const newMember: User = {
+        id: `${teamMembers.length + 1}`,
+        name: values.name,
+        email: values.email,
+        role: values.role,
+        lastLogin: undefined
+      };
+      
+      setTeamMembers([...teamMembers, newMember]);
       
       toast({
         title: 'Invitation Sent',
@@ -101,8 +103,9 @@ const TeamMembers = () => {
       
       setIsInviteOpen(false);
       form.reset();
-      await fetchTeamMembers();
+      setLoading(false);
     } catch (err) {
+      setLoading(false);
       const errorMessage = err instanceof Error ? err.message : 'Failed to send invitation';
       toast({
         title: 'Error',
@@ -115,20 +118,26 @@ const TeamMembers = () => {
   // Handle role change
   const handleRoleChange = async (userId: string, newRole: 'admin' | 'team-member' | 'user') => {
     try {
-      const currentUser = auth.getCurrentUser();
-      if (!currentUser) {
-        throw new Error('You must be logged in to update roles');
-      }
+      setLoading(true);
       
-      await updateRole(currentUser.id, userId, newRole);
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      // Update the team member's role in the state
+      setTeamMembers(prevMembers => 
+        prevMembers.map(member => 
+          member.id === userId ? { ...member, role: newRole } : member
+        )
+      );
       
       toast({
         title: 'Role Updated',
         description: 'User role has been updated successfully',
       });
       
-      await fetchTeamMembers();
+      setLoading(false);
     } catch (err) {
+      setLoading(false);
       const errorMessage = err instanceof Error ? err.message : 'Failed to update role';
       toast({
         title: 'Error',
@@ -143,12 +152,15 @@ const TeamMembers = () => {
     try {
       if (!userToDelete) return;
       
-      const currentUser = auth.getCurrentUser();
-      if (!currentUser) {
-        throw new Error('You must be logged in to delete users');
-      }
+      setLoading(true);
       
-      await removeUser(currentUser.id, userToDelete);
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 800));
+      
+      // Remove the team member from the state
+      setTeamMembers(prevMembers => 
+        prevMembers.filter(member => member.id !== userToDelete)
+      );
       
       toast({
         title: 'User Deleted',
@@ -157,8 +169,9 @@ const TeamMembers = () => {
       
       setIsConfirmDeleteOpen(false);
       setUserToDelete(null);
-      await fetchTeamMembers();
+      setLoading(false);
     } catch (err) {
+      setLoading(false);
       const errorMessage = err instanceof Error ? err.message : 'Failed to delete user';
       toast({
         title: 'Error',
@@ -245,7 +258,9 @@ const TeamMembers = () => {
                   )}
                 />
                 <DialogFooter>
-                  <Button type="submit">Send Invitation</Button>
+                  <Button type="submit" disabled={loading}>
+                    {loading ? 'Sending...' : 'Send Invitation'}
+                  </Button>
                 </DialogFooter>
               </form>
             </Form>
@@ -261,7 +276,7 @@ const TeamMembers = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {loading ? (
+          {loading && !isInviteOpen && !isConfirmDeleteOpen ? (
             <div className="text-center py-4">Loading team members...</div>
           ) : error ? (
             <div className="text-center text-red-500 py-4">{error}</div>
@@ -313,6 +328,7 @@ const TeamMembers = () => {
                         variant="ghost" 
                         onClick={() => confirmDelete(member.id)}
                         className="text-red-500 hover:text-red-700"
+                        disabled={loading}
                       >
                         Delete
                       </Button>
