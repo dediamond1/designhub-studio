@@ -65,6 +65,12 @@ export type DesignAction =
   | { type: 'UNDO' }
   | { type: 'REDO' };
 
+// History action types
+export type HistoryAction =
+  | { type: 'UNDO' }
+  | { type: 'REDO' }
+  | { type: 'UPDATE'; payload: DesignState };
+
 // Initial state
 const initialDesignState: DesignState = {
   objects: [],

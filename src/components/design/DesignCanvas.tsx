@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef, useState } from 'react';
 import { Canvas, Text, Image, Rect, Circle, Triangle, Polygon, Line, Group } from 'fabric';
 import { useDesign } from '../../contexts/DesignContext';
@@ -89,8 +90,8 @@ const DesignCanvas: React.FC<DesignCanvasProps> = ({ width, height, className })
     
     const grid = createGrid();
     fabricCanvas.add(grid);
-    // Use lower-level API to move grid to back
-    grid.moveTo(0);
+    // Use setZIndex to move grid to back
+    fabricCanvas.setZIndex(grid, 0);
     fabricCanvas.renderAll();
 
     // Set up event listeners
