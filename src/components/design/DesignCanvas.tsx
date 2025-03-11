@@ -1,6 +1,6 @@
 
 import React, { useEffect, useRef, useState } from 'react';
-import * as fabric from 'fabric';
+import { Canvas, Text, Image, Rect, Circle, Triangle, Polygon } from 'fabric';
 import { useDesign } from '../../contexts/DesignContext';
 import { v4 as uuidv4 } from 'uuid';
 import { toast } from 'sonner';
@@ -14,7 +14,7 @@ interface DesignCanvasProps {
 
 const DesignCanvas: React.FC<DesignCanvasProps> = ({ width, height, className }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [canvas, setCanvas] = useState<fabric.Canvas | null>(null);
+  const [canvas, setCanvas] = useState<Canvas | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const { designState, dispatch } = useDesign();
   const [isInitialized, setIsInitialized] = useState(false);
@@ -26,7 +26,7 @@ const DesignCanvas: React.FC<DesignCanvasProps> = ({ width, height, className })
   useEffect(() => {
     if (!canvasRef.current) return;
 
-    const fabricCanvas = new fabric.Canvas(canvasRef.current, {
+    const fabricCanvas = new Canvas(canvasRef.current, {
       width,
       height,
       backgroundColor: designState.background,
@@ -113,11 +113,11 @@ const DesignCanvas: React.FC<DesignCanvasProps> = ({ width, height, className })
   };
 
   // Handle object modifications
-  const handleObjectModified = (e: fabric.IEvent<Event>) => {
+  const handleObjectModified = (e: any) => {
     if (!e.target) return;
 
     const obj = e.target;
-    const id = obj.data?.id;
+    const id = obj.__designId;
 
     if (!id) return;
 
@@ -145,7 +145,7 @@ const DesignCanvas: React.FC<DesignCanvasProps> = ({ width, height, className })
     const activeObject = canvas.getActiveObject();
     if (!activeObject) return;
 
-    const id = activeObject.data?.id;
+    const id = activeObject.__designId;
     if (!id) return;
 
     canvas.remove(activeObject);
@@ -160,7 +160,7 @@ const DesignCanvas: React.FC<DesignCanvasProps> = ({ width, height, className })
     const activeObject = canvas.getActiveObject();
     if (!activeObject) return;
 
-    const id = activeObject.data?.id;
+    const id = activeObject.__designId;
     if (!id) return;
 
     // Clone the object through the context
@@ -172,18 +172,19 @@ const DesignCanvas: React.FC<DesignCanvasProps> = ({ width, height, className })
     if (!canvas || isLoading) return;
 
     // Update canvas background
-    canvas.setBackgroundColor(designState.background, canvas.renderAll.bind(canvas));
+    canvas.backgroundColor = designState.background;
+    canvas.renderAll();
 
     // Clear canvas objects
     canvas.remove(...canvas.getObjects());
 
     // Add all objects from design state
     designState.objects.forEach(async (obj) => {
-      let fabricObj: fabric.Object | null = null;
+      let fabricObj: any = null;
 
       switch (obj.type) {
         case 'text':
-          fabricObj = new fabric.Text(obj.content || 'Text', {
+          fabricObj = new Text(obj.content || 'Text', {
             left: obj.x,
             top: obj.y,
             fill: obj.fill,
@@ -200,19 +201,23 @@ const DesignCanvas: React.FC<DesignCanvasProps> = ({ width, height, className })
         case 'image':
           if (obj.src) {
             try {
-              fabricObj = await new Promise<fabric.Image>((resolve) => {
-                fabric.Image.fromURL(obj.src || '', (img) => {
-                  resolve(img);
-                }, { crossOrigin: 'anonymous' });
-              });
-
-              fabricObj.set({
-                left: obj.x,
-                top: obj.y,
-                angle: obj.rotation,
-                scaleX: obj.scaleX,
-                scaleY: obj.scaleY,
-                opacity: obj.opacity,
+              await new Promise<void>((resolve) => {
+                Image.fromURL(obj.src || '', {
+                  crossOrigin: 'anonymous',
+                  onload: (img) => {
+                    img.set({
+                      left: obj.x,
+                      top: obj.y,
+                      angle: obj.rotation,
+                      scaleX: obj.scaleX,
+                      scaleY: obj.scaleY,
+                      opacity: obj.opacity,
+                    });
+                    
+                    fabricObj = img;
+                    resolve();
+                  }
+                });
               });
             } catch (error) {
               console.error('Error loading image:', error);
@@ -223,7 +228,7 @@ const DesignCanvas: React.FC<DesignCanvasProps> = ({ width, height, className })
         case 'shape':
           switch (obj.shapeType) {
             case 'rect':
-              fabricObj = new fabric.Rect({
+              fabricObj = new Rect({
                 left: obj.x,
                 top: obj.y,
                 width: obj.width,
@@ -239,7 +244,7 @@ const DesignCanvas: React.FC<DesignCanvasProps> = ({ width, height, className })
               break;
 
             case 'circle':
-              fabricObj = new fabric.Circle({
+              fabricObj = new Circle({
                 left: obj.x,
                 top: obj.y,
                 radius: Math.min(obj.width, obj.height) / 2,
@@ -254,7 +259,7 @@ const DesignCanvas: React.FC<DesignCanvasProps> = ({ width, height, className })
               break;
 
             case 'triangle':
-              fabricObj = new fabric.Triangle({
+              fabricObj = new Triangle({
                 left: obj.x,
                 top: obj.y,
                 width: obj.width,
@@ -271,7 +276,7 @@ const DesignCanvas: React.FC<DesignCanvasProps> = ({ width, height, className })
 
             case 'polygon':
               // This would be more complex in a real implementation
-              fabricObj = new fabric.Polygon(
+              fabricObj = new Polygon(
                 [
                   { x: 0, y: 0 },
                   { x: 50, y: 0 },
@@ -298,8 +303,8 @@ const DesignCanvas: React.FC<DesignCanvasProps> = ({ width, height, className })
       }
 
       if (fabricObj) {
-        // Store the ID in the fabric object's data property
-        fabricObj.data = { id: obj.id };
+        // Store the ID in a custom property
+        fabricObj.__designId = obj.id;
         
         // Make objects selectable and movable
         fabricObj.set({
