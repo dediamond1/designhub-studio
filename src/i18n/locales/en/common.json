@@ -16,6 +16,15 @@
     "ads": "Ads",
     "resources": "Resources"
   },
+  "menuDescriptions": {
+    "design": "Create your own custom designs",
+    "print": "Professional printing services",
+    "clothes": "Custom apparel and clothing",
+    "stickers": "Custom stickers and decals",
+    "blog": "Read our latest articles",
+    "news": "Company news and updates",
+    "offers": "Special deals and promotions"
+  },
   "buttons": {
     "readMore": "Read More",
     "getStarted": "Get Started",

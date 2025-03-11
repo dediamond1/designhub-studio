@@ -5,11 +5,12 @@ import { motion } from 'framer-motion';
 import HeroSection from '../components/HeroSection';
 import ServicesSection from '../components/ServicesSection';
 import AboutSection from '../components/AboutSection';
-import ContactSection from '../components/ContactSection';
-import Footer from '../components/Footer';
 import TestimonialsSection from '../components/TestimonialsSection';
 import ProcessSection from '../components/ProcessSection';
 import FeaturedWorksSection from '../components/FeaturedWorksSection';
+import ClientsSection from '../components/ClientsSection';
+import CtaSection from '../components/CtaSection';
+import Footer from '../components/Footer';
 import { SEO, createOrganizationSchema, createWebsiteSchema } from '@/utils/seo';
 
 const fadeIn = {
@@ -61,10 +62,11 @@ const Index = () => {
         <HeroSection />
         <ProcessSection />
         <ServicesSection />
+        <ClientsSection />
         <FeaturedWorksSection />
         <TestimonialsSection />
         <AboutSection />
-        <ContactSection />
+        <CtaSection />
       </main>
       <Footer />
     </motion.div>

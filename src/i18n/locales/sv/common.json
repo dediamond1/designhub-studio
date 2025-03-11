@@ -16,6 +16,15 @@
     "ads": "Annonser",
     "resources": "Resurser"
   },
+  "menuDescriptions": {
+    "design": "Skapa dina egna anpassade designer",
+    "print": "Professionella trycktjänster",
+    "clothes": "Anpassade kläder och plagg",
+    "stickers": "Anpassade klistermärken och dekaler",
+    "blog": "Läs våra senaste artiklar",
+    "news": "Företagsnyheter och uppdateringar",
+    "offers": "Specialerbjudanden och kampanjer"
+  },
   "buttons": {
     "readMore": "Läs mer",
     "getStarted": "Kom igång",
