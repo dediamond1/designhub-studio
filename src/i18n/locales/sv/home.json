@@ -4,7 +4,35 @@
     "tagline": "TRYCKEXCELLENS",
     "title": "Designa, Trycka, Leverera",
     "subtitle": "Anpassat efter dina behov",
-    "description": "Skräddarsydda designer för t-shirts, visitkort, dekaler och mer – Gjorda just för dig med premiumkvalitet och personlig service."
+    "description": "Skräddarsydda designer för t-shirts, visitkort, dekaler och mer – Gjorda just för dig med premiumkvalitet och personlig service.",
+    "scrollDown": "Scrolla ner för att utforska våra tjänster",
+    "popularServices": "Populära tjänster",
+    "categories": {
+      "clothing": "Anpassade kläder för varumärken, evenemang och team",
+      "print": "Visitkort, broschyrer och marknadsföringsmaterial",
+      "stickers": "Anpassade klistermärken och dekaler för alla ytor",
+      "0": {
+        "features": {
+          "1": "Högkvalitativa t-shirts, hoodies och kepsar",
+          "2": "Tåligt screentryck och broderi",
+          "3": "Perfekt för laguniformer och evenemang"
+        }
+      },
+      "1": {
+        "features": {
+          "1": "Premium visitkort och kontorsmaterial",
+          "2": "Broschyrer, kataloger och marknadsföringsmaterial",
+          "3": "Snabb leverans på stora beställningar"
+        }
+      },
+      "2": {
+        "features": {
+          "1": "Väderbeständiga vinyldekaler",
+          "2": "Anpassade former och storlekar tillgängliga",
+          "3": "Perfekt för varumärkesprofilering och kampanjer"
+        }
+      }
+    }
   },
   "services": {
     "title": "Upptäck vårt utbud av trycktjänster",
@@ -37,6 +65,16 @@
     "tagline": "OM KALMAR STUDIO",
     "title": "Din vision, vårt hantverk",
     "description": "Lär känna historien bakom Kalmar Studio och vår passion för tryck och design.",
+    "historyText1": "Grundat 2005 har Kalmar Studio vuxit från en liten tryckverkstad till en komplett tryck- och designstudio som betjänar kunder över hela Sverige och utanför.",
+    "historyText2": "Vårt team av erfarna designers och tryckspecialister är dedikerade till att leverera exceptionell kvalitet och service för varje projekt, stort som litet.",
+    "highlights": [
+      "Högkvalitativa trycklösningar",
+      "Personlig service",
+      "Snabba leveranser",
+      "Miljövänliga material",
+      "Prisbelönt design",
+      "Kundfokuserad process"
+    ],
     "cta": "Upptäck vår historia"
   },
   "testimonials": {
@@ -67,7 +105,45 @@
   },
   "recentProjects": {
     "title": "Senaste Projekten",
-    "description": "Ta en titt på några av våra senaste arbeten för inspiration."
+    "description": "Ta en titt på några av våra senaste arbeten för inspiration.",
+    "tagline": "PORTFOLIO",
+    "project1": {
+      "title": "Företagsprofilpaket",
+      "category": "Visitkort & Kontorsmaterial"
+    },
+    "project2": {
+      "title": "Eventplagg",
+      "category": "Klädtryck"
+    },
+    "project3": {
+      "title": "Butiksskyltning",
+      "category": "Storformatstryck"
+    },
+    "project4": {
+      "title": "Produktförpackningar",
+      "category": "Förpackningsdesign"
+    }
+  },
+  "process": {
+    "tagline": "HUR VI ARBETAR",
+    "title": "Vår enkla process",
+    "description": "Från koncept till leverans gör vi skräddarsydda trycklösningar enkla och problemfria.",
+    "consultation": {
+      "title": "Konsultation",
+      "description": "Vi börjar med att förstå dina behov och din vision för att skapa den perfekta trycklösningen."
+    },
+    "design": {
+      "title": "Design",
+      "description": "Våra expertdesigners skapar fantastiska visuella element skräddarsydda för ditt varumärke och specifikationer."
+    },
+    "printing": {
+      "title": "Tryck",
+      "description": "Med hjälp av den senaste tekniken ger vi liv åt dina designer med förstklassig tryckkvalitet."
+    },
+    "delivery": {
+      "title": "Leverans",
+      "description": "Vi ser till att dina färdiga produkter levereras i tid och i perfekt skick."
+    }
   },
   "clients": {
     "title": "Betrodda av företag över hela Sverige",

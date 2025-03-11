@@ -4,7 +4,35 @@
     "tagline": "PRINTING EXCELLENCE",
     "title": "Design, Print, Deliver",
     "subtitle": "Tailored to Your Needs",
-    "description": "Custom designs for T-shirts, Business Cards, Decals, and more – Made just for you with premium quality and personalized service."
+    "description": "Custom designs for T-shirts, Business Cards, Decals, and more – Made just for you with premium quality and personalized service.",
+    "scrollDown": "Scroll down to explore our services",
+    "popularServices": "Popular Services",
+    "categories": {
+      "clothing": "Custom apparel for brands, events, and teams",
+      "print": "Business cards, brochures, and marketing materials",
+      "stickers": "Custom stickers and decals for any surface",
+      "0": {
+        "features": {
+          "1": "High-quality t-shirts, hoodies, and caps",
+          "2": "Durable screen printing and embroidery",
+          "3": "Perfect for team uniforms and events"
+        }
+      },
+      "1": {
+        "features": {
+          "1": "Premium business cards and stationery",
+          "2": "Brochures, catalogs, and marketing materials",
+          "3": "Fast turnaround on large orders"
+        }
+      },
+      "2": {
+        "features": {
+          "1": "Weather-resistant vinyl decals",
+          "2": "Custom shapes and sizes available",
+          "3": "Perfect for branding and promotions"
+        }
+      }
+    }
   },
   "services": {
     "title": "Discover our range of printing services",
@@ -37,6 +65,16 @@
     "tagline": "ABOUT KALMAR STUDIO",
     "title": "Your vision, our craft",
     "description": "Learn about the story behind Kalmar Studio and our passion for printing and design.",
+    "historyText1": "Founded in 2005, Kalmar Studio has grown from a small print shop to a full-service printing and design studio serving clients across Sweden and beyond.",
+    "historyText2": "Our team of experienced designers and print specialists are dedicated to delivering exceptional quality and service for every project, big or small.",
+    "highlights": [
+      "High-quality printing solutions",
+      "Personal service",
+      "Fast deliveries",
+      "Environmentally friendly materials",
+      "Award-winning design",
+      "Customer-focused process"
+    ],
     "cta": "Discover our story"
   },
   "testimonials": {
@@ -67,7 +105,45 @@
   },
   "recentProjects": {
     "title": "Recent Projects",
-    "description": "Take a look at some of our latest work for inspiration."
+    "description": "Take a look at some of our latest work for inspiration.",
+    "tagline": "PORTFOLIO",
+    "project1": {
+      "title": "Corporate Branding Package",
+      "category": "Business Cards & Stationery"
+    },
+    "project2": {
+      "title": "Event T-shirts",
+      "category": "Apparel Printing"
+    },
+    "project3": {
+      "title": "Custom Store Signage",
+      "category": "Large Format Printing"
+    },
+    "project4": {
+      "title": "Product Packaging",
+      "category": "Packaging Design"
+    }
+  },
+  "process": {
+    "tagline": "HOW WE WORK",
+    "title": "Our Simple Process",
+    "description": "From concept to delivery, we make custom printing easy and hassle-free.",
+    "consultation": {
+      "title": "Consultation",
+      "description": "We start with understanding your needs and vision to create the perfect print solution."
+    },
+    "design": {
+      "title": "Design",
+      "description": "Our expert designers create stunning visuals tailored to your brand and specifications."
+    },
+    "printing": {
+      "title": "Printing",
+      "description": "Using cutting-edge technology, we bring your designs to life with premium quality printing."
+    },
+    "delivery": {
+      "title": "Delivery",
+      "description": "We ensure your finished products are delivered on time and in perfect condition."
+    }
   },
   "clients": {
     "title": "Trusted by businesses all over Sweden",
