@@ -1,0 +1,72 @@
+
+{
+  "title": "Advertising & Sponsorship",
+  "subtitle": "Connect with our audience through strategic partnerships",
+  "seo": {
+    "title": "Advertising & Sponsorship - Kalmar Studio",
+    "description": "Explore advertising opportunities and sponsorship packages at Kalmar Studio to reach our audience of design professionals and enthusiasts."
+  },
+  "hero": {
+    "heading": "Grow your brand with us",
+    "subheading": "Reach our audience of design professionals and enthusiasts through strategic partnerships"
+  },
+  "adPlacements": {
+    "title": "Advertising Opportunities",
+    "description": "Reach our audience through strategic advertising placements",
+    "options": {
+      "website": {
+        "title": "Website Banners",
+        "description": "Strategic placements on high-traffic pages"
+      },
+      "newsletter": {
+        "title": "Newsletter Features",
+        "description": "Reach our subscribers directly in their inbox"
+      },
+      "content": {
+        "title": "Sponsored Content",
+        "description": "Native content created to engage our audience"
+      }
+    }
+  },
+  "sponsorships": {
+    "title": "Sponsorship Packages",
+    "description": "Become a sponsor and gain exclusive access to our community",
+    "levels": {
+      "bronze": {
+        "title": "Bronze Sponsor",
+        "benefits": [
+          "Logo placement on website",
+          "Monthly social media mentions",
+          "Newsletter recognition"
+        ]
+      },
+      "silver": {
+        "title": "Silver Sponsor",
+        "benefits": [
+          "All Bronze benefits",
+          "Sponsored blog post",
+          "Webinar participation",
+          "Featured in case studies"
+        ]
+      },
+      "gold": {
+        "title": "Gold Sponsor",
+        "benefits": [
+          "All Silver benefits",
+          "Premium placement in all materials",
+          "Co-branded events",
+          "Exclusive industry reports",
+          "Direct access to our network"
+        ]
+      }
+    }
+  },
+  "contact": {
+    "title": "Contact Our Advertising Team",
+    "description": "Interested in our advertising opportunities? Contact our team to discuss custom solutions tailored to your goals.",
+    "getInTouch": "Get in Touch",
+    "email": "advertising@kalmarstudio.com",
+    "phone": "(123) 456-7890",
+    "cta": "Request Media Kit"
+  }
+}

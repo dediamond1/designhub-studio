@@ -1,0 +1,41 @@
+
+{
+  "title": "Skapa ett konto",
+  "description": "Ange dina uppgifter nedan för att skapa ditt konto",
+  "seo": {
+    "title": "Registrera - Kalmar Studio",
+    "description": "Skapa ditt konto på Kalmar Studio för att få tillgång till exklusiva designer och erbjudanden."
+  },
+  "form": {
+    "name": {
+      "label": "Fullständigt namn",
+      "placeholder": "John Doe",
+      "error": "Namnet måste vara minst 2 tecken"
+    },
+    "email": {
+      "label": "E-post",
+      "placeholder": "din.email@exempel.com",
+      "error": "Vänligen ange en giltig e-postadress"
+    },
+    "password": {
+      "label": "Lösenord",
+      "placeholder": "••••••••",
+      "error": "Lösenordet måste vara minst 6 tecken"
+    },
+    "confirmPassword": {
+      "label": "Bekräfta lösenord",
+      "placeholder": "••••••••",
+      "error": "Bekräfta lösenord krävs",
+      "mismatch": "Lösenorden matchar inte"
+    }
+  },
+  "button": {
+    "creating": "Skapar konto...",
+    "create": "Skapa konto"
+  },
+  "login": {
+    "text": "Har du redan ett konto?",
+    "link": "Logga in här"
+  },
+  "success": "Konto skapat framgångsrikt!"
+}

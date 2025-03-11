@@ -1,0 +1,41 @@
+
+{
+  "title": "Create an account",
+  "description": "Enter your details below to create your account",
+  "seo": {
+    "title": "Register - Kalmar Studio",
+    "description": "Create your account on Kalmar Studio to access exclusive designs and offers."
+  },
+  "form": {
+    "name": {
+      "label": "Full Name",
+      "placeholder": "John Doe",
+      "error": "Name must be at least 2 characters"
+    },
+    "email": {
+      "label": "Email",
+      "placeholder": "your.email@example.com",
+      "error": "Please enter a valid email address"
+    },
+    "password": {
+      "label": "Password",
+      "placeholder": "••••••••",
+      "error": "Password must be at least 6 characters"
+    },
+    "confirmPassword": {
+      "label": "Confirm Password",
+      "placeholder": "••••••••",
+      "error": "Confirm password is required",
+      "mismatch": "Passwords don't match"
+    }
+  },
+  "button": {
+    "creating": "Creating account...",
+    "create": "Create Account"
+  },
+  "login": {
+    "text": "Already have an account?",
+    "link": "Sign in here"
+  },
+  "success": "Account created successfully!"
+}

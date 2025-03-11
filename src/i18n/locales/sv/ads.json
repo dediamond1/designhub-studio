@@ -1,0 +1,72 @@
+
+{
+  "title": "Annonsering & Sponsring",
+  "subtitle": "Koppla samman med vår publik genom strategiska partnerskap",
+  "seo": {
+    "title": "Annonsering & Sponsring - Kalmar Studio",
+    "description": "Utforska annonseringsmöjligheter och sponsorpaket hos Kalmar Studio för att nå vår publik av designproffs och entusiaster."
+  },
+  "hero": {
+    "heading": "Väx ditt varumärke med oss",
+    "subheading": "Nå vår publik av designproffs och entusiaster genom strategiska partnerskap"
+  },
+  "adPlacements": {
+    "title": "Annonseringsmöjligheter",
+    "description": "Nå vår publik genom strategiska annonsplaceringar",
+    "options": {
+      "website": {
+        "title": "Webbplatsbanners",
+        "description": "Strategiska placeringar på sidor med hög trafik"
+      },
+      "newsletter": {
+        "title": "Nyhetsbrevsfunktioner",
+        "description": "Nå våra prenumeranter direkt i deras inkorg"
+      },
+      "content": {
+        "title": "Sponsrat innehåll",
+        "description": "Inhemskt innehåll skapat för att engagera vår publik"
+      }
+    }
+  },
+  "sponsorships": {
+    "title": "Sponsorpaket",
+    "description": "Bli sponsor och få exklusiv tillgång till vår gemenskap",
+    "levels": {
+      "bronze": {
+        "title": "Bronssponsor",
+        "benefits": [
+          "Logotypplacering på webbplatsen",
+          "Månatliga omnämnanden i sociala medier",
+          "Erkännande i nyhetsbrev"
+        ]
+      },
+      "silver": {
+        "title": "Silversponsor",
+        "benefits": [
+          "Alla bronsförmåner",
+          "Sponsrat blogginlägg",
+          "Webinardeltagande",
+          "Medverkan i fallstudier"
+        ]
+      },
+      "gold": {
+        "title": "Guldsponsor",
+        "benefits": [
+          "Alla silverförmåner",
+          "Premiumplacering i allt material",
+          "Samarrangemang",
+          "Exklusiva branschrapporter",
+          "Direkt tillgång till vårt nätverk"
+        ]
+      }
+    }
+  },
+  "contact": {
+    "title": "Kontakta vårt annonseringsteam",
+    "description": "Intresserad av våra annonseringsmöjligheter? Kontakta vårt team för att diskutera skräddarsydda lösningar anpassade efter dina mål.",
+    "getInTouch": "Kom i kontakt",
+    "email": "annonsering@kalmarstudio.com",
+    "phone": "(123) 456-7890",
+    "cta": "Begär mediekit"
+  }
+}

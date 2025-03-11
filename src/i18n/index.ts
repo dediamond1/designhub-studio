@@ -12,17 +12,29 @@ import enHome from './locales/en/home.json';
 import svHome from './locales/sv/home.json';
 import enLogin from './locales/en/login.json';
 import svLogin from './locales/sv/login.json';
+import enRegister from './locales/en/register.json';
+import svRegister from './locales/sv/register.json';
+import enAds from './locales/en/ads.json';
+import svAds from './locales/sv/ads.json';
+import enNotFound from './locales/en/notFound.json';
+import svNotFound from './locales/sv/notFound.json';
 
 const resources = {
   en: {
     common: enCommon,
     home: enHome,
-    login: enLogin
+    login: enLogin,
+    register: enRegister,
+    ads: enAds,
+    notFound: enNotFound
   },
   sv: {
     common: svCommon,
     home: svHome,
-    login: svLogin
+    login: svLogin,
+    register: svRegister,
+    ads: svAds,
+    notFound: svNotFound
   }
 };
 
@@ -40,7 +52,7 @@ i18n
       caches: ['localStorage']
     },
     // Using namespaces for better organization
-    ns: ['common', 'home', 'login'],
+    ns: ['common', 'home', 'login', 'register', 'ads', 'notFound'],
     defaultNS: 'common'
   });
 
