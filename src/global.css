@@ -11,8 +11,11 @@
     --card-foreground: 224 71.4% 4.1%;
     --popover: 0 0% 100%;
     --popover-foreground: 224 71.4% 4.1%;
-    --primary: 220 91% 54%;
+    
+    /* New purple primary color */
+    --primary: 260 70% 65%;
     --primary-foreground: 210 20% 98%;
+    
     --secondary: 220 14.3% 95.9%;
     --secondary-foreground: 220.9 39.3% 11%;
     --muted: 220 14.3% 95.9%;
@@ -26,18 +29,31 @@
     --ring: 262.1 83.3% 57.8%;
     --radius: 0.5rem;
     
-    /* Kalmar Studio Colors */
-    --kalmar-50: 220 20% 98%;
-    --kalmar-100: 220 16% 96%;
-    --kalmar-200: 220 14% 90%;
-    --kalmar-300: 220 13% 80%;
-    --kalmar-400: 220 12% 65%;
-    --kalmar-500: 220 11% 50%;
-    --kalmar-600: 220 18% 40%;
-    --kalmar-700: 220 22% 32%;
-    --kalmar-800: 220 26% 22%;
-    --kalmar-900: 220 30% 13%;
-    --kalmar-950: 220 35% 8%;
+    /* Kalmar Studio New Colors */
+    --kalmar-50: 260 40% 98%;
+    --kalmar-100: 260 36% 96%;
+    --kalmar-200: 260 34% 90%;
+    --kalmar-300: 260 33% 80%;
+    --kalmar-400: 260 32% 65%;
+    --kalmar-500: 260 31% 50%;
+    --kalmar-600: 260 38% 40%;
+    --kalmar-700: 260 42% 32%;
+    --kalmar-800: 260 46% 22%;
+    --kalmar-900: 260 50% 13%;
+    --kalmar-950: 260 55% 8%;
+    
+    /* Orange accent colors */
+    --orange-50: 24 100% 97%;
+    --orange-100: 24 94% 93%;
+    --orange-200: 24 94% 86%;
+    --orange-300: 24 91% 76%;
+    --orange-400: 24 90% 66%;
+    --orange-500: 24 90% 58%;
+    --orange-600: 24 85% 48%;
+    --orange-700: 24 90% 40%;
+    --orange-800: 24 81% 32%;
+    --orange-900: 24 74% 25%;
+    --orange-950: 24 80% 15%;
   }
 
   .dark {
@@ -142,4 +158,47 @@
 .reveal-on-scroll.revealed {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* New gradients for purple and orange theme */
+.gradient-primary {
+  @apply bg-gradient-to-r from-purple-500 to-purple-600;
+}
+
+.gradient-accent {
+  @apply bg-gradient-to-r from-orange-400 to-orange-500;
+}
+
+.gradient-mixed {
+  @apply bg-gradient-to-br from-purple-500 via-purple-400 to-orange-400;
+}
+
+.text-gradient-mixed {
+  @apply bg-gradient-to-r from-purple-600 to-orange-500 bg-clip-text text-transparent;
+}
+
+.bg-soft-purple {
+  @apply bg-purple-50;
+}
+
+.bg-soft-orange {
+  @apply bg-orange-50;
+}
+
+/* New card styles */
+.card-accent {
+  @apply border border-orange-200 bg-gradient-to-b from-white to-orange-50 rounded-xl shadow-sm;
+}
+
+.card-primary {
+  @apply border border-purple-200 bg-gradient-to-b from-white to-purple-50 rounded-xl shadow-sm;
+}
+
+/* Button variants */
+.button-accent {
+  @apply inline-flex items-center justify-center px-6 py-3 rounded-lg bg-orange-500 text-white font-medium transition-colors hover:bg-orange-600;
+}
+
+.button-accent-outline {
+  @apply inline-flex items-center justify-center px-6 py-3 rounded-lg bg-transparent text-orange-500 border border-orange-300 font-medium transition-colors hover:bg-orange-50;
 }

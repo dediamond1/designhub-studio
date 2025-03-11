@@ -1,3 +1,4 @@
+
 import React, { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useScrollReveal } from '../utils/animations';
@@ -66,10 +67,10 @@ const DesignPreviewTool = () => {
   };
 
   return (
-    <section ref={sectionRef} className="py-16 md:py-24 bg-gradient-to-b from-kalmar-50 to-white">
+    <section ref={sectionRef} className="py-16 md:py-24 bg-gradient-to-b from-purple-50 to-white">
       <div className="container mx-auto px-4 md:px-6">
         <div className="text-center max-w-3xl mx-auto mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gradient-mixed">
             {t('designPreview.title')}
           </h2>
           <p className="text-lg text-gray-600">
@@ -78,10 +79,10 @@ const DesignPreviewTool = () => {
         </div>
 
         <div className="max-w-5xl mx-auto">
-          <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
+          <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-purple-100">
             <div className="grid grid-cols-1 lg:grid-cols-3">
               {/* Product Sidebar */}
-              <div className="bg-gray-50 p-6 border-r border-gray-100">
+              <div className="bg-gradient-soft-purple p-6 border-r border-purple-100">
                 <h3 className="font-medium mb-4">{t('designPreview.selectProduct')}</h3>
                 
                 <div className="space-y-2">
@@ -92,14 +93,14 @@ const DesignPreviewTool = () => {
                       className={cn(
                         "w-full flex items-center p-3 rounded-lg text-left text-sm transition-colors",
                         selectedProduct === product.id
-                          ? "bg-kalmar-100 text-kalmar-700"
-                          : "hover:bg-gray-100"
+                          ? "bg-purple-100 text-purple-700"
+                          : "hover:bg-purple-50"
                       )}
                     >
                       <div className={cn(
                         "w-8 h-8 rounded-md flex items-center justify-center mr-3",
                         selectedProduct === product.id
-                          ? "bg-kalmar-500 text-white"
+                          ? "bg-purple-500 text-white"
                           : "bg-gray-200 text-gray-600"
                       )}>
                         {product.icon}
@@ -116,8 +117,8 @@ const DesignPreviewTool = () => {
                     className={cn(
                       "border-2 border-dashed rounded-lg p-4 text-center cursor-pointer transition-colors",
                       isDragging 
-                        ? "border-kalmar-500 bg-kalmar-50" 
-                        : "border-gray-300 hover:border-kalmar-400 hover:bg-gray-50"
+                        ? "border-purple-500 bg-purple-50" 
+                        : "border-gray-300 hover:border-purple-400 hover:bg-purple-50"
                     )}
                     onDragOver={handleDragOver}
                     onDragLeave={handleDragLeave}
@@ -144,25 +145,25 @@ const DesignPreviewTool = () => {
                 <div className="flex justify-between items-center mb-6">
                   <h3 className="font-medium">{t('designPreview.preview')}</h3>
                   <div className="flex space-x-2">
-                    <button className="p-2 rounded-md hover:bg-gray-100">
-                      <RefreshCw className="h-4 w-4 text-gray-600" />
+                    <button className="p-2 rounded-md hover:bg-purple-50">
+                      <RefreshCw className="h-4 w-4 text-purple-600" />
                     </button>
                     <button 
-                      className="p-2 rounded-md hover:bg-gray-100"
+                      className="p-2 rounded-md hover:bg-purple-50"
                       disabled={!designImage}
                     >
-                      <Download className="h-4 w-4 text-gray-600" />
+                      <Download className="h-4 w-4 text-purple-600" />
                     </button>
                     <button 
-                      className="p-2 rounded-md hover:bg-gray-100"
+                      className="p-2 rounded-md hover:bg-purple-50"
                       disabled={!designImage}
                     >
-                      <Save className="h-4 w-4 text-gray-600" />
+                      <Save className="h-4 w-4 text-purple-600" />
                     </button>
                   </div>
                 </div>
 
-                <div className="relative bg-gray-50 rounded-lg overflow-hidden h-72 md:h-96 flex items-center justify-center border border-gray-200">
+                <div className="relative bg-gradient-soft-purple rounded-lg overflow-hidden h-72 md:h-96 flex items-center justify-center border border-purple-100">
                   {/* Product Preview */}
                   <img 
                     src={products.find(p => p.id === selectedProduct)?.image || ''} 
@@ -195,7 +196,7 @@ const DesignPreviewTool = () => {
                     {t('buttons.try')} {products.find(p => p.id === selectedProduct)?.label}
                   </button>
                   
-                  <button className="px-4 py-2 rounded-lg bg-kalmar-600 text-white hover:bg-kalmar-700 transition-colors">
+                  <button className="px-4 py-2 rounded-lg bg-gradient-to-r from-purple-600 to-orange-500 text-white hover:opacity-90 transition-colors shadow-purple">
                     {t('buttons.requestQuote')}
                   </button>
                 </div>
