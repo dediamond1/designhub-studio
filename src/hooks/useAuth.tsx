@@ -1,6 +1,5 @@
 
 import { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useToast } from './use-toast';
 import { 
   LoginCredentials, 
@@ -13,12 +12,11 @@ import {
 
 const API_URL = '/api/auth';
 
-export const useAuth = () => {
+export const useAuthContext = () => {
   const [user, setUser] = useState<UserData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [initialized, setInitialized] = useState<boolean>(false);
   const { toast } = useToast();
-  const navigate = useNavigate();
 
   // Initialize authentication state from local storage
   useEffect(() => {
@@ -142,12 +140,14 @@ export const useAuth = () => {
     localStorage.removeItem('user');
     localStorage.removeItem('token');
     setUser(null);
-    navigate('/login');
+    
+    window.location.href = '/login'; // Using direct navigation instead of useNavigate
+    
     toast({
       title: 'Logged Out',
       description: 'You have been successfully logged out',
     });
-  }, [navigate, toast]);
+  }, [toast]);
 
   // Request password reset
   const forgotPassword = useCallback(async (data: ResetPasswordRequest) => {

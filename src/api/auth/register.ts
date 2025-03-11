@@ -22,8 +22,8 @@ export default async function register(req: Request, res: Response) {
       return res.status(400).json({ success: false, message: 'Please provide all required fields' });
     }
 
-    // Check if user already exists - using exec() to properly execute the query
-    const existingUser = await User.findOne({ email }).exec();
+    // Check if user already exists
+    const existingUser = await User.findOne({ email }).lean();
     if (existingUser) {
       return res.status(400).json({ success: false, message: 'User with this email already exists' });
     }

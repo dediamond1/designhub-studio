@@ -21,8 +21,8 @@ export default async function login(req: Request, res: Response) {
       return res.status(400).json({ success: false, message: 'Please provide email and password' });
     }
 
-    // Find user - using exec() to properly execute the query
-    const user = await User.findOne({ email }).exec();
+    // Find user by email
+    const user = await User.findOne({ email }).lean();
     if (!user) {
       return res.status(401).json({ success: false, message: 'Invalid credentials' });
     }
@@ -34,8 +34,7 @@ export default async function login(req: Request, res: Response) {
     }
 
     // Update last login
-    user.lastLogin = new Date();
-    await user.save();
+    await User.updateOne({ _id: user._id }, { $set: { lastLogin: new Date() } });
 
     // Generate JWT Token
     const token = jwt.sign(

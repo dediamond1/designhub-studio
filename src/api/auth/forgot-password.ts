@@ -18,8 +18,8 @@ export default async function forgotPassword(req: Request, res: Response) {
       return res.status(400).json({ success: false, message: 'Email is required' });
     }
 
-    // Find user - using exec() to properly execute the query
-    const user = await User.findOne({ email }).exec();
+    // Find user
+    const user = await User.findOne({ email }).lean();
     
     // Don't reveal that the user doesn't exist
     if (!user) {
@@ -33,9 +33,13 @@ export default async function forgotPassword(req: Request, res: Response) {
     const resetToken = crypto.randomBytes(32).toString('hex');
     
     // Set reset token and expiry
-    user.resetPasswordToken = resetToken;
-    user.resetPasswordExpires = new Date(Date.now() + 3600000); // 1 hour
-    await user.save();
+    await User.updateOne(
+      { _id: user._id },
+      { 
+        resetPasswordToken: resetToken,
+        resetPasswordExpires: new Date(Date.now() + 3600000) // 1 hour
+      }
+    );
 
     // Here you would normally send an email with the reset link
     // For now we just return the token in the response

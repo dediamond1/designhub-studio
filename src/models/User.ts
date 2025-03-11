@@ -1,5 +1,5 @@
 
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema, Document, Model } from 'mongoose';
 import bcrypt from 'bcryptjs';
 
 export interface IUser extends Document {
@@ -15,6 +15,10 @@ export interface IUser extends Document {
   createdAt: Date;
   updatedAt: Date;
   comparePassword(candidatePassword: string): Promise<boolean>;
+}
+
+interface IUserModel extends Model<IUser> {
+  comparePassword?: (candidatePassword: string) => Promise<boolean>;
 }
 
 const UserSchema = new Schema<IUser>({
@@ -73,6 +77,14 @@ UserSchema.methods.comparePassword = async function(candidatePassword: string): 
   return bcrypt.compare(candidatePassword, this.password);
 };
 
-const User = mongoose.models.User || mongoose.model<IUser>('User', UserSchema);
+// This ensures we're using the right approach for Mongoose models
+let User: IUserModel;
+
+// Check if the model already exists to prevent overwriting
+if (mongoose.models.User) {
+  User = mongoose.models.User as IUserModel;
+} else {
+  User = mongoose.model<IUser, IUserModel>('User', UserSchema);
+}
 
 export default User;

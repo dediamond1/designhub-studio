@@ -20,11 +20,11 @@ export default async function resetPassword(req: Request, res: Response) {
       });
     }
 
-    // Find user with this reset token and token not expired - using exec() to properly execute the query
+    // Find user with this reset token and token not expired
     const user = await User.findOne({
       resetPasswordToken: token,
       resetPasswordExpires: { $gt: Date.now() }
-    }).exec();
+    }).lean();
     
     if (!user) {
       return res.status(400).json({
@@ -33,11 +33,14 @@ export default async function resetPassword(req: Request, res: Response) {
       });
     }
 
-    // Set new password and clear reset token
-    user.password = password;
-    user.resetPasswordToken = undefined;
-    user.resetPasswordExpires = undefined;
-    await user.save();
+    // Update user with new password and clear reset token fields
+    await User.updateOne(
+      { _id: user._id },
+      {
+        $set: { password },
+        $unset: { resetPasswordToken: "", resetPasswordExpires: "" }
+      }
+    );
 
     return res.status(200).json({
       success: true,
