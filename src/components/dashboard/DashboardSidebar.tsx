@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { 
@@ -31,13 +30,11 @@ const DashboardSidebar = () => {
     { name: 'Analytics', path: '/dashboard/analytics', icon: BarChart3 },
   ];
   
-  // Admin-only items
   const adminItems = [
     { name: 'Team Members', path: '/dashboard/team', icon: UserPlus },
     { name: 'Settings', path: '/dashboard/settings', icon: Settings },
   ];
 
-  // Determine which items to show based on user role
   const displayItems = [...sidebarItems, ...(user?.role === 'admin' ? adminItems : [])];
 
   return (
