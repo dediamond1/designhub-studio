@@ -11,7 +11,6 @@ import {
   DropdownMenuTrigger 
 } from '@/components/ui/dropdown-menu';
 import { useNavigate } from 'react-router-dom';
-import { useAuthContext } from '@/contexts/AuthContext';
 
 interface DashboardHeaderProps {
   toggleSidebar?: () => void;
@@ -19,10 +18,14 @@ interface DashboardHeaderProps {
 
 const DashboardHeader = ({ toggleSidebar }: DashboardHeaderProps) => {
   const navigate = useNavigate();
-  const { user, logout } = useAuthContext();
 
-  const handleLogout = async () => {
-    logout();
+  // Mock user data for UI display only
+  const mockUser = {
+    name: 'Demo User',
+  };
+
+  const handleLogout = () => {
+    navigate('/');
   };
 
   return (
@@ -54,7 +57,7 @@ const DashboardHeader = ({ toggleSidebar }: DashboardHeaderProps) => {
               <DropdownMenuSeparator />
               <DropdownMenuItem>
                 <User className="h-4 w-4 mr-2" />
-                <span>{user?.name || 'Profile'}</span>
+                <span>{mockUser.name}</span>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => navigate('/dashboard/settings')}>
                 <Settings className="h-4 w-4 mr-2" />

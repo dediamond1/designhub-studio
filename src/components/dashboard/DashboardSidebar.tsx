@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { 
   Home, 
   ShoppingCart, 
@@ -15,11 +15,13 @@ import {
   UserPlus
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useAuthContext } from '@/contexts/AuthContext';
 
 const DashboardSidebar = () => {
   const [collapsed, setCollapsed] = useState(false);
-  const { user, logout } = useAuthContext();
+  const navigate = useNavigate();
+
+  // Mock user role for display purposes
+  const mockUserRole = 'admin';
 
   const sidebarItems = [
     { name: 'Overview', path: '/dashboard', icon: Home },
@@ -35,7 +37,11 @@ const DashboardSidebar = () => {
     { name: 'Team Members', path: '/dashboard/team', icon: UserPlus },
   ];
 
-  const displayItems = [...sidebarItems, ...(user?.role === 'admin' ? adminItems : [])];
+  const displayItems = [...sidebarItems, ...(mockUserRole === 'admin' ? adminItems : [])];
+
+  const handleLogout = () => {
+    navigate('/');
+  };
 
   return (
     <aside 
@@ -88,7 +94,7 @@ const DashboardSidebar = () => {
       
       <div className="p-4 border-t border-border">
         <button
-          onClick={logout}
+          onClick={handleLogout}
           className="flex items-center w-full p-2 rounded-md text-sm group transition-colors text-sidebar-foreground hover:bg-sidebar-accent/80"
         >
           <LogOut size={20} className={cn(collapsed ? "" : "mr-3")} />

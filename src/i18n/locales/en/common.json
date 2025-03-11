@@ -1,0 +1,63 @@
+
+{
+  "navigation": {
+    "home": "Home",
+    "about": "About Us",
+    "services": "Services",
+    "design": "Design Your Own",
+    "blog": "Blog",
+    "news": "News",
+    "offers": "Offers",
+    "contact": "Contact",
+    "career": "Careers",
+    "ads": "Advertising"
+  },
+  "buttons": {
+    "getQuote": "Get a Quote",
+    "startDesigning": "Start Designing",
+    "readMore": "Read More",
+    "contactUs": "Contact Us",
+    "learnMore": "Learn More",
+    "subscribe": "Subscribe",
+    "submitMessage": "Send Message",
+    "backToHome": "Back to Home",
+    "login": "Log In",
+    "register": "Sign Up",
+    "forgotPassword": "Forgot Password?",
+    "resetPassword": "Reset Password"
+  },
+  "formLabels": {
+    "name": "Name",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "message": "Message",
+    "phone": "Phone",
+    "subject": "Subject"
+  },
+  "formPlaceholders": {
+    "email": "your.email@example.com",
+    "password": "••••••••",
+    "name": "Your name"
+  },
+  "footer": {
+    "rights": "All rights reserved",
+    "company": "Company",
+    "services": "Services",
+    "support": "Support",
+    "newsletter": "Newsletter",
+    "newsletterDescription": "Get the latest articles, tips and offers directly in your inbox. We send newsletters about once a month.",
+    "subscribe": "Subscribe",
+    "connect": "Connect with us"
+  },
+  "metadata": {
+    "company": "Kalmar Studio",
+    "address": "Tryckvägen 123, 123 45 Kalmar, Sweden",
+    "phone": "+46 70 123 45 67",
+    "email": "info@kalmarstudio.se"
+  },
+  "loading": "Loading...",
+  "error": "An error occurred",
+  "success": "Success!",
+  "tryAgain": "Please try again"
+}

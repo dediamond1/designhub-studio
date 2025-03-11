@@ -1,0 +1,80 @@
+
+{
+  "hero": {
+    "tagline": "TRYCKEXCELLENS",
+    "title": "Designa, Trycka, Leverera",
+    "subtitle": "Anpassat efter dina behov",
+    "description": "Skräddarsydda designer för t-shirts, visitkort, dekaler och mer – Gjorda just för dig med premiumkvalitet och personlig service."
+  },
+  "services": {
+    "title": "Upptäck vårt utbud av trycktjänster",
+    "description": "Vi erbjuder högkvalitativa tryck- och designlösningar för alla behov, från företag till privatpersoner.",
+    "categories": {
+      "tshirts": {
+        "title": "T-shirts & Kläder",
+        "description": "Skapa personliga t-shirts och kläder med din egen design. Perfekt för event, företag eller personligt bruk."
+      },
+      "businessCards": {
+        "title": "Visitkort & Trycksaker",
+        "description": "Professionella visitkort och trycksaker som gör intryck och stärker ditt varumärke."
+      },
+      "decals": {
+        "title": "Dekaler & Klistermärken",
+        "description": "Högkvalitativa dekaler och klistermärken i olika former och storlekar för alla ändamål."
+      },
+      "graphicDesign": {
+        "title": "Grafisk Design",
+        "description": "Låt våra designers hjälpa dig skapa unika och professionella designlösningar för ditt varumärke."
+      },
+      "webSocial": {
+        "title": "Webb & Sociala Medier",
+        "description": "Designlösningar för dina digitala kanaler, från webbplatser till sociala medier."
+      }
+    },
+    "exploreAll": "Utforska alla tjänster"
+  },
+  "about": {
+    "tagline": "OM KALMAR STUDIO",
+    "title": "Din vision, vårt hantverk",
+    "description": "Lär känna historien bakom Kalmar Studio och vår passion för tryck och design.",
+    "cta": "Upptäck vår historia"
+  },
+  "testimonials": {
+    "title": "Vad våra kunder säger",
+    "description": "Ta inte bara vårt ord på det - hör vad våra värdefulla kunder har att säga om våra tjänster.",
+    "items": [
+      {
+        "quote": "Kvaliteten på trycket översteg våra förväntningar. Kundservicen var enastående från början till slut.",
+        "author": "Sarah Johnson",
+        "company": "ABC Corporation"
+      },
+      {
+        "quote": "Snabb leverans och oklanderligt designarbete. Kalmar Studio hjälpte oss att förnya hela vår visuella identitet.",
+        "author": "Michael Brown",
+        "company": "Innovation Labs"
+      },
+      {
+        "quote": "Som småföretagare uppskattar jag deras personliga touch och uppmärksamhet på detaljer. Rekommenderas starkt!",
+        "author": "Emma Wilson",
+        "company": "Craft Cafe"
+      }
+    ]
+  },
+  "cta": {
+    "title": "Redo att förverkliga dina idéer?",
+    "description": "Kontakta oss idag för att diskutera ditt projekt och få en personlig offert.",
+    "button": "Starta ditt projekt"
+  },
+  "recentProjects": {
+    "title": "Senaste Projekten",
+    "description": "Ta en titt på några av våra senaste arbeten för inspiration."
+  },
+  "clients": {
+    "title": "Betrodda av företag över hela Sverige",
+    "description": "Från små startups till stora företag, vi har hjälpt företag i alla storlekar med deras tryckbehov."
+  },
+  "seo": {
+    "title": "Kalmar Studio | Skräddarsydda Trycklösningar",
+    "description": "Högkvalitativt anpassat tryck för t-shirts, visitkort, dekaler och mer. Snabb leverans och personlig service för alla dina tryckbehov."
+  }
+}

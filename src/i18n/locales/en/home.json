@@ -1,0 +1,80 @@
+
+{
+  "hero": {
+    "tagline": "PRINTING EXCELLENCE",
+    "title": "Design, Print, Deliver",
+    "subtitle": "Tailored to Your Needs",
+    "description": "Custom designs for T-shirts, Business Cards, Decals, and more – Made just for you with premium quality and personalized service."
+  },
+  "services": {
+    "title": "Discover our range of printing services",
+    "description": "We offer high-quality print and design solutions for all needs, from businesses to individuals.",
+    "categories": {
+      "tshirts": {
+        "title": "T-shirts & Clothing",
+        "description": "Create personalized t-shirts and clothing with your own design. Perfect for events, companies or personal use."
+      },
+      "businessCards": {
+        "title": "Business Cards & Print",
+        "description": "Professional business cards and printed materials that make an impression and strengthen your brand."
+      },
+      "decals": {
+        "title": "Decals & Stickers",
+        "description": "High-quality decals and stickers in different shapes and sizes for all purposes."
+      },
+      "graphicDesign": {
+        "title": "Graphic Design",
+        "description": "Let our designers help you create unique and professional design solutions for your brand."
+      },
+      "webSocial": {
+        "title": "Web & Social Media",
+        "description": "Design solutions for your digital channels, from websites to social media."
+      }
+    },
+    "exploreAll": "Explore all services"
+  },
+  "about": {
+    "tagline": "ABOUT KALMAR STUDIO",
+    "title": "Your vision, our craft",
+    "description": "Learn about the story behind Kalmar Studio and our passion for printing and design.",
+    "cta": "Discover our story"
+  },
+  "testimonials": {
+    "title": "What our clients say",
+    "description": "Don't just take our word for it - hear what our valued customers have to say about our services.",
+    "items": [
+      {
+        "quote": "The quality of the print exceeded our expectations. The customer service was exceptional from start to finish.",
+        "author": "Sarah Johnson",
+        "company": "ABC Corporation"
+      },
+      {
+        "quote": "Fast delivery and impeccable design work. Kalmar Studio helped us rebrand our entire visual identity.",
+        "author": "Michael Brown",
+        "company": "Innovation Labs"
+      },
+      {
+        "quote": "As a small business owner, I appreciate their personal touch and attention to detail. Highly recommended!",
+        "author": "Emma Wilson",
+        "company": "Craft Cafe"
+      }
+    ]
+  },
+  "cta": {
+    "title": "Ready to bring your ideas to life?",
+    "description": "Contact us today to discuss your project and get a personalized quote.",
+    "button": "Start your project"
+  },
+  "recentProjects": {
+    "title": "Recent Projects",
+    "description": "Take a look at some of our latest work for inspiration."
+  },
+  "clients": {
+    "title": "Trusted by businesses all over Sweden",
+    "description": "From small startups to large corporations, we've helped businesses of all sizes with their printing needs."
+  },
+  "seo": {
+    "title": "Kalmar Studio | Custom Printing Solutions",
+    "description": "High-quality custom printing for t-shirts, business cards, decals and more. Fast delivery and personalized service for all your printing needs."
+  }
+}

@@ -6,7 +6,6 @@ import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2 } from 'lucide-react';
-import { useAuthContext } from '@/hooks/useAuth';
 import { 
   Form, 
   FormControl, 
@@ -19,17 +18,17 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { SEO, createWebsiteSchema } from '@/utils/seo';
+import { toast } from 'sonner';
 
 const Login = () => {
   const navigate = useNavigate();
-  const { login } = useAuthContext();
   const [loading, setLoading] = useState(false);
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation(['login', 'common']);
   
   // Schema with i18n messages
   const loginSchema = z.object({
-    email: z.string().email(t('auth.login.emailError', 'Please enter a valid email address')),
-    password: z.string().min(6, t('auth.login.passwordError', 'Password must be at least 6 characters')),
+    email: z.string().email(t('emailError')),
+    password: z.string().min(6, t('passwordError')),
   });
 
   type LoginFormValues = z.infer<typeof loginSchema>;
@@ -45,16 +44,12 @@ const Login = () => {
   const onSubmit = async (data: LoginFormValues) => {
     setLoading(true);
     
-    const result = await login({
-      email: data.email,
-      password: data.password
-    });
-    
-    setLoading(false);
-    
-    if (result.success) {
+    // Simulate login (no auth functionality)
+    setTimeout(() => {
+      setLoading(false);
+      toast.success('Demo login successful');
       navigate('/dashboard');
-    }
+    }, 1000);
   };
 
   // SEO schema
@@ -66,17 +61,17 @@ const Login = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <SEO 
-        title="Login | Kalmar Studio"
-        description="Log in to your Kalmar Studio account to manage your orders, designs, and profile."
+        title={t('seo.title')}
+        description={t('seo.description')}
         canonicalUrl="https://kalmarstudio.com/login"
         schema={schema}
         lang={i18n.language}
       />
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold">{t('auth.login.title')}</CardTitle>
+          <CardTitle className="text-2xl font-bold">{t('title')}</CardTitle>
           <CardDescription>
-            {t('auth.login.description')}
+            {t('description')}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -87,9 +82,9 @@ const Login = () => {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t('auth.login.emailLabel')}</FormLabel>
+                    <FormLabel>{t('emailLabel')}</FormLabel>
                     <FormControl>
-                      <Input placeholder={t('auth.login.emailPlaceholder')} {...field} />
+                      <Input placeholder={t('emailPlaceholder')} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -101,16 +96,16 @@ const Login = () => {
                 render={({ field }) => (
                   <FormItem>
                     <div className="flex items-center justify-between">
-                      <FormLabel>{t('auth.login.passwordLabel')}</FormLabel>
+                      <FormLabel>{t('passwordLabel')}</FormLabel>
                       <Link 
                         to="/forgot-password" 
                         className="text-sm text-primary hover:underline"
                       >
-                        {t('auth.login.forgotPassword')}
+                        {t('forgotPassword')}
                       </Link>
                     </div>
                     <FormControl>
-                      <Input type="password" placeholder={t('auth.login.passwordPlaceholder')} {...field} />
+                      <Input type="password" placeholder={t('passwordPlaceholder')} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -120,10 +115,10 @@ const Login = () => {
                 {loading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    {t('auth.login.signingIn')}
+                    {t('signingIn')}
                   </>
                 ) : (
-                  t('auth.login.signInButton')
+                  t('signInButton')
                 )}
               </Button>
             </form>
@@ -131,14 +126,14 @@ const Login = () => {
         </CardContent>
         <CardFooter className="flex flex-col space-y-4">
           <div className="text-center text-sm text-muted-foreground">
-            <span>{t('auth.login.noAccount')} </span>
+            <span>{t('noAccount')} </span>
             <Link to="/register" className="text-primary hover:underline">
-              {t('auth.login.signUp')}
+              {t('signUp')}
             </Link>
           </div>
           <div className="text-center text-sm text-muted-foreground">
             <Link to="/" className="text-primary hover:underline">
-              {t('common.backToHome')}
+              {t('common:buttons.backToHome')}
             </Link>
           </div>
         </CardFooter>

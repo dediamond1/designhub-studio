@@ -3,15 +3,46 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 
-import enTranslation from './en.json';
-import svTranslation from './sv.json';
+// Common translations
+import enCommon from './locales/en/common.json';
+import svCommon from './locales/sv/common.json';
+
+// Page-specific translations
+import enHome from './locales/en/home.json';
+import svHome from './locales/sv/home.json';
+import enAbout from './locales/en/about.json';
+import svAbout from './locales/sv/about.json';
+import enServices from './locales/en/services.json';
+import svServices from './locales/sv/services.json';
+import enContact from './locales/en/contact.json';
+import svContact from './locales/sv/contact.json';
+import enLogin from './locales/en/login.json';
+import svLogin from './locales/sv/login.json';
+import enBlog from './locales/en/blog.json';
+import svBlog from './locales/sv/blog.json';
+import enDashboard from './locales/en/dashboard.json';
+import svDashboard from './locales/sv/dashboard.json';
 
 const resources = {
   en: {
-    translation: enTranslation
+    common: enCommon,
+    home: enHome,
+    about: enAbout,
+    services: enServices,
+    contact: enContact,
+    login: enLogin,
+    blog: enBlog,
+    dashboard: enDashboard
   },
   sv: {
-    translation: svTranslation
+    common: svCommon,
+    home: svHome,
+    about: svAbout,
+    services: svServices,
+    contact: svContact,
+    login: svLogin,
+    blog: svBlog,
+    dashboard: svDashboard
   }
 };
 
@@ -27,7 +58,10 @@ i18n
     detection: {
       order: ['localStorage', 'navigator'],
       caches: ['localStorage']
-    }
+    },
+    // Using namespaces for better organization
+    ns: ['common', 'home', 'about', 'services', 'contact', 'login', 'blog', 'dashboard'],
+    defaultNS: 'common'
   });
 
 export default i18n;

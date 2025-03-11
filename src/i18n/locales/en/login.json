@@ -1,0 +1,20 @@
+
+{
+  "title": "Sign in to your account",
+  "description": "Enter your credentials below to access your dashboard",
+  "emailLabel": "Email",
+  "emailPlaceholder": "your.email@example.com",
+  "passwordLabel": "Password",
+  "passwordPlaceholder": "••••••••",
+  "forgotPassword": "Forgot password?",
+  "signInButton": "Sign In",
+  "signingIn": "Signing in...",
+  "noAccount": "Don't have an account?",
+  "signUp": "Sign up here",
+  "emailError": "Please enter a valid email address",
+  "passwordError": "Password must be at least 6 characters",
+  "seo": {
+    "title": "Login | Kalmar Studio",
+    "description": "Log in to your Kalmar Studio account to manage your orders, designs, and profile."
+  }
+}

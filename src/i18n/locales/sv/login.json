@@ -1,0 +1,20 @@
+
+{
+  "title": "Logga in på ditt konto",
+  "description": "Ange dina inloggningsuppgifter nedan för att komma åt din kontrollpanel",
+  "emailLabel": "E-post",
+  "emailPlaceholder": "din.epost@exempel.com",
+  "passwordLabel": "Lösenord",
+  "passwordPlaceholder": "••••••••",
+  "forgotPassword": "Glömt lösenord?",
+  "signInButton": "Logga in",
+  "signingIn": "Loggar in...",
+  "noAccount": "Har du inget konto?",
+  "signUp": "Registrera dig här",
+  "emailError": "Vänligen ange en giltig e-postadress",
+  "passwordError": "Lösenordet måste vara minst 6 tecken",
+  "seo": {
+    "title": "Logga in | Kalmar Studio",
+    "description": "Logga in på ditt Kalmar Studio-konto för att hantera dina beställningar, designer och profil."
+  }
+}

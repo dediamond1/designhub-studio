@@ -1,21 +1,6 @@
 
-export interface LoginCredentials {
-  email: string;
-  password: string;
-}
-
-export interface RegisterCredentials {
-  name: string;
-  email: string;
-  password: string;
-}
-
-export interface AuthResponse {
-  success: boolean;
-  message: string;
-  user?: UserData;
-  token?: string;
-}
+// Basic types that might still be useful for UI demonstrations
+// without actual authentication functionality
 
 export interface UserData {
   id: string;
@@ -23,17 +8,4 @@ export interface UserData {
   email: string;
   role: 'admin' | 'user' | 'team-member';
   verified: boolean;
-}
-
-export interface ResetPasswordRequest {
-  email: string;
-}
-
-export interface VerifyEmailRequest {
-  token: string;
-}
-
-export interface ChangePasswordRequest {
-  token: string;
-  password: string;
 }
