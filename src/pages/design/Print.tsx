@@ -37,15 +37,19 @@ const PrintDesigner = () => {
               <Breadcrumb className="mb-4">
                 <BreadcrumbList>
                   <BreadcrumbItem>
-                    <BreadcrumbLink as={Link} to="/">
-                      <Home className="h-3.5 w-3.5" />
+                    <BreadcrumbLink asChild>
+                      <Link to="/">
+                        <Home className="h-3.5 w-3.5" />
+                      </Link>
                     </BreadcrumbLink>
                   </BreadcrumbItem>
                   <BreadcrumbSeparator>
                     <ChevronRight className="h-3.5 w-3.5" />
                   </BreadcrumbSeparator>
                   <BreadcrumbItem>
-                    <BreadcrumbLink as={Link} to="/design">Design</BreadcrumbLink>
+                    <BreadcrumbLink asChild>
+                      <Link to="/design">Design</Link>
+                    </BreadcrumbLink>
                   </BreadcrumbItem>
                   <BreadcrumbSeparator>
                     <ChevronRight className="h-3.5 w-3.5" />

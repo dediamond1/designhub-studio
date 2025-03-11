@@ -1,7 +1,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
-import { Canvas, IEvent, Object as FabricObject, loadSVGFromURL } from 'fabric';
-import { useDesign, DesignObject } from '../../contexts/DesignContext';
+import { fabric } from 'fabric';
+import { useDesign } from '../../contexts/DesignContext';
 import { v4 as uuidv4 } from 'uuid';
 import { toast } from 'sonner';
 import { Loader2 } from 'lucide-react';
@@ -14,7 +14,7 @@ interface DesignCanvasProps {
 
 const DesignCanvas: React.FC<DesignCanvasProps> = ({ width, height, className }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [canvas, setCanvas] = useState<Canvas | null>(null);
+  const [canvas, setCanvas] = useState<fabric.Canvas | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const { designState, dispatch } = useDesign();
   const [isInitialized, setIsInitialized] = useState(false);
@@ -26,7 +26,7 @@ const DesignCanvas: React.FC<DesignCanvasProps> = ({ width, height, className })
   useEffect(() => {
     if (!canvasRef.current) return;
 
-    const fabricCanvas = new Canvas(canvasRef.current, {
+    const fabricCanvas = new fabric.Canvas(canvasRef.current, {
       width,
       height,
       backgroundColor: designState.background,
@@ -113,7 +113,7 @@ const DesignCanvas: React.FC<DesignCanvasProps> = ({ width, height, className })
   };
 
   // Handle object modifications
-  const handleObjectModified = (e: IEvent<Event>) => {
+  const handleObjectModified = (e: fabric.IEvent<Event>) => {
     if (!e.target) return;
 
     const obj = e.target;
@@ -179,7 +179,7 @@ const DesignCanvas: React.FC<DesignCanvasProps> = ({ width, height, className })
 
     // Add all objects from design state
     designState.objects.forEach(async (obj) => {
-      let fabricObj: FabricObject | null = null;
+      let fabricObj: fabric.Object | null = null;
 
       switch (obj.type) {
         case 'text':
@@ -189,7 +189,7 @@ const DesignCanvas: React.FC<DesignCanvasProps> = ({ width, height, className })
             fill: obj.fill,
             fontFamily: obj.fontFamily,
             fontSize: obj.fontSize,
-            fontWeight: obj.fontWeight,
+            fontWeight: obj.fontWeight as any,
             angle: obj.rotation,
             scaleX: obj.scaleX,
             scaleY: obj.scaleY,
@@ -200,7 +200,7 @@ const DesignCanvas: React.FC<DesignCanvasProps> = ({ width, height, className })
         case 'image':
           if (obj.src) {
             try {
-              fabricObj = await new Promise<fabric.Image>((resolve, reject) => {
+              fabricObj = await new Promise<fabric.Image>((resolve) => {
                 fabric.Image.fromURL(obj.src || '', (img) => {
                   resolve(img);
                 }, { crossOrigin: 'anonymous' });
