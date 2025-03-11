@@ -207,9 +207,9 @@ const DesignCanvas: React.FC<DesignCanvasProps> = ({ width, height, className })
           if (obj.src) {
             try {
               await new Promise<void>((resolve) => {
+                // Fix: Remove objectCaching from options and use the correct pattern for loading images
                 Image.fromURL(obj.src || '', {
                   crossOrigin: 'anonymous',
-                  objectCaching: true,
                 }).then((img) => {
                   img.set({
                     left: obj.x,
@@ -308,7 +308,7 @@ const DesignCanvas: React.FC<DesignCanvasProps> = ({ width, height, className })
       }
 
       if (fabricObj) {
-        // Store the ID in a custom property
+        // Store the ID in a custom property and cast properly
         (fabricObj as CustomFabricObject).__designId = obj.id;
         
         // Make objects selectable and movable
