@@ -14,7 +14,10 @@
     "contact": "Kontakt",
     "career": "Karriär",
     "ads": "Annonser",
-    "resources": "Resurser"
+    "resources": "Resurser",
+    "portfolio": "Portfolio",
+    "faq": "Vanliga frågor",
+    "calculator": "Priskalkylator"
   },
   "menuDescriptions": {
     "design": "Skapa dina egna anpassade designer",
@@ -23,7 +26,10 @@
     "stickers": "Anpassade klistermärken och dekaler",
     "blog": "Läs våra senaste artiklar",
     "news": "Företagsnyheter och uppdateringar",
-    "offers": "Specialerbjudanden och kampanjer"
+    "offers": "Specialerbjudanden och kampanjer",
+    "portfolio": "Bläddra genom våra senaste arbeten",
+    "faq": "Vanliga frågor och svar",
+    "calculator": "Beräkna kostnader för ditt projekt"
   },
   "buttons": {
     "readMore": "Läs mer",
@@ -31,7 +37,13 @@
     "learnMore": "Läs mer",
     "viewAll": "Visa alla",
     "download": "Ladda ner",
-    "try": "Prova"
+    "try": "Prova",
+    "uploadDesign": "Ladda upp din design",
+    "calculate": "Beräkna pris",
+    "bookConsultation": "Boka konsultation",
+    "viewPortfolio": "Se vår portfolio",
+    "requestQuote": "Begär offert",
+    "submitFiles": "Skicka filer"
   },
   "footer": {
     "services": "Tjänster",
@@ -40,7 +52,10 @@
     "newsletter": "Nyhetsbrev",
     "emailPlaceholder": "Din e-post",
     "subscribe": "Prenumerera",
-    "copyright": "© 2023 Kalmar Studio. Alla rättigheter förbehållna."
+    "copyright": "© 2023 Kalmar Studio. Alla rättigheter förbehållna.",
+    "privacy": "Integritetspolicy",
+    "terms": "Användarvillkor",
+    "follow": "Följ oss"
   },
   "getQuote": "Få en offert",
   "login": "Logga in",
@@ -49,7 +64,124 @@
     "tryAgain": "Försök igen"
   },
   "success": {
-    "title": "Klart"
+    "title": "Klart",
+    "message": "Åtgärden slutfördes framgångsrikt"
   },
-  "startDesigning": "Börja Designa"
+  "startDesigning": "Börja Designa",
+  "calculator": {
+    "title": "Priskalkylator",
+    "description": "Beräkna kostnaden för ditt tryckprojekt",
+    "productType": "Produkttyp",
+    "quantity": "Antal",
+    "size": "Storlek",
+    "color": "Färgalternativ",
+    "material": "Material",
+    "finishing": "Efterbehandling",
+    "delivery": "Leveransalternativ",
+    "totalPrice": "Totalt pris",
+    "note": "Obs: Detta är en uppskattning. Kontakta oss för en exakt offert."
+  },
+  "faq": {
+    "title": "Vanliga frågor",
+    "description": "Hitta svar på vanliga frågor om våra tjänster",
+    "readMore": "Läs mer",
+    "categories": {
+      "general": "Allmänt",
+      "design": "Designprocessen",
+      "printing": "Tryckprocessen",
+      "delivery": "Leverans",
+      "payment": "Betalning"
+    }
+  },
+  "howItWorks": {
+    "title": "Hur det fungerar",
+    "description": "Från koncept till leverans, vi gör skräddarsytt tryck enkelt",
+    "steps": {
+      "step1": {
+        "title": "Begär en offert",
+        "description": "Berätta om dina projektkrav"
+      },
+      "step2": {
+        "title": "Designgodkännande",
+        "description": "Vi skapar eller granskar din design"
+      },
+      "step3": {
+        "title": "Produktion",
+        "description": "Din design trycks med premiumkvalitet"
+      },
+      "step4": {
+        "title": "Leverans",
+        "description": "Dina färdiga produkter levereras till dig"
+      }
+    }
+  },
+  "portfolio": {
+    "title": "Vår Portfolio",
+    "description": "Bläddra genom våra senaste arbeten",
+    "filters": {
+      "all": "Alla projekt",
+      "business": "Företag & Kontor",
+      "events": "Evenemang & Kampanjer",
+      "retail": "Butik & Förpackning",
+      "branding": "Varumärke & Identitet"
+    },
+    "viewProject": "Visa projekt"
+  },
+  "industries": {
+    "title": "Branschlösningar",
+    "description": "Specialiserade trycklösningar för din bransch",
+    "retail": {
+      "title": "Butik & E-handel",
+      "description": "Utmärk dig med anpassade förpackningar och marknadsföringsmaterial"
+    },
+    "restaurants": {
+      "title": "Restauranger & Caféer",
+      "description": "Menyer, skyltar och varumärkta material för matservice"
+    },
+    "events": {
+      "title": "Evenemang & Underhållning",
+      "description": "Gör intryck med evenemangskyltning och kampanjartiklar"
+    },
+    "corporate": {
+      "title": "Företag & Kontor",
+      "description": "Professionella kontorsmaterial och marknadsföringsmaterial"
+    }
+  },
+  "designPreview": {
+    "title": "Designförhandsvisningsverktyg",
+    "description": "Se hur din design kommer att se ut på den färdiga produkten",
+    "upload": "Ladda upp din design",
+    "selectProduct": "Välj produkt",
+    "preview": "Förhandsgranska",
+    "saveDesign": "Spara design",
+    "downloadPreview": "Ladda ner förhandsgranskning"
+  },
+  "reviews": {
+    "title": "Kundrecensioner",
+    "description": "Vad våra kunder säger om oss",
+    "writeReview": "Skriv en recension",
+    "rating": "Betyg",
+    "readAll": "Läs alla recensioner"
+  },
+  "uploadFiles": {
+    "title": "Ladda upp tryckfiler",
+    "description": "Ladda upp dina tryckfärdiga filer",
+    "dragDrop": "Dra och släpp filer här eller klicka för att bläddra",
+    "requirements": "Filkrav",
+    "accepted": "Godkända filtyper: PDF, AI, PSD, JPEG (300 DPI)",
+    "maxSize": "Maximal filstorlek: 100MB",
+    "uploadButton": "Ladda upp filer"
+  },
+  "booking": {
+    "title": "Boka en konsultation",
+    "description": "Boka ett möte med våra designexperter",
+    "name": "Ditt namn",
+    "email": "Din e-post",
+    "phone": "Telefonnummer",
+    "date": "Önskat datum",
+    "time": "Önskad tid",
+    "topic": "Konsultationsämne",
+    "message": "Ytterligare information",
+    "submit": "Boka tid"
+  }
 }

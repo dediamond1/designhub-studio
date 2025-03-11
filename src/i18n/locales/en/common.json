@@ -14,7 +14,10 @@
     "contact": "Contact",
     "career": "Careers",
     "ads": "Ads",
-    "resources": "Resources"
+    "resources": "Resources",
+    "portfolio": "Portfolio",
+    "faq": "FAQ",
+    "calculator": "Price Calculator"
   },
   "menuDescriptions": {
     "design": "Create your own custom designs",
@@ -23,7 +26,10 @@
     "stickers": "Custom stickers and decals",
     "blog": "Read our latest articles",
     "news": "Company news and updates",
-    "offers": "Special deals and promotions"
+    "offers": "Special deals and promotions",
+    "portfolio": "Browse our recent work",
+    "faq": "Frequently asked questions",
+    "calculator": "Calculate costs for your project"
   },
   "buttons": {
     "readMore": "Read More",
@@ -31,7 +37,13 @@
     "learnMore": "Learn More",
     "viewAll": "View All",
     "download": "Download",
-    "try": "Try it"
+    "try": "Try it",
+    "uploadDesign": "Upload Your Design",
+    "calculate": "Calculate Price",
+    "bookConsultation": "Book a Consultation",
+    "viewPortfolio": "View Our Portfolio",
+    "requestQuote": "Request a Quote",
+    "submitFiles": "Submit Files"
   },
   "footer": {
     "services": "Services",
@@ -40,7 +52,10 @@
     "newsletter": "Newsletter",
     "emailPlaceholder": "Your email",
     "subscribe": "Subscribe",
-    "copyright": "© 2023 Kalmar Studio. All rights reserved."
+    "copyright": "© 2023 Kalmar Studio. All rights reserved.",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "follow": "Follow Us"
   },
   "getQuote": "Get a Quote",
   "login": "Sign In",
@@ -49,7 +64,124 @@
     "tryAgain": "Please try again"
   },
   "success": {
-    "title": "Success"
+    "title": "Success",
+    "message": "Operation completed successfully"
   },
-  "startDesigning": "Start Designing"
+  "startDesigning": "Start Designing",
+  "calculator": {
+    "title": "Price Calculator",
+    "description": "Calculate the cost of your print project",
+    "productType": "Product Type",
+    "quantity": "Quantity",
+    "size": "Size",
+    "color": "Color Options",
+    "material": "Material",
+    "finishing": "Finishing",
+    "delivery": "Delivery Option",
+    "totalPrice": "Total Price",
+    "note": "Note: This is an estimate. Contact us for an exact quote."
+  },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "description": "Find answers to common questions about our services",
+    "readMore": "Learn More",
+    "categories": {
+      "general": "General",
+      "design": "Design Process",
+      "printing": "Printing Process",
+      "delivery": "Delivery",
+      "payment": "Payment"
+    }
+  },
+  "howItWorks": {
+    "title": "How It Works",
+    "description": "From concept to delivery, we make custom printing easy",
+    "steps": {
+      "step1": {
+        "title": "Request a Quote",
+        "description": "Tell us about your project requirements"
+      },
+      "step2": {
+        "title": "Design Approval",
+        "description": "We create or review your design"
+      },
+      "step3": {
+        "title": "Production",
+        "description": "Your design is printed with premium quality"
+      },
+      "step4": {
+        "title": "Delivery",
+        "description": "Your finished products are delivered to you"
+      }
+    }
+  },
+  "portfolio": {
+    "title": "Our Portfolio",
+    "description": "Browse through our recent work",
+    "filters": {
+      "all": "All Projects",
+      "business": "Business & Corporate",
+      "events": "Events & Promotions",
+      "retail": "Retail & Packaging",
+      "branding": "Branding & Identity"
+    },
+    "viewProject": "View Project"
+  },
+  "industries": {
+    "title": "Industry Solutions",
+    "description": "Specialized printing solutions for your industry",
+    "retail": {
+      "title": "Retail & E-commerce",
+      "description": "Stand out with custom packaging and promotional materials"
+    },
+    "restaurants": {
+      "title": "Restaurants & Cafes",
+      "description": "Menus, signage, and branded materials for food service"
+    },
+    "events": {
+      "title": "Events & Entertainment",
+      "description": "Make an impact with event signage and promotional items"
+    },
+    "corporate": {
+      "title": "Corporate & Office",
+      "description": "Professional stationery and marketing materials"
+    }
+  },
+  "designPreview": {
+    "title": "Design Preview Tool",
+    "description": "See how your design will look on the finished product",
+    "upload": "Upload Your Design",
+    "selectProduct": "Select Product",
+    "preview": "Preview",
+    "saveDesign": "Save Design",
+    "downloadPreview": "Download Preview"
+  },
+  "reviews": {
+    "title": "Customer Reviews",
+    "description": "What our clients say about us",
+    "writeReview": "Write a Review",
+    "rating": "Rating",
+    "readAll": "Read All Reviews"
+  },
+  "uploadFiles": {
+    "title": "Upload Print Files",
+    "description": "Upload your print-ready files",
+    "dragDrop": "Drag and drop files here or click to browse",
+    "requirements": "File Requirements",
+    "accepted": "Accepted file types: PDF, AI, PSD, JPEG (300 DPI)",
+    "maxSize": "Maximum file size: 100MB",
+    "uploadButton": "Upload Files"
+  },
+  "booking": {
+    "title": "Book a Consultation",
+    "description": "Schedule a meeting with our design experts",
+    "name": "Your Name",
+    "email": "Your Email",
+    "phone": "Phone Number",
+    "date": "Preferred Date",
+    "time": "Preferred Time",
+    "topic": "Consultation Topic",
+    "message": "Additional Information",
+    "submit": "Book Appointment"
+  }
 }

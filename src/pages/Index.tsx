@@ -11,6 +11,13 @@ import FeaturedWorksSection from '../components/FeaturedWorksSection';
 import ClientsSection from '../components/ClientsSection';
 import CtaSection from '../components/CtaSection';
 import Footer from '../components/Footer';
+import IndustrySolutions from '../components/IndustrySolutions';
+import HowItWorks from '../components/HowItWorks';
+import FaqSection from '../components/FaqSection';
+import PriceCalculator from '../components/PriceCalculator';
+import PortfolioGallery from '../components/PortfolioGallery';
+import DesignPreviewTool from '../components/DesignPreviewTool';
+import CustomerReviews from '../components/CustomerReviews';
 import { SEO, createOrganizationSchema, createWebsiteSchema } from '@/utils/seo';
 
 const fadeIn = {
@@ -62,9 +69,16 @@ const Index = () => {
         <HeroSection />
         <ProcessSection />
         <ServicesSection />
-        <ClientsSection />
+        <HowItWorks />
+        <PortfolioGallery />
         <FeaturedWorksSection />
+        <DesignPreviewTool />
+        <IndustrySolutions />
+        <PriceCalculator />
         <TestimonialsSection />
+        <CustomerReviews />
+        <FaqSection />
+        <ClientsSection />
         <AboutSection />
         <CtaSection />
       </main>
