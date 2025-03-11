@@ -1,9 +1,9 @@
 
-import { createAuth } from 'better-auth';
+import { createAuth as createBetterAuth } from 'better-auth';
 import { dbConnect } from './db';
 
 // Create and configure better-auth
-export const auth = createAuth({
+export const auth = createBetterAuth({
   // Connect to MongoDB
   dbAdapter: async () => {
     const { db } = await dbConnect();

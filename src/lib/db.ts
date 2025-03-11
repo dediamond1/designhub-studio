@@ -26,6 +26,9 @@ export async function dbConnect() {
   return { client, db };
 }
 
+// Alias for compatibility with existing code
+export const connectToDatabase = dbConnect;
+
 /**
  * Close the MongoDB connection
  */
