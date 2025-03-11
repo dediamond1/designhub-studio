@@ -1,214 +1,147 @@
 
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useScrollReveal } from '../utils/animations';
+import { NavLink } from 'react-router-dom';
+import { ArrowRight, Send } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Send, Phone, Mail, MapPin } from 'lucide-react';
-import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 
 const ContactSection = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const isVisible = useScrollReveal(sectionRef, 0.1);
-  
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    subject: '',
-    message: ''
-  });
-  
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
+  const { t } = useTranslation();
   
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    toast.success("Tack för ditt meddelande! Vi återkommer så snart som möjligt.");
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      subject: '',
-      message: ''
-    });
+    // This would be where you'd handle the form submission
   };
-  
-  const contactInfo = [
-    {
-      icon: <Phone className="h-5 w-5" />,
-      title: 'Telefon',
-      info: '+46 70 123 45 67',
-      link: 'tel:+46701234567'
-    },
-    {
-      icon: <Mail className="h-5 w-5" />,
-      title: 'E-post',
-      info: 'info@kalmarstudio.se',
-      link: 'mailto:info@kalmarstudio.se'
-    },
-    {
-      icon: <MapPin className="h-5 w-5" />,
-      title: 'Adress',
-      info: 'Tryckvägen 123, 123 45 Kalmar',
-      link: 'https://maps.google.com'
-    }
-  ];
 
   return (
     <section ref={sectionRef} className="py-20 md:py-32 bg-kalmar-50">
       <div className="section-container">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-16">
+        <div className="grid md:grid-cols-2 gap-12 lg:gap-20 items-center">
+          <div>
             <div
               className={cn(
                 "transition-all duration-700",
-                isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+                isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
               )}
             >
               <span className="inline-block py-1 px-3 mb-6 text-xs font-medium tracking-wider border border-primary/30 rounded-full bg-primary/5">
-                KONTAKTA OSS
+                {t('contact.tagline')}
               </span>
             </div>
-            
+
             <h2
               className={cn(
-                "text-3xl md:text-4xl font-bold mb-4 transition-all duration-700 delay-100",
-                isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+                "text-3xl md:text-4xl font-bold mb-6 transition-all duration-700 delay-100",
+                isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
               )}
             >
-              Låt oss diskutera ditt projekt
+              {t('contact.title')}
             </h2>
-            
+
             <p
               className={cn(
-                "text-foreground/70 text-lg max-w-2xl mx-auto transition-all duration-700 delay-200",
-                isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+                "text-foreground/70 mb-8 transition-all duration-700 delay-200",
+                isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
               )}
             >
-              Har du frågor eller behöver hjälp med ett projekt? Fyll i formuläret nedan eller kontakta oss direkt.
+              {t('contact.messageDescription')}
             </p>
+
+            <div
+              className={cn(
+                "bg-white p-6 rounded-xl shadow-subtle mb-8 transition-all duration-700 delay-300",
+                isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+              )}
+            >
+              <h3 className="text-lg font-semibold mb-2">{t('contact.quoteBox.title')}</h3>
+              <p className="text-foreground/70">
+                {t('contact.quoteBox.description')}
+              </p>
+            </div>
+
+            <NavLink
+              to="/contact"
+              className={cn(
+                "button-primary group inline-flex transition-all duration-700 delay-400",
+                isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+              )}
+            >
+              {t('common.contactUs')}
+              <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </NavLink>
           </div>
-          
-          <div className="grid md:grid-cols-3 gap-8 mb-12">
-            {contactInfo.map((item, index) => (
-              <a
-                key={index}
-                href={item.link}
-                className={cn(
-                  "flex flex-col items-center text-center p-6 bg-background rounded-xl border border-border shadow-subtle hover:shadow-elevated transition-all duration-500",
-                  isVisible
-                    ? "opacity-100 translate-y-0"
-                    : "opacity-0 translate-y-4"
-                )}
-                style={{
-                  transitionDelay: isVisible ? `${300 + index * 100}ms` : "0ms",
-                }}
-              >
-                <div className="p-3 bg-kalmar-100 rounded-full mb-4">
-                  {item.icon}
-                </div>
-                <h3 className="text-lg font-semibold mb-1">{item.title}</h3>
-                <p className="text-foreground/70">{item.info}</p>
-              </a>
-            ))}
-          </div>
-          
-          <div 
+
+          <div
             className={cn(
-              "bg-background rounded-2xl shadow-card border border-border p-8 transition-all duration-700 delay-600",
-              isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+              "bg-white rounded-2xl p-8 shadow-card transition-all duration-700 delay-500",
+              isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
             )}
           >
-            <form onSubmit={handleSubmit}>
-              <div className="grid md:grid-cols-2 gap-6 mb-6">
+            <h3 className="text-xl font-semibold mb-5">{t('contact.messageTitle')}</h3>
+            
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium mb-2">
-                    Namn
+                  <label htmlFor="name" className="block text-sm font-medium mb-1">
+                    {t('contact.form.name')}
                   </label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-md border border-border bg-background focus:outline-none focus:ring-2 focus:ring-kalmar-500 focus:border-transparent transition-all"
-                    required
+                  <Input 
+                    id="name" 
+                    placeholder={t('contact.form.name')} 
+                    className="w-full"
                   />
                 </div>
-                
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium mb-2">
-                    E-post
+                  <label htmlFor="email" className="block text-sm font-medium mb-1">
+                    {t('contact.form.email')}
                   </label>
-                  <input
+                  <Input 
+                    id="email" 
                     type="email"
-                    id="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-md border border-border bg-background focus:outline-none focus:ring-2 focus:ring-kalmar-500 focus:border-transparent transition-all"
-                    required
+                    placeholder={t('contact.form.email')} 
+                    className="w-full"
                   />
-                </div>
-                
-                <div>
-                  <label htmlFor="phone" className="block text-sm font-medium mb-2">
-                    Telefon
-                  </label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-md border border-border bg-background focus:outline-none focus:ring-2 focus:ring-kalmar-500 focus:border-transparent transition-all"
-                  />
-                </div>
-                
-                <div>
-                  <label htmlFor="subject" className="block text-sm font-medium mb-2">
-                    Ämne
-                  </label>
-                  <select
-                    id="subject"
-                    name="subject"
-                    value={formData.subject}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-md border border-border bg-background focus:outline-none focus:ring-2 focus:ring-kalmar-500 focus:border-transparent transition-all"
-                    required
-                  >
-                    <option value="">Välj ämne</option>
-                    <option value="quote">Offertförfrågan</option>
-                    <option value="info">Produktinformation</option>
-                    <option value="support">Support</option>
-                    <option value="other">Annat</option>
-                  </select>
                 </div>
               </div>
               
-              <div className="mb-6">
-                <label htmlFor="message" className="block text-sm font-medium mb-2">
-                  Meddelande
+              <div>
+                <label htmlFor="subject" className="block text-sm font-medium mb-1">
+                  {t('contact.form.subject')}
                 </label>
-                <textarea
-                  id="message"
-                  name="message"
-                  value={formData.message}
-                  onChange={handleChange}
-                  rows={5}
-                  className="w-full px-4 py-3 rounded-md border border-border bg-background focus:outline-none focus:ring-2 focus:ring-kalmar-500 focus:border-transparent transition-all"
-                  required
+                <select 
+                  id="subject"
+                  className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                >
+                  <option value="">{t('contact.form.subject')}</option>
+                  <option value="quote">{t('contact.form.subjectOptions.quote')}</option>
+                  <option value="info">{t('contact.form.subjectOptions.info')}</option>
+                  <option value="support">{t('contact.form.subjectOptions.support')}</option>
+                  <option value="other">{t('contact.form.subjectOptions.other')}</option>
+                </select>
+              </div>
+              
+              <div>
+                <label htmlFor="message" className="block text-sm font-medium mb-1">
+                  {t('contact.form.message')}
+                </label>
+                <Textarea 
+                  id="message" 
+                  rows={4}
+                  placeholder={t('contact.form.message')} 
+                  className="w-full"
                 />
               </div>
               
-              <button 
-                type="submit" 
-                className="button-primary group"
-              >
-                Skicka meddelande
+              <Button type="submit" className="w-full group">
+                {t('common.submitMessage')}
                 <Send className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </button>
+              </Button>
             </form>
           </div>
         </div>

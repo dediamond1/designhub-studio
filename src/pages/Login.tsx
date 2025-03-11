@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -17,18 +18,21 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-
-const loginSchema = z.object({
-  email: z.string().email('Please enter a valid email address'),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
-});
-
-type LoginFormValues = z.infer<typeof loginSchema>;
+import { SEO, createWebsiteSchema } from '@/utils/seo';
 
 const Login = () => {
   const navigate = useNavigate();
   const { login } = useAuthContext();
   const [loading, setLoading] = useState(false);
+  const { t, i18n } = useTranslation();
+  
+  // Schema with i18n messages
+  const loginSchema = z.object({
+    email: z.string().email(t('auth.login.emailError', 'Please enter a valid email address')),
+    password: z.string().min(6, t('auth.login.passwordError', 'Password must be at least 6 characters')),
+  });
+
+  type LoginFormValues = z.infer<typeof loginSchema>;
   
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -53,13 +57,26 @@ const Login = () => {
     }
   };
 
+  // SEO schema
+  const schema = createWebsiteSchema(
+    'Kalmar Studio - Login',
+    'https://kalmarstudio.com/login'
+  );
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
+      <SEO 
+        title="Login | Kalmar Studio"
+        description="Log in to your Kalmar Studio account to manage your orders, designs, and profile."
+        canonicalUrl="https://kalmarstudio.com/login"
+        schema={schema}
+        lang={i18n.language}
+      />
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold">Sign in to your account</CardTitle>
+          <CardTitle className="text-2xl font-bold">{t('auth.login.title')}</CardTitle>
           <CardDescription>
-            Enter your credentials below to access your dashboard
+            {t('auth.login.description')}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -70,9 +87,9 @@ const Login = () => {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel>{t('auth.login.emailLabel')}</FormLabel>
                     <FormControl>
-                      <Input placeholder="your.email@example.com" {...field} />
+                      <Input placeholder={t('auth.login.emailPlaceholder')} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -84,16 +101,16 @@ const Login = () => {
                 render={({ field }) => (
                   <FormItem>
                     <div className="flex items-center justify-between">
-                      <FormLabel>Password</FormLabel>
+                      <FormLabel>{t('auth.login.passwordLabel')}</FormLabel>
                       <Link 
                         to="/forgot-password" 
                         className="text-sm text-primary hover:underline"
                       >
-                        Forgot password?
+                        {t('auth.login.forgotPassword')}
                       </Link>
                     </div>
                     <FormControl>
-                      <Input type="password" placeholder="••••••••" {...field} />
+                      <Input type="password" placeholder={t('auth.login.passwordPlaceholder')} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -103,10 +120,10 @@ const Login = () => {
                 {loading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Signing in...
+                    {t('auth.login.signingIn')}
                   </>
                 ) : (
-                  'Sign In'
+                  t('auth.login.signInButton')
                 )}
               </Button>
             </form>
@@ -114,14 +131,14 @@ const Login = () => {
         </CardContent>
         <CardFooter className="flex flex-col space-y-4">
           <div className="text-center text-sm text-muted-foreground">
-            <span>Don't have an account? </span>
+            <span>{t('auth.login.noAccount')} </span>
             <Link to="/register" className="text-primary hover:underline">
-              Sign up here
+              {t('auth.login.signUp')}
             </Link>
           </div>
           <div className="text-center text-sm text-muted-foreground">
             <Link to="/" className="text-primary hover:underline">
-              Back to Home
+              {t('common.backToHome')}
             </Link>
           </div>
         </CardFooter>

@@ -1,0 +1,145 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 224 71.4% 4.1%;
+    --card: 0 0% 100%;
+    --card-foreground: 224 71.4% 4.1%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 224 71.4% 4.1%;
+    --primary: 220 91% 54%;
+    --primary-foreground: 210 20% 98%;
+    --secondary: 220 14.3% 95.9%;
+    --secondary-foreground: 220.9 39.3% 11%;
+    --muted: 220 14.3% 95.9%;
+    --muted-foreground: 220 8.9% 46.1%;
+    --accent: 220 14.3% 95.9%;
+    --accent-foreground: 220.9 39.3% 11%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 20% 98%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 262.1 83.3% 57.8%;
+    --radius: 0.5rem;
+    
+    /* Kalmar Studio Colors */
+    --kalmar-50: 220 20% 98%;
+    --kalmar-100: 220 16% 96%;
+    --kalmar-200: 220 14% 90%;
+    --kalmar-300: 220 13% 80%;
+    --kalmar-400: 220 12% 65%;
+    --kalmar-500: 220 11% 50%;
+    --kalmar-600: 220 18% 40%;
+    --kalmar-700: 220 22% 32%;
+    --kalmar-800: 220 26% 22%;
+    --kalmar-900: 220 30% 13%;
+    --kalmar-950: 220 35% 8%;
+  }
+
+  .dark {
+    --background: 224 71.4% 4.1%;
+    --foreground: 210 20% 98%;
+    --card: 224 71.4% 4.1%;
+    --card-foreground: 210 20% 98%;
+    --popover: 224 71.4% 4.1%;
+    --popover-foreground: 210 20% 98%;
+    --primary: 263.4 70% 50.4%;
+    --primary-foreground: 210 20% 98%;
+    --secondary: 215 27.9% 16.9%;
+    --secondary-foreground: 210 20% 98%;
+    --muted: 215 27.9% 16.9%;
+    --muted-foreground: 217.9 10.6% 64.9%;
+    --accent: 215 27.9% 16.9%;
+    --accent-foreground: 210 20% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 20% 98%;
+    --border: 215 27.9% 16.9%;
+    --input: 215 27.9% 16.9%;
+    --ring: 263.4 70% 50.4%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply tracking-tight;
+  }
+  
+  /* For language-specific typography adjustments */
+  html[lang="sv"] {
+    /* Swedish-specific typography rules if needed */
+  }
+  
+  html[lang="en"] {
+    /* English-specific typography rules if needed */
+  }
+}
+
+/* Container styles */
+.section-container {
+  @apply container mx-auto px-6 md:px-12;
+}
+
+/* Button styles */
+.button-primary {
+  @apply inline-flex items-center justify-center px-6 py-3 rounded-lg bg-primary text-primary-foreground font-medium transition-colors hover:bg-primary/90;
+}
+
+.button-outline {
+  @apply inline-flex items-center justify-center px-6 py-3 rounded-lg bg-transparent text-primary border border-primary/30 font-medium transition-colors hover:bg-primary/5;
+}
+
+/* Nav links */
+.nav-link {
+  @apply relative;
+}
+
+.nav-link::after {
+  @apply content-[''] absolute w-0 h-0.5 bg-primary left-0 -bottom-1 transition-all duration-300;
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+  @apply w-full;
+}
+
+/* Glassmorphism navbar effect */
+.glassmorphism {
+  @apply bg-background/90 backdrop-blur-md;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
+}
+
+/* Card shadows */
+.shadow-card {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.shadow-subtle {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+}
+
+.shadow-elevated {
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+}
+
+/* Scroll reveal animations */
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.reveal-on-scroll.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}

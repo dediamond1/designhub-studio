@@ -1,0 +1,177 @@
+
+{
+  "common": {
+    "getQuote": "Get a Quote",
+    "startDesigning": "Start Designing",
+    "readMore": "Read More",
+    "contactUs": "Contact Us",
+    "learnMore": "Learn More",
+    "subscribe": "Subscribe",
+    "submitMessage": "Send Message",
+    "yourEmail": "Your Email Address",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "forgotPassword": "Forgot Password?",
+    "resetPassword": "Reset Password",
+    "verifyEmail": "Verify Email",
+    "backToHome": "Back to Home"
+  },
+  "navigation": {
+    "home": "Home",
+    "about": "About Us",
+    "services": "Services",
+    "design": "Design Your Own",
+    "blog": "Blog",
+    "news": "News",
+    "offers": "Offers",
+    "contact": "Contact",
+    "career": "Careers",
+    "ads": "Advertising"
+  },
+  "hero": {
+    "tagline": "PRINTING EXCELLENCE",
+    "title": "Design, Print, Deliver",
+    "subtitle": "Tailored to Your Needs",
+    "description": "Custom designs for T-shirts, Business Cards, Decals, and more – Made just for you with premium quality and personalized service."
+  },
+  "services": {
+    "title": "Discover our range of printing services",
+    "description": "We offer high-quality print and design solutions for all needs, from businesses to individuals.",
+    "tshirts": {
+      "title": "T-shirts & Clothing",
+      "description": "Create personalized t-shirts and clothing with your own design. Perfect for events, companies or personal use."
+    },
+    "businessCards": {
+      "title": "Business Cards & Print",
+      "description": "Professional business cards and printed materials that make an impression and strengthen your brand."
+    },
+    "decals": {
+      "title": "Decals & Stickers",
+      "description": "High-quality decals and stickers in different shapes and sizes for all purposes."
+    },
+    "graphicDesign": {
+      "title": "Graphic Design",
+      "description": "Let our designers help you create unique and professional design solutions for your brand."
+    },
+    "webSocial": {
+      "title": "Web & Social Media",
+      "description": "Design solutions for your digital channels, from websites to social media."
+    },
+    "exploreAll": "Explore all services"
+  },
+  "about": {
+    "tagline": "ABOUT KALMAR STUDIO",
+    "title": "Your vision, our craft",
+    "description": "Learn about the story behind Kalmar Studio and our passion for printing and design.",
+    "history": "Our History",
+    "historyText1": "Kalmar Studio was founded in 2010 with the vision to offer high-quality printing solutions at reasonable prices. What started as a small business focused on business cards and posters has grown into a full-service printing company with modern equipment and a team of experienced designers.",
+    "historyText2": "Our philosophy is built on personal service, precision, and creativity. We believe in building long-term relationships with our customers by delivering results that exceed expectations. Today, we serve customers all over Sweden with everything from individual orders to large-scale corporate projects.",
+    "highlights": [
+      "High-quality printing solutions",
+      "Personal service",
+      "Fast deliveries",
+      "Environmentally friendly materials",
+      "Award-winning design",
+      "Customer-focused process"
+    ],
+    "values": "Our Values",
+    "valueItems": [
+      {
+        "title": "Customer Relationships",
+        "description": "We build long-term relationships with our customers by always delivering beyond expectations and prioritizing customer satisfaction."
+      },
+      {
+        "title": "Quality",
+        "description": "We never compromise on quality. Every product that leaves our premises meets the highest standards."
+      },
+      {
+        "title": "Punctuality",
+        "description": "We understand the importance of deadlines and always deliver on time. Your time is valuable to us."
+      },
+      {
+        "title": "Sustainability",
+        "description": "We take environmental responsibility by using sustainable materials and environmentally friendly processes in our production."
+      }
+    ],
+    "cta": "Ready to collaborate with us?",
+    "ctaDescription": "We look forward to helping you bring your ideas to life. Contact us today to discuss your project."
+  },
+  "auth": {
+    "login": {
+      "title": "Sign in to your account",
+      "description": "Enter your credentials below to access your dashboard",
+      "emailLabel": "Email",
+      "emailPlaceholder": "your.email@example.com",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "••••••••",
+      "forgotPassword": "Forgot password?",
+      "signInButton": "Sign In",
+      "signingIn": "Signing in...",
+      "noAccount": "Don't have an account?",
+      "signUp": "Sign up here"
+    },
+    "register": {
+      "title": "Create an account",
+      "description": "Enter your details below to create your account",
+      "nameLabel": "Name",
+      "namePlaceholder": "Your name",
+      "emailLabel": "Email",
+      "emailPlaceholder": "your.email@example.com",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Create a secure password",
+      "signUpButton": "Sign Up",
+      "signingUp": "Creating account...",
+      "haveAccount": "Already have an account?",
+      "signIn": "Sign in here"
+    }
+  },
+  "footer": {
+    "description": "We are specialists in customized printing solutions for businesses and individuals. With a passion for quality and creativity, we create printed materials that make an impression.",
+    "company": "Company",
+    "services": "Services",
+    "support": "Support",
+    "newsletter": "Newsletter",
+    "newsletterDescription": "Get the latest articles, tips and offers directly in your inbox. We send newsletters about once a month.",
+    "emailPlaceholder": "Your email address",
+    "subscribe": "Subscribe",
+    "connect": "Connect with us"
+  },
+  "blog": {
+    "tagline": "BLOG",
+    "title": "News & Inspiration",
+    "description": "Here we share news, tips, and inspiration in design and printing.",
+    "categories": ["All", "Design", "Sustainability", "Printing Methods", "Trends", "Marketing", "Color Theory"],
+    "loadMore": "Load more articles",
+    "newsletterTitle": "Subscribe to our newsletter",
+    "newsletterDescription": "Get the latest articles, tips and offers directly in your inbox. We send newsletters about once a month."
+  },
+  "contact": {
+    "tagline": "CONTACT US",
+    "title": "Let's discuss your project",
+    "description": "Have questions or need help with a project? Fill in the form below or contact us directly.",
+    "phone": "Phone",
+    "email": "Email",
+    "address": "Address",
+    "hours": "Opening Hours",
+    "messageTitle": "Send a message",
+    "messageDescription": "Fill out the form and we'll get back to you as soon as possible. We strive to respond to all inquiries within 24 hours on weekdays.",
+    "quoteBox": {
+      "title": "Need a quote?",
+      "description": "Describe your project in as much detail as possible – quantity, size, colors, etc. – so we can give you a more accurate price estimate."
+    },
+    "form": {
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "subject": "Subject",
+      "subjectOptions": {
+        "quote": "Quote Request",
+        "info": "Product Information",
+        "support": "Support",
+        "other": "Other"
+      },
+      "message": "Message",
+      "submit": "Send Message"
+    }
+  }
+}

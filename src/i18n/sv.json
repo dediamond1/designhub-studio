@@ -1,0 +1,177 @@
+
+{
+  "common": {
+    "getQuote": "Få offert",
+    "startDesigning": "Börja designa",
+    "readMore": "Läs mer",
+    "contactUs": "Kontakta oss",
+    "learnMore": "Lär dig mer",
+    "subscribe": "Prenumerera",
+    "submitMessage": "Skicka meddelande",
+    "yourEmail": "Din e-postadress",
+    "signIn": "Logga in",
+    "signUp": "Registrera dig",
+    "forgotPassword": "Glömt lösenord?",
+    "resetPassword": "Återställ lösenord",
+    "verifyEmail": "Verifiera e-post",
+    "backToHome": "Tillbaka till startsidan"
+  },
+  "navigation": {
+    "home": "Hem",
+    "about": "Om oss",
+    "services": "Tjänster",
+    "design": "Designa din egen",
+    "blog": "Blogg",
+    "news": "Nyheter",
+    "offers": "Erbjudande",
+    "contact": "Kontakt",
+    "career": "Karriär",
+    "ads": "Reklam"
+  },
+  "hero": {
+    "tagline": "TRYCKEXCELLENS",
+    "title": "Designa, Trycka, Leverera",
+    "subtitle": "Anpassad efter dina behov",
+    "description": "Skräddarsydda designer för t-shirts, visitkort, dekaler och mer – Gjorda just för dig med premiumkvalitet och personlig service."
+  },
+  "services": {
+    "title": "Upptäck vårt utbud av trycktjänster",
+    "description": "Vi erbjuder högkvalitativa tryck- och designlösningar för alla behov, från företag till privatpersoner.",
+    "tshirts": {
+      "title": "T-shirts & Kläder",
+      "description": "Skapa personliga t-shirts och kläder med din egen design. Perfekt för event, företag eller personligt bruk."
+    },
+    "businessCards": {
+      "title": "Visitkort & Trycksaker",
+      "description": "Professionella visitkort och trycksaker som gör intryck och stärker ditt varumärke."
+    },
+    "decals": {
+      "title": "Dekaler & Klistermärken",
+      "description": "Högkvalitativa dekaler och klistermärken i olika former och storlekar för alla ändamål."
+    },
+    "graphicDesign": {
+      "title": "Grafisk Design",
+      "description": "Låt våra designers hjälpa dig skapa unika och professionella designlösningar för ditt varumärke."
+    },
+    "webSocial": {
+      "title": "Webb & Sociala Medier",
+      "description": "Designlösningar för dina digitala kanaler, från webbplatser till sociala medier."
+    },
+    "exploreAll": "Utforska alla tjänster"
+  },
+  "about": {
+    "tagline": "OM KALMAR STUDIO",
+    "title": "Din vision, vårt hantverk",
+    "description": "Lär känna historien bakom Kalmar Studio och vår passion för tryck och design.",
+    "history": "Vår Historia",
+    "historyText1": "Kalmar Studio grundades 2010 med visionen att erbjuda högkvalitativa trycklösningar till rimliga priser. Vad som började som en liten verksamhet med fokus på visitkort och affischer har vuxit till ett fullservicetryckeri med modern utrustning och ett team av erfarna formgivare.",
+    "historyText2": "Vår filosofi bygger på personlig service, noggrannhet och kreativitet. Vi tror på att bygga långsiktiga relationer med våra kunder genom att leverera resultat som överträffar förväntningar. Idag servar vi kunder över hela Sverige med allt från enskilda beställningar till storskaliga företagsprojekt.",
+    "highlights": [
+      "Högkvalitativa trycklösningar",
+      "Personlig service",
+      "Snabba leveranser",
+      "Miljövänliga material",
+      "Prisbelönt design",
+      "Kundfokuserad process"
+    ],
+    "values": "Våra Värderingar",
+    "valueItems": [
+      {
+        "title": "Kundrelationer",
+        "description": "Vi bygger långsiktiga relationer med våra kunder genom att alltid leverera över förväntan och prioritera kundnöjdhet."
+      },
+      {
+        "title": "Kvalitet",
+        "description": "Vi kompromissar aldrig med kvalitet. Varje produkt som lämnar våra lokaler håller högsta standard."
+      },
+      {
+        "title": "Punktlighet",
+        "description": "Vi förstår vikten av deadlines och levererar alltid i tid. Din tid är värdefull för oss."
+      },
+      {
+        "title": "Hållbarhet",
+        "description": "Vi tar miljöansvar genom att använda hållbara material och miljövänliga processer i vår produktion."
+      }
+    ],
+    "cta": "Redo att samarbeta med oss?",
+    "ctaDescription": "Vi ser fram emot att hjälpa dig förverkliga dina idéer. Kontakta oss idag för att diskutera ditt projekt."
+  },
+  "auth": {
+    "login": {
+      "title": "Logga in på ditt konto",
+      "description": "Ange dina inloggningsuppgifter nedan för att komma åt din kontrollpanel",
+      "emailLabel": "E-post",
+      "emailPlaceholder": "din.epost@exempel.com",
+      "passwordLabel": "Lösenord",
+      "passwordPlaceholder": "••••••••",
+      "forgotPassword": "Glömt lösenord?",
+      "signInButton": "Logga in",
+      "signingIn": "Loggar in...",
+      "noAccount": "Har du inget konto?",
+      "signUp": "Registrera dig här"
+    },
+    "register": {
+      "title": "Skapa ett konto",
+      "description": "Ange dina uppgifter nedan för att skapa ditt konto",
+      "nameLabel": "Namn",
+      "namePlaceholder": "Ditt namn",
+      "emailLabel": "E-post",
+      "emailPlaceholder": "din.epost@exempel.com",
+      "passwordLabel": "Lösenord",
+      "passwordPlaceholder": "Skapa ett säkert lösenord",
+      "signUpButton": "Registrera dig",
+      "signingUp": "Skapar konto...",
+      "haveAccount": "Har du redan ett konto?",
+      "signIn": "Logga in här"
+    }
+  },
+  "footer": {
+    "description": "Vi är specialister på skräddarsydda trycklösningar för företag och privatpersoner. Med passion för kvalitet och kreativitet skapar vi trycksaker som gör intryck.",
+    "company": "Företaget",
+    "services": "Tjänster",
+    "support": "Support",
+    "newsletter": "Nyhetsbrev",
+    "newsletterDescription": "Få de senaste artiklarna, tips och erbjudanden direkt i din inkorg. Vi skickar nyhetsbrev ungefär en gång i månaden.",
+    "emailPlaceholder": "Din e-postadress",
+    "subscribe": "Prenumerera",
+    "connect": "Följ oss"
+  },
+  "blog": {
+    "tagline": "BLOGG",
+    "title": "Nyheter & Inspiration",
+    "description": "Här delar vi med oss av nyheter, tips och inspiration inom design och tryck.",
+    "categories": ["Alla", "Design", "Hållbarhet", "Tryckmetoder", "Trender", "Marknadsföring", "Färgteori"],
+    "loadMore": "Ladda fler artiklar",
+    "newsletterTitle": "Prenumerera på vårt nyhetsbrev",
+    "newsletterDescription": "Få de senaste artiklarna, tips och erbjudanden direkt i din inkorg. Vi skickar nyhetsbrev ungefär en gång i månaden."
+  },
+  "contact": {
+    "tagline": "KONTAKTA OSS",
+    "title": "Låt oss diskutera ditt projekt",
+    "description": "Har du frågor eller behöver hjälp med ett projekt? Fyll i formuläret nedan eller kontakta oss direkt.",
+    "phone": "Telefon",
+    "email": "E-post",
+    "address": "Adress",
+    "hours": "Öppettider",
+    "messageTitle": "Skicka ett meddelande",
+    "messageDescription": "Fyll i formuläret så återkommer vi så snart som möjligt. Vi strävar efter att svara på alla förfrågningar inom 24 timmar under vardagar.",
+    "quoteBox": {
+      "title": "Behöver du en offert?",
+      "description": "Beskriv ditt projekt så detaljerat som möjligt – antal, storlek, färger etc – så kan vi ge dig en mer exakt prisuppskattning."
+    },
+    "form": {
+      "name": "Namn",
+      "email": "E-post",
+      "phone": "Telefon",
+      "subject": "Ämne",
+      "subjectOptions": {
+        "quote": "Offertförfrågan",
+        "info": "Produktinformation",
+        "support": "Support",
+        "other": "Annat"
+      },
+      "message": "Meddelande",
+      "submit": "Skicka meddelande"
+    }
+  }
+}

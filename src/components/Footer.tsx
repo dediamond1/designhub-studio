@@ -1,10 +1,12 @@
 
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Facebook, Instagram, Linkedin, Twitter, ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const Footer = () => {
+  const { t } = useTranslation();
   const [email, setEmail] = React.useState('');
   
   const handleSubmit = (e: React.FormEvent) => {
@@ -18,23 +20,23 @@ const Footer = () => {
   
   const links = {
     company: [
-      { name: 'Om oss', path: '/about' },
-      { name: 'Karriär', path: '/career' },
-      { name: 'Blogg', path: '/blog' },
-      { name: 'Nyheter', path: '/news' },
+      { name: t('navigation.about'), path: '/about' },
+      { name: t('navigation.career'), path: '/career' },
+      { name: t('navigation.blog'), path: '/blog' },
+      { name: t('navigation.news'), path: '/news' },
     ],
     services: [
-      { name: 'T-shirts & Kläder', path: '/services#t-shirts' },
-      { name: 'Visitkort & Trycksaker', path: '/services#business-cards' },
-      { name: 'Dekaler & Klistermärken', path: '/services#decals' },
-      { name: 'Grafisk Design', path: '/services#design' },
-      { name: 'Webb & Sociala Medier', path: '/services#web' },
+      { name: t('services.tshirts.title'), path: '/services#t-shirts' },
+      { name: t('services.businessCards.title'), path: '/services#business-cards' },
+      { name: t('services.decals.title'), path: '/services#decals' },
+      { name: t('services.graphicDesign.title'), path: '/services#design' },
+      { name: t('services.webSocial.title'), path: '/services#web' },
     ],
     support: [
-      { name: 'Kontakt', path: '/contact' },
+      { name: t('navigation.contact'), path: '/contact' },
       { name: 'FAQ', path: '/faq' },
-      { name: 'Leveransinformation', path: '/delivery' },
-      { name: 'Returpolicy', path: '/returns' },
+      { name: t('Delivery Information'), path: '/delivery' },
+      { name: t('Return Policy'), path: '/returns' },
     ]
   };
   
@@ -55,7 +57,7 @@ const Footer = () => {
               Kalmar Studio
             </NavLink>
             <p className="text-white/70 mb-6 max-w-md">
-              Vi är specialister på skräddarsydda trycklösningar för företag och privatpersoner. Med passion för kvalitet och kreativitet skapar vi trycksaker som gör intryck.
+              {t('footer.description')}
             </p>
             
             <div className="flex space-x-4 mb-8">
@@ -76,7 +78,7 @@ const Footer = () => {
           
           {/* Quick Links */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Företaget</h3>
+            <h3 className="text-lg font-semibold mb-4">{t('footer.company')}</h3>
             <ul className="space-y-3">
               {links.company.map((link, index) => (
                 <li key={index}>
@@ -92,7 +94,7 @@ const Footer = () => {
           </div>
           
           <div>
-            <h3 className="text-lg font-semibold mb-4">Tjänster</h3>
+            <h3 className="text-lg font-semibold mb-4">{t('footer.services')}</h3>
             <ul className="space-y-3">
               {links.services.map((link, index) => (
                 <li key={index}>
@@ -108,7 +110,7 @@ const Footer = () => {
           </div>
           
           <div>
-            <h3 className="text-lg font-semibold mb-4">Support</h3>
+            <h3 className="text-lg font-semibold mb-4">{t('footer.support')}</h3>
             <ul className="space-y-3">
               {links.support.map((link, index) => (
                 <li key={index}>
@@ -123,20 +125,20 @@ const Footer = () => {
             </ul>
             
             <div className="mt-8">
-              <h3 className="text-lg font-semibold mb-4">Nyhetsbrev</h3>
+              <h3 className="text-lg font-semibold mb-4">{t('footer.newsletter')}</h3>
               <form onSubmit={handleSubmit} className="flex">
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Din e-postadress"
+                  placeholder={t('footer.emailPlaceholder')}
                   className="flex-1 px-4 py-2 rounded-l-md bg-white/10 border border-white/20 text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-kalmar-400"
                   required
                 />
                 <button
                   type="submit"
                   className="bg-kalmar-600 hover:bg-kalmar-700 px-4 py-2 rounded-r-md transition-colors"
-                  aria-label="Prenumerera"
+                  aria-label={t('common.subscribe')}
                 >
                   <ArrowRight className="h-5 w-5" />
                 </button>
@@ -145,22 +147,14 @@ const Footer = () => {
           </div>
         </div>
         
-        <hr className="border-white/10 my-8" />
-        
-        <div className="flex flex-col md:flex-row justify-between items-center">
-          <p className="text-white/50 text-sm">
-            © {currentYear} Kalmar Studio. Alla rättigheter förbehållna.
-          </p>
-          
-          <div className="flex space-x-6 mt-4 md:mt-0">
-            <NavLink to="/privacy" className="text-white/50 text-sm hover:text-white transition-colors">
-              Integritetspolicy
+        <div className="border-t border-white/10 mt-12 pt-8 text-white/50 text-sm flex flex-col md:flex-row justify-between items-center">
+          <p>© {currentYear} Kalmar Studio. {t('All rights reserved.')}</p>
+          <div className="mt-4 md:mt-0 flex space-x-6">
+            <NavLink to="/terms" className="hover:text-white transition-colors">
+              {t('Terms of Service')}
             </NavLink>
-            <NavLink to="/terms" className="text-white/50 text-sm hover:text-white transition-colors">
-              Användarvillkor
-            </NavLink>
-            <NavLink to="/cookies" className="text-white/50 text-sm hover:text-white transition-colors">
-              Cookies
+            <NavLink to="/privacy" className="hover:text-white transition-colors">
+              {t('Privacy Policy')}
             </NavLink>
           </div>
         </div>

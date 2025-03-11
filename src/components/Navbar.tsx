@@ -1,14 +1,17 @@
 
 import React, { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useNavbarTransition } from '../utils/animations';
 import { Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import LanguageSwitcher from './LanguageSwitcher';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const isScrolled = useNavbarTransition();
   const location = useLocation();
+  const { t } = useTranslation();
   
   // Close mobile menu when route changes
   useEffect(() => {
@@ -16,16 +19,16 @@ const Navbar = () => {
   }, [location.pathname]);
   
   const navItems = [
-    { name: 'Hem', path: '/' },
-    { name: 'Om oss', path: '/about' },
-    { name: 'Tjänster', path: '/services' },
-    { name: 'Designa din egen', path: '/design' },
-    { name: 'Blogg', path: '/blog' },
-    { name: 'Nyheter', path: '/news' },
-    { name: 'Erbjudande', path: '/offers' },
-    { name: 'Kontakt', path: '/contact' },
-    { name: 'Karriär', path: '/career' },
-    { name: 'Reklam / Sponsring', path: '/ads' },
+    { name: t('navigation.home'), path: '/' },
+    { name: t('navigation.about'), path: '/about' },
+    { name: t('navigation.services'), path: '/services' },
+    { name: t('navigation.design'), path: '/design' },
+    { name: t('navigation.blog'), path: '/blog' },
+    { name: t('navigation.news'), path: '/news' },
+    { name: t('navigation.offers'), path: '/offers' },
+    { name: t('navigation.contact'), path: '/contact' },
+    { name: t('navigation.career'), path: '/career' },
+    { name: t('navigation.ads'), path: '/ads' },
   ];
 
   return (
@@ -57,22 +60,26 @@ const Navbar = () => {
               {item.name}
             </NavLink>
           ))}
+          <LanguageSwitcher />
           <NavLink 
             to="/contact" 
             className="button-primary"
           >
-            Få offert
+            {t('common.getQuote')}
           </NavLink>
         </div>
         
         {/* Mobile menu button */}
-        <button
-          className="lg:hidden z-20 focus:outline-none"
-          onClick={() => setIsOpen(!isOpen)}
-          aria-label="Toggle menu"
-        >
-          {isOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
+        <div className="lg:hidden flex items-center space-x-2 z-20">
+          <LanguageSwitcher />
+          <button
+            className="focus:outline-none"
+            onClick={() => setIsOpen(!isOpen)}
+            aria-label="Toggle menu"
+          >
+            {isOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
         
         {/* Mobile Navigation */}
         <div
@@ -105,7 +112,7 @@ const Navbar = () => {
             )}
             style={{ '--index': navItems.length } as React.CSSProperties}
           >
-            Få offert
+            {t('common.getQuote')}
           </NavLink>
         </div>
       </nav>

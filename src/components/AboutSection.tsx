@@ -1,22 +1,27 @@
 
 import React, { useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useScrollReveal } from '../utils/animations';
 import { NavLink } from 'react-router-dom';
 import { ArrowRight, CheckCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-const highlights = [
-  'Högkvalitativa trycklösningar',
-  'Personlig service',
-  'Snabba leveranser',
-  'Miljövänliga material',
-  'Prisbelönt design',
-  'Kundfokuserad process'
-];
-
 const AboutSection = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const isVisible = useScrollReveal(sectionRef, 0.1);
+  const { t } = useTranslation();
+
+  const highlights = t('about.highlights', {
+    returnObjects: true,
+    defaultValue: [
+      'High-quality printing solutions',
+      'Personal service',
+      'Fast deliveries',
+      'Environmentally friendly materials',
+      'Award-winning design',
+      'Customer-focused process'
+    ]
+  }) as string[];
 
   return (
     <section ref={sectionRef} className="py-20 md:py-32">
@@ -57,7 +62,7 @@ const AboutSection = () => {
               )}
             >
               <span className="inline-block py-1 px-3 mb-6 text-xs font-medium tracking-wider border border-primary/30 rounded-full bg-primary/5">
-                OM KALMAR STUDIO
+                {t('about.tagline')}
               </span>
             </div>
 
@@ -67,7 +72,7 @@ const AboutSection = () => {
                 isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
               )}
             >
-              Din vision, vårt hantverk. <br />Tillsammans skapar vi magi.
+              {t('about.title')}
             </h2>
 
             <p
@@ -76,7 +81,7 @@ const AboutSection = () => {
                 isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
               )}
             >
-              På Kalmar Studio har vi en passion för tryck och design. Sedan starten har vi levererat högkvalitativa trycklösningar till kunder över hela Sverige. Med vår expertis och moderna utrustning säkerställer vi att dina idéer förvandlas till enastående tryckresultat.
+              {t('about.historyText1')}
             </p>
 
             <p
@@ -85,7 +90,7 @@ const AboutSection = () => {
                 isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
               )}
             >
-              Vår filosofi bygger på personlig service, noggrannhet och kreativitet. Vi tror på att bygga långsiktiga relationer med våra kunder genom att leverera resultat som överträffar förväntningar.
+              {t('about.historyText2')}
             </p>
 
             <div
@@ -109,7 +114,7 @@ const AboutSection = () => {
                 isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
               )}
             >
-              Lär känna oss bättre
+              {t('common.learnMore')}
               <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
             </NavLink>
           </div>

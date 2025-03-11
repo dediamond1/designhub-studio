@@ -1,5 +1,6 @@
 
 import React, { useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useScrollReveal, useImageLoad } from '../utils/animations';
 import { ArrowRight } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
@@ -9,6 +10,7 @@ const HeroSection = () => {
   const heroRef = useRef<HTMLDivElement>(null);
   const isVisible = useScrollReveal(heroRef, 0.1);
   const { loaded, handleImageLoaded } = useImageLoad();
+  const { t } = useTranslation();
 
   return (
     <section 
@@ -40,7 +42,7 @@ const HeroSection = () => {
             )}
           >
             <span className="inline-block py-1 px-3 mb-6 text-xs font-medium tracking-wider border border-primary/30 rounded-full bg-primary/5">
-              PRINTING EXCELLENCE
+              {t('hero.tagline')}
             </span>
           </div>
 
@@ -52,8 +54,8 @@ const HeroSection = () => {
                 : "opacity-0 translate-y-10"
             )}
           >
-            Design, Print, Deliver{" "}
-            <span className="block mt-2">Tailored to Your Needs</span>
+            {t('hero.title')}{" "}
+            <span className="block mt-2">{t('hero.subtitle')}</span>
           </h1>
 
           <p
@@ -64,7 +66,7 @@ const HeroSection = () => {
                 : "opacity-0 translate-y-10"
             )}
           >
-            Custom designs for T-shirts, Business Cards, Decals, and more – Made just for you with premium quality and personalized service.
+            {t('hero.description')}
           </p>
 
           <div
@@ -79,14 +81,14 @@ const HeroSection = () => {
               to="/design"
               className="button-primary group w-full sm:w-auto"
             >
-              Start Designing
+              {t('common.startDesigning')}
               <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
             </NavLink>
             <NavLink
               to="/contact"
               className="button-outline w-full sm:w-auto"
             >
-              Get a Quote
+              {t('common.getQuote')}
             </NavLink>
           </div>
         </div>

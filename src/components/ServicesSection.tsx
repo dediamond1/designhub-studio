@@ -1,46 +1,48 @@
 
 import React, { useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useScrollReveal } from '../utils/animations';
 import { ExternalLink, ShoppingBag, Image, FileImage, Palette, Globe } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 
-const services = [
-  {
-    title: 'T-shirts & Kläder',
-    description: 'Skapa personliga t-shirts och kläder med din egen design. Perfekt för event, företag eller personligt bruk.',
-    icon: <ShoppingBag className="h-6 w-6" />,
-    link: '/services#t-shirts'
-  },
-  {
-    title: 'Visitkort & Trycksaker',
-    description: 'Professionella visitkort och trycksaker som gör intryck och stärker ditt varumärke.',
-    icon: <FileImage className="h-6 w-6" />,
-    link: '/services#business-cards'
-  },
-  {
-    title: 'Dekaler & Klistermärken',
-    description: 'Högkvalitativa dekaler och klistermärken i olika former och storlekar för alla ändamål.',
-    icon: <Image className="h-6 w-6" />,
-    link: '/services#decals'
-  },
-  {
-    title: 'Grafisk Design',
-    description: 'Låt våra designers hjälpa dig skapa unika och professionella designlösningar för ditt varumärke.',
-    icon: <Palette className="h-6 w-6" />,
-    link: '/services#design'
-  },
-  {
-    title: 'Webb & Sociala Medier',
-    description: 'Designlösningar för dina digitala kanaler, från webbplatser till sociala medier.',
-    icon: <Globe className="h-6 w-6" />,
-    link: '/services#web'
-  }
-];
-
 const ServicesSection = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const isVisible = useScrollReveal(sectionRef, 0.1);
+  const { t } = useTranslation();
+
+  const services = [
+    {
+      title: t('services.tshirts.title'),
+      description: t('services.tshirts.description'),
+      icon: <ShoppingBag className="h-6 w-6" />,
+      link: '/services#t-shirts'
+    },
+    {
+      title: t('services.businessCards.title'),
+      description: t('services.businessCards.description'),
+      icon: <FileImage className="h-6 w-6" />,
+      link: '/services#business-cards'
+    },
+    {
+      title: t('services.decals.title'),
+      description: t('services.decals.description'),
+      icon: <Image className="h-6 w-6" />,
+      link: '/services#decals'
+    },
+    {
+      title: t('services.graphicDesign.title'),
+      description: t('services.graphicDesign.description'),
+      icon: <Palette className="h-6 w-6" />,
+      link: '/services#design'
+    },
+    {
+      title: t('services.webSocial.title'),
+      description: t('services.webSocial.description'),
+      icon: <Globe className="h-6 w-6" />,
+      link: '/services#web'
+    }
+  ];
 
   return (
     <section ref={sectionRef} className="py-20 md:py-32 bg-secondary/50">
@@ -52,7 +54,7 @@ const ServicesSection = () => {
               isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
             )}
           >
-            VÅRA TJÄNSTER
+            {t('services.title')}
           </span>
           <h2
             className={cn(
@@ -60,7 +62,7 @@ const ServicesSection = () => {
               isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
             )}
           >
-            Upptäck vårt utbud av trycktjänster
+            {t('services.title')}
           </h2>
           <p
             className={cn(
@@ -68,7 +70,7 @@ const ServicesSection = () => {
               isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
             )}
           >
-            Vi erbjuder högkvalitativa tryck- och designlösningar för alla behov, från företag till privatpersoner.
+            {t('services.description')}
           </p>
         </div>
 
@@ -104,7 +106,7 @@ const ServicesSection = () => {
                 to={service.link}
                 className="flex items-center text-kalmar-600 font-medium hover:text-kalmar-700 transition-colors group-hover:underline"
               >
-                Läs mer
+                {t('common.readMore')}
                 <ExternalLink className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </NavLink>
             </div>
@@ -126,7 +128,7 @@ const ServicesSection = () => {
               transitionDuration: "700ms",
             }}
           >
-            Utforska alla tjänster
+            {t('services.exploreAll')}
           </NavLink>
         </div>
       </div>

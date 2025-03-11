@@ -1,6 +1,7 @@
 
-import { useState, useEffect, useCallback } from 'react';
-import { useToast } from './use-toast';
+import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import { 
   LoginCredentials, 
   RegisterCredentials, 
@@ -10,165 +11,210 @@ import {
   VerifyEmailRequest 
 } from '@/types/auth';
 
+// Mock authentication service with localStorage for simplicity
 export const useAuthContext = () => {
   const [user, setUser] = useState<UserData | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [initialized, setInitialized] = useState<boolean>(false);
-  const { toast } = useToast();
+  const [loading, setLoading] = useState(true);
+  const [initialized, setInitialized] = useState(false);
+  const { t } = useTranslation();
 
-  // Initialize authentication state from local storage
+  // Initialize auth state from localStorage on mount
   useEffect(() => {
-    const initAuth = () => {
-      const storedUser = localStorage.getItem('user');
-      const token = localStorage.getItem('token');
-      
-      if (storedUser && token) {
-        try {
-          setUser(JSON.parse(storedUser));
-        } catch (error) {
-          // Handle invalid JSON
-          localStorage.removeItem('user');
-          localStorage.removeItem('token');
-        }
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      try {
+        setUser(JSON.parse(storedUser));
+      } catch (error) {
+        console.error('Failed to parse stored user:', error);
+        localStorage.removeItem('user');
       }
-      
-      setLoading(false);
-      setInitialized(true);
-    };
-
-    initAuth();
+    }
+    setLoading(false);
+    setInitialized(true);
   }, []);
 
-  // Register a new user (mock functionality)
-  const register = useCallback(async (credentials: RegisterCredentials) => {
+  const register = async (credentials: RegisterCredentials) => {
     setLoading(true);
     
-    // Mock API delay
+    // Simulate API call delay
     await new Promise(resolve => setTimeout(resolve, 1000));
     
-    // Create a mock user
-    const mockUser: UserData = {
-      id: 'user_' + Math.random().toString(36).substr(2, 9),
+    // Check if email already exists
+    const existingUser = localStorage.getItem(`user_${credentials.email}`);
+    if (existingUser) {
+      setLoading(false);
+      toast.error(t('auth.register.emailExists', 'Email already registered'));
+      return { success: false, message: t('auth.register.emailExists', 'Email already registered') };
+    }
+    
+    // Create new user
+    const newUser: UserData = {
+      id: Date.now().toString(),
       name: credentials.name,
       email: credentials.email,
       role: 'user',
-      verified: false
+      createdAt: new Date().toISOString(),
     };
     
-    // Store user data and token
-    localStorage.setItem('user', JSON.stringify(mockUser));
-    localStorage.setItem('token', 'mock_token_' + Date.now());
-    setUser(mockUser);
+    // Store in localStorage
+    localStorage.setItem(`user_${credentials.email}`, JSON.stringify({
+      ...newUser,
+      password: credentials.password // In a real app, this would be hashed
+    }));
     
-    toast({
-      title: 'Registration Successful',
-      description: 'Please check your email to verify your account',
-    });
-    
-    setLoading(false);
-    return { success: true, message: 'Registration successful!' };
-  }, [toast]);
-
-  // Login user (mock functionality)
-  const login = useCallback(async (credentials: LoginCredentials) => {
-    setLoading(true);
-    
-    // Mock API delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // Always succeed in this mock version
-    const mockUser: UserData = {
-      id: 'user_' + Math.random().toString(36).substr(2, 9),
-      name: 'Demo User',
-      email: credentials.email,
-      role: 'admin',
-      verified: true
-    };
-    
-    // Store user data and token
-    localStorage.setItem('user', JSON.stringify(mockUser));
-    localStorage.setItem('token', 'mock_token_' + Date.now());
-    setUser(mockUser);
-    
-    toast({
-      title: 'Login Successful',
-      description: 'Welcome back!',
-    });
+    // Update auth state
+    setUser(newUser);
+    localStorage.setItem('user', JSON.stringify(newUser));
     
     setLoading(false);
-    return { success: true, message: 'Login successful!' };
-  }, [toast]);
+    toast.success(t('auth.register.success', 'Registration successful'));
+    return { success: true, message: t('auth.register.success', 'Registration successful') };
+  };
 
-  // Logout user
-  const logout = useCallback(() => {
-    localStorage.removeItem('user');
-    localStorage.removeItem('token');
-    setUser(null);
-    
-    toast({
-      title: 'Logged Out',
-      description: 'You have been successfully logged out',
-    });
-  }, [toast]);
-
-  // Request password reset (mock functionality)
-  const forgotPassword = useCallback(async (data: ResetPasswordRequest) => {
+  const login = async (credentials: LoginCredentials) => {
     setLoading(true);
     
-    // Mock API delay
+    // Simulate API call delay
     await new Promise(resolve => setTimeout(resolve, 1000));
     
-    toast({
-      title: 'Request Sent',
-      description: 'If your email exists in our system, you will receive password reset instructions',
-    });
-    
-    setLoading(false);
-    return { 
-      success: true, 
-      message: 'Password reset link sent!', 
-      token: 'mock_reset_token_' + Date.now() 
-    };
-  }, [toast]);
-
-  // Reset password with token (mock functionality)
-  const resetPassword = useCallback(async (data: ChangePasswordRequest) => {
-    setLoading(true);
-    
-    // Mock API delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    toast({
-      title: 'Password Reset Successful',
-      description: 'Your password has been successfully reset',
-    });
-    
-    setLoading(false);
-    return { success: true, message: 'Password reset successful!' };
-  }, [toast]);
-
-  // Verify email with token (mock functionality)
-  const verifyEmail = useCallback(async (data: VerifyEmailRequest) => {
-    setLoading(true);
-    
-    // Mock API delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // If the user is logged in, update the verified status
-    if (user) {
-      const updatedUser = { ...user, verified: true };
-      localStorage.setItem('user', JSON.stringify(updatedUser));
-      setUser(updatedUser);
+    // Check credentials
+    const storedUser = localStorage.getItem(`user_${credentials.email}`);
+    if (!storedUser) {
+      setLoading(false);
+      toast.error(t('auth.login.invalidCredentials', 'Invalid email or password'));
+      return { success: false, message: t('auth.login.invalidCredentials', 'Invalid email or password') };
     }
     
-    toast({
-      title: 'Email Verified',
-      description: 'Your email has been successfully verified',
-    });
+    try {
+      const userData = JSON.parse(storedUser);
+      if (userData.password !== credentials.password) {
+        setLoading(false);
+        toast.error(t('auth.login.invalidCredentials', 'Invalid email or password'));
+        return { success: false, message: t('auth.login.invalidCredentials', 'Invalid email or password') };
+      }
+      
+      // Login successful
+      const user: UserData = {
+        id: userData.id,
+        name: userData.name,
+        email: userData.email,
+        role: userData.role || 'user',
+        createdAt: userData.createdAt,
+      };
+      
+      setUser(user);
+      localStorage.setItem('user', JSON.stringify(user));
+      
+      setLoading(false);
+      toast.success(t('auth.login.success', 'Login successful'));
+      return { success: true, message: t('auth.login.success', 'Login successful') };
+    } catch (error) {
+      console.error('Failed to parse stored user:', error);
+      setLoading(false);
+      toast.error(t('auth.login.error', 'An error occurred during login'));
+      return { success: false, message: t('auth.login.error', 'An error occurred during login') };
+    }
+  };
+
+  const logout = () => {
+    localStorage.removeItem('user');
+    setUser(null);
+    toast.success(t('auth.logout.success', 'Logout successful'));
+  };
+
+  const forgotPassword = async (data: ResetPasswordRequest) => {
+    setLoading(true);
+    
+    // Simulate API call delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // Check if email exists
+    const storedUser = localStorage.getItem(`user_${data.email}`);
+    if (!storedUser) {
+      setLoading(false);
+      // For security reasons, don't reveal if email exists or not
+      toast.success(t('auth.forgotPassword.checkEmail', 'If your email is registered, you will receive a password reset link'));
+      return { 
+        success: true, 
+        message: t('auth.forgotPassword.checkEmail', 'If your email is registered, you will receive a password reset link')
+      };
+    }
+    
+    // Generate a token (in a real app this would be a secure token)
+    const token = Math.random().toString(36).substring(2, 15);
+    localStorage.setItem(`reset_token_${data.email}`, token);
     
     setLoading(false);
-    return { success: true, message: 'Email verification successful!' };
-  }, [toast, user]);
+    toast.success(t('auth.forgotPassword.checkEmail', 'If your email is registered, you will receive a password reset link'));
+    return { 
+      success: true, 
+      message: t('auth.forgotPassword.checkEmail', 'If your email is registered, you will receive a password reset link'),
+      token
+    };
+  };
+
+  const resetPassword = async (data: ChangePasswordRequest) => {
+    setLoading(true);
+    
+    // Simulate API call delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // Validate token (in a real app this would be more secure)
+    const storedToken = localStorage.getItem(`reset_token_${data.email}`);
+    if (!storedToken || storedToken !== data.token) {
+      setLoading(false);
+      toast.error(t('auth.resetPassword.invalidToken', 'Invalid or expired token'));
+      return { success: false, message: t('auth.resetPassword.invalidToken', 'Invalid or expired token') };
+    }
+    
+    // Check if user exists
+    const storedUser = localStorage.getItem(`user_${data.email}`);
+    if (!storedUser) {
+      setLoading(false);
+      toast.error(t('auth.resetPassword.userNotFound', 'User not found'));
+      return { success: false, message: t('auth.resetPassword.userNotFound', 'User not found') };
+    }
+    
+    try {
+      // Update password
+      const userData = JSON.parse(storedUser);
+      userData.password = data.password;
+      localStorage.setItem(`user_${data.email}`, JSON.stringify(userData));
+      
+      // Clean up token
+      localStorage.removeItem(`reset_token_${data.email}`);
+      
+      setLoading(false);
+      toast.success(t('auth.resetPassword.success', 'Password reset successful'));
+      return { success: true, message: t('auth.resetPassword.success', 'Password reset successful') };
+    } catch (error) {
+      console.error('Failed to update password:', error);
+      setLoading(false);
+      toast.error(t('auth.resetPassword.error', 'An error occurred'));
+      return { success: false, message: t('auth.resetPassword.error', 'An error occurred') };
+    }
+  };
+
+  const verifyEmail = async (data: VerifyEmailRequest) => {
+    setLoading(true);
+    
+    // Simulate API call delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // Validate token (in a real app this would involve JWT validation or similar)
+    if (!data.token) {
+      setLoading(false);
+      toast.error(t('auth.verifyEmail.invalidToken', 'Invalid verification token'));
+      return { success: false, message: t('auth.verifyEmail.invalidToken', 'Invalid verification token') };
+    }
+    
+    // In a real app, you would update user's verified status in the database
+    // Here we'll just simulate success
+    
+    setLoading(false);
+    toast.success(t('auth.verifyEmail.success', 'Email verified successfully'));
+    return { success: true, message: t('auth.verifyEmail.success', 'Email verified successfully') };
+  };
 
   return {
     user,
