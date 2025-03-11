@@ -5,7 +5,6 @@ import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2 } from 'lucide-react';
-import { useAuthContext } from '@/hooks/useAuth';
 import { 
   Form, 
   FormControl, 
@@ -17,6 +16,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { toast } from "sonner";
 
 const registerSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -32,7 +32,6 @@ type RegisterFormValues = z.infer<typeof registerSchema>;
 
 const Register = () => {
   const navigate = useNavigate();
-  const { register } = useAuthContext();
   const [loading, setLoading] = useState(false);
   
   const form = useForm<RegisterFormValues>({
@@ -48,19 +47,12 @@ const Register = () => {
   const onSubmit = async (data: RegisterFormValues) => {
     setLoading(true);
     
-    const { confirmPassword, ...registerData } = data;
-    
-    const result = await register({
-      name: registerData.name,
-      email: registerData.email,
-      password: registerData.password
-    });
-    
-    setLoading(false);
-    
-    if (result.success) {
+    // Mock registration (since we've removed actual auth functionality)
+    setTimeout(() => {
+      toast.success("Account created successfully!");
+      setLoading(false);
       navigate('/dashboard');
-    }
+    }, 1500);
   };
 
   return (
