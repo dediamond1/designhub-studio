@@ -22,6 +22,8 @@ import Ads from "./pages/Ads";
 import Login from "./pages/Login";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import VerifyEmail from "./pages/VerifyEmail";
+import AcceptInvitation from "./pages/AcceptInvitation";
 import NotFound from "./pages/NotFound";
 import Dashboard from "./pages/Dashboard";
 import DashboardOrders from "./pages/dashboard/Orders";
@@ -30,6 +32,7 @@ import DashboardCustomers from "./pages/dashboard/Customers";
 import DashboardDesigns from "./pages/dashboard/Designs";
 import DashboardAnalytics from "./pages/dashboard/Analytics";
 import DashboardSettings from "./pages/dashboard/Settings";
+import TeamMembers from "./pages/dashboard/TeamMembers";
 
 const queryClient = new QueryClient();
 
@@ -60,6 +63,8 @@ const App = () => (
             <Route path="/login" element={<Login />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/verify-email" element={<VerifyEmail />} />
+            <Route path="/accept-invitation" element={<AcceptInvitation />} />
             
             {/* Protected Dashboard Routes */}
             <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
@@ -69,6 +74,7 @@ const App = () => (
             <Route path="/dashboard/designs" element={<PrivateRoute><DashboardDesigns /></PrivateRoute>} />
             <Route path="/dashboard/analytics" element={<PrivateRoute><DashboardAnalytics /></PrivateRoute>} />
             <Route path="/dashboard/settings" element={<PrivateRoute><DashboardSettings /></PrivateRoute>} />
+            <Route path="/dashboard/team" element={<PrivateRoute><TeamMembers /></PrivateRoute>} />
             
             {/* Catch-all route */}
             <Route path="*" element={<NotFound />} />

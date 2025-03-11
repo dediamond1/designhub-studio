@@ -1,136 +1,74 @@
+
+import { connectToDatabase } from '@/lib/db';
 import { ObjectId } from 'mongodb';
-import { dbConnect } from '@/lib/db';
-import { auth } from '@/lib/better-auth';
+import { 
+  loginUser, 
+  registerUser, 
+  getCurrentUser, 
+  requestPasswordReset,
+  resetPassword,
+  verifyEmail,
+  inviteTeamMember,
+  acceptInvitation,
+  getAllUsers,
+  updateUserRole,
+  deleteUser
+} from '@/services/authService';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
+// These functions are adapters for our API routes
+// They bridge between the API layer and our service layer
 
-export async function login(req: any, res: any) {
-  try {
-    const { email, password } = req.body;
-    const { db } = await dbConnect();
-    
-    const user = await db.collection('users').findOne({ email });
-    
-    if (!user) {
-      return res.status(401).json({ message: 'Invalid email or password' });
-    }
-    
-    const isPasswordValid = await auth.compare(password, user.password);
-    
-    if (!isPasswordValid) {
-      return res.status(401).json({ message: 'Invalid email or password' });
-    }
-    
-    const token = jwt.sign(
-      { id: user._id, email: user.email, role: user.role || 'user' },
-      JWT_SECRET,
-      { expiresIn: '7d' }
-    );
-    
-    // Set JWT as HTTP-only cookie
-    res.setHeader(
-      'Set-Cookie',
-      `token=${token}; HttpOnly; Path=/; Max-Age=${7 * 24 * 60 * 60}; SameSite=Strict`
-    );
-    
-    return res.status(200).json({
-      id: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.role || 'user',
-    });
-  } catch (error) {
-    console.error('Login error:', error);
-    return res.status(500).json({ message: 'Internal server error' });
-  }
-}
+// User login
+export const login = async (email: string, password: string) => {
+  return await loginUser(email, password);
+};
 
-export async function register(req: any, res: any) {
-  try {
-    const { name, email, password } = req.body;
-    const { db } = await dbConnect();
-    
-    // Check if user already exists
-    const existingUser = await db.collection('users').findOne({ email });
-    
-    if (existingUser) {
-      return res.status(409).json({ message: 'User already exists' });
-    }
-    
-    // Hash password
-    const hashedPassword = await auth.hash(password, 10);
-    
-    // Create new user
-    const result = await db.collection('users').insertOne({
-      name,
-      email,
-      password: hashedPassword,
-      role: 'user',
-      createdAt: new Date(),
-    });
-    
-    const user = {
-      id: result.insertedId,
-      name,
-      email,
-      role: 'user',
-    };
-    
-    // Generate JWT
-    const token = jwt.sign(
-      { id: user.id, email: user.email, role: user.role },
-      JWT_SECRET,
-      { expiresIn: '7d' }
-    );
-    
-    // Set JWT as HTTP-only cookie
-    res.setHeader(
-      'Set-Cookie',
-      `token=${token}; HttpOnly; Path=/; Max-Age=${7 * 24 * 60 * 60}; SameSite=Strict`
-    );
-    
-    return res.status(201).json(user);
-  } catch (error) {
-    console.error('Registration error:', error);
-    return res.status(500).json({ message: 'Internal server error' });
-  }
-}
+// User registration
+export const register = async (name: string, email: string, password: string) => {
+  return await registerUser(name, email, password);
+};
 
-export async function logout(req: any, res: any) {
-  // Clear the auth cookie
-  res.setHeader(
-    'Set-Cookie',
-    'token=; HttpOnly; Path=/; Max-Age=0; SameSite=Strict'
-  );
-  
-  return res.status(200).json({ message: 'Logged out successfully' });
-}
+// Get current user
+export const getUser = async (token: string) => {
+  return await getCurrentUser(token);
+};
 
-export async function getMe(req: any, res: any) {
-  try {
-    const token = req.cookies.token;
-    
-    if (!token) {
-      return res.status(401).json({ message: 'Not authenticated' });
-    }
-    
-    const decoded = jwt.verify(token, JWT_SECRET) as any;
-    const { db } = await dbConnect();
-    
-    const user = await db.collection('users').findOne({ _id: decoded.id });
-    
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-    
-    return res.status(200).json({
-      id: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.role || 'user',
-    });
-  } catch (error) {
-    console.error('Get user error:', error);
-    return res.status(401).json({ message: 'Invalid token' });
-  }
-}
+// Request password reset
+export const forgotPassword = async (email: string) => {
+  return await requestPasswordReset(email);
+};
+
+// Reset password with token
+export const changePassword = async (token: string, newPassword: string) => {
+  return await resetPassword(token, newPassword);
+};
+
+// Verify email address
+export const verifyUserEmail = async (token: string) => {
+  return await verifyEmail(token);
+};
+
+// Admin: Get all users
+export const getUsers = async (adminId: string) => {
+  return await getAllUsers(adminId);
+};
+
+// Admin: Update user role
+export const updateRole = async (adminId: string, userId: string, role: 'admin' | 'user' | 'team-member') => {
+  return await updateUserRole(adminId, userId, role);
+};
+
+// Admin: Delete user
+export const removeUser = async (adminId: string, userId: string) => {
+  return await deleteUser(adminId, userId);
+};
+
+// Admin: Invite team member
+export const invite = async (adminId: string, email: string, name: string, role: 'admin' | 'team-member') => {
+  return await inviteTeamMember(email, name, role, adminId);
+};
+
+// Accept invitation
+export const acceptTeamInvitation = async (token: string, password: string) => {
+  return await acceptInvitation(token, password);
+};

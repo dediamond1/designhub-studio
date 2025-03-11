@@ -3,6 +3,9 @@ import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useToast } from '@/hooks/use-toast';
 
+// Helper to get the auth token
+const getAuthToken = () => localStorage.getItem('auth_token') || '';
+
 // Generic GET hook
 export const useFetch = <T>(url: string, queryKey: string[]) => {
   const { toast } = useToast();
@@ -10,7 +13,11 @@ export const useFetch = <T>(url: string, queryKey: string[]) => {
   return useQuery({
     queryKey,
     queryFn: async (): Promise<T> => {
-      const response = await fetch(url);
+      const response = await fetch(url, {
+        headers: {
+          'Authorization': `Bearer ${getAuthToken()}`,
+        },
+      });
       
       if (!response.ok) {
         const error = await response.json();
@@ -45,9 +52,9 @@ export const useCreate = <T, U>(url: string, queryKey: string[]) => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${getAuthToken()}`,
           },
           body: JSON.stringify(data),
-          credentials: 'include',
         });
         
         if (!response.ok) {
@@ -93,9 +100,9 @@ export const useUpdate = <T, U>(baseUrl: string, queryKey: string[]) => {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${getAuthToken()}`,
           },
           body: JSON.stringify(data),
-          credentials: 'include',
         });
         
         if (!response.ok) {
@@ -139,7 +146,9 @@ export const useDelete = (baseUrl: string, queryKey: string[]) => {
       try {
         const response = await fetch(`${baseUrl}/${id}`, {
           method: 'DELETE',
-          credentials: 'include',
+          headers: {
+            'Authorization': `Bearer ${getAuthToken()}`,
+          },
         });
         
         if (!response.ok) {

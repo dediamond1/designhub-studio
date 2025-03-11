@@ -12,12 +12,15 @@ import {
   PaintBucket,
   ChevronLeft,
   ChevronRight,
-  LogOut
+  LogOut,
+  UserPlus
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/contexts/AuthContext';
 
 const DashboardSidebar = () => {
   const [collapsed, setCollapsed] = useState(false);
+  const { user, logout } = useAuth();
 
   const sidebarItems = [
     { name: 'Overview', path: '/dashboard', icon: Home },
@@ -26,8 +29,16 @@ const DashboardSidebar = () => {
     { name: 'Customers', path: '/dashboard/customers', icon: Users },
     { name: 'Designs', path: '/dashboard/designs', icon: PaintBucket },
     { name: 'Analytics', path: '/dashboard/analytics', icon: BarChart3 },
+  ];
+  
+  // Admin-only items
+  const adminItems = [
+    { name: 'Team Members', path: '/dashboard/team', icon: UserPlus },
     { name: 'Settings', path: '/dashboard/settings', icon: Settings },
   ];
+
+  // Determine which items to show based on user role
+  const displayItems = [...sidebarItems, ...(user?.role === 'admin' ? adminItems : [])];
 
   return (
     <aside 
@@ -57,7 +68,7 @@ const DashboardSidebar = () => {
       </div>
       
       <nav className="flex-1 py-4 px-2 space-y-1 overflow-y-auto">
-        {sidebarItems.map((item) => (
+        {displayItems.map((item) => (
           <NavLink
             key={item.path}
             to={item.path}
@@ -81,18 +92,18 @@ const DashboardSidebar = () => {
       </nav>
       
       <div className="p-4 border-t border-border">
-        <NavLink
-          to="/"
-          className="flex items-center p-2 rounded-md text-sm group transition-colors text-sidebar-foreground hover:bg-sidebar-accent/80"
+        <button
+          onClick={logout}
+          className="flex items-center w-full p-2 rounded-md text-sm group transition-colors text-sidebar-foreground hover:bg-sidebar-accent/80"
         >
           <LogOut size={20} className={cn(collapsed ? "" : "mr-3")} />
           <span className={cn(
             "transition-all duration-300",
             collapsed ? "opacity-0 w-0 hidden" : "opacity-100"
           )}>
-            Return to Site
+            Logout
           </span>
-        </NavLink>
+        </button>
       </div>
     </aside>
   );

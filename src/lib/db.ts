@@ -26,7 +26,7 @@ export async function dbConnect() {
   return { client, db };
 }
 
-// Alias for compatibility with existing code
+// Export connectToDatabase as alias for backward compatibility
 export const connectToDatabase = dbConnect;
 
 /**
