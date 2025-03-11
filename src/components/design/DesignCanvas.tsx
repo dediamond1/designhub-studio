@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from 'react';
 import { Canvas, Text, Image, Rect, Circle, Triangle, Polygon } from 'fabric';
 import { useDesign } from '../../contexts/DesignContext';
@@ -26,6 +25,7 @@ const DesignCanvas: React.FC<DesignCanvasProps> = ({ width, height, className })
   const [isDragging, setIsDragging] = useState(false);
   const [isScaling, setIsScaling] = useState(false);
   const [isRotating, setIsRotating] = useState(false);
+  const [zoom, setZoom] = useState(1);
 
   // Initialize canvas once on mount
   useEffect(() => {
@@ -38,20 +38,66 @@ const DesignCanvas: React.FC<DesignCanvasProps> = ({ width, height, className })
       preserveObjectStacking: true,
       selection: true,
       controlsAboveOverlay: true,
+      centeredScaling: true,
+      centeredRotation: true,
+      selectionBorderColor: '#2563eb',
+      selectionColor: 'rgba(37, 99, 235, 0.1)',
+      selectionLineWidth: 1,
     });
 
+    // Set up grid background (optional, can be toggled)
+    const gridSize = 20;
+    const canvasWidth = width;
+    const canvasHeight = height;
+    
+    // Create grid lines as background
+    const createGrid = () => {
+      const gridGroup = [];
+      
+      // Create horizontal lines
+      for (let i = 0; i < canvasHeight / gridSize; i++) {
+        const line = new fabric.Line([0, i * gridSize, canvasWidth, i * gridSize], {
+          stroke: '#e5e7eb',
+          selectable: false,
+          evented: false,
+          strokeWidth: 0.5,
+        });
+        gridGroup.push(line);
+      }
+      
+      // Create vertical lines
+      for (let i = 0; i < canvasWidth / gridSize; i++) {
+        const line = new fabric.Line([i * gridSize, 0, i * gridSize, canvasHeight], {
+          stroke: '#e5e7eb',
+          selectable: false,
+          evented: false,
+          strokeWidth: 0.5,
+        });
+        gridGroup.push(line);
+      }
+      
+      return new fabric.Group(gridGroup, {
+        selectable: false,
+        evented: false,
+      });
+    };
+    
+    const grid = createGrid();
+    fabricCanvas.add(grid);
+    fabricCanvas.sendToBack(grid);
+
     // Set up event listeners
-    fabricCanvas.on('object:moving', (e) => {
+    fabricCanvas.on('object:moving', (e: any) => {
       setIsDragging(true);
       handleObjectModified(e);
     });
 
-    fabricCanvas.on('object:scaling', (e) => {
+    fabricCanvas.on('object:scaling', (e: any) => {
       setIsScaling(true);
       handleObjectModified(e);
     });
 
-    fabricCanvas.on('object:rotating', (e) => {
+    fabricCanvas.on('object:rotating', (e: any) => {
       setIsRotating(true);
       handleObjectModified(e);
     });
@@ -65,16 +111,17 @@ const DesignCanvas: React.FC<DesignCanvasProps> = ({ width, height, className })
       }
     });
 
-    fabricCanvas.on('selection:created', (e) => {
-      console.log('Selection created:', e);
+    fabricCanvas.on('selection:created', (e: any) => {
+      updateToolbarWithSelection(e.selected);
     });
 
-    fabricCanvas.on('selection:updated', (e) => {
-      console.log('Selection updated:', e);
+    fabricCanvas.on('selection:updated', (e: any) => {
+      updateToolbarWithSelection(e.selected);
     });
 
     fabricCanvas.on('selection:cleared', () => {
-      console.log('Selection cleared');
+      // Reset toolbar state when selection is cleared
+      dispatch({ type: 'SET_SELECTED_OBJECT', payload: null });
     });
 
     // Set up keyboard event listeners
@@ -88,6 +135,21 @@ const DesignCanvas: React.FC<DesignCanvasProps> = ({ width, height, className })
       fabricCanvas.dispose();
     };
   }, []);
+
+  // Update toolbar with selected object properties
+  const updateToolbarWithSelection = (selected: any[]) => {
+    if (!selected || selected.length === 0) return;
+    
+    const obj = selected[0] as any;
+    const designId = (obj as CustomFabricObject).__designId;
+    
+    if (!designId) return;
+    
+    const designObject = designState.objects.find(o => o.id === designId);
+    if (designObject) {
+      dispatch({ type: 'SET_SELECTED_OBJECT', payload: designObject });
+    }
+  };
 
   // Handle keyboard shortcuts
   const handleKeyDown = (e: KeyboardEvent) => {
@@ -107,14 +169,115 @@ const DesignCanvas: React.FC<DesignCanvasProps> = ({ width, height, className })
     // Undo with Ctrl+Z
     if (e.ctrlKey && e.key === 'z') {
       e.preventDefault();
-      // Undo functionality would be handled by the DesignContext
+      dispatch({ type: 'UNDO' });
     }
 
     // Redo with Ctrl+Y or Ctrl+Shift+Z
     if ((e.ctrlKey && e.key === 'y') || (e.ctrlKey && e.shiftKey && e.key === 'z')) {
       e.preventDefault();
-      // Redo functionality would be handled by the DesignContext
+      dispatch({ type: 'REDO' });
     }
+
+    // Group objects with Ctrl+G
+    if (e.ctrlKey && e.key === 'g' && canvas.getActiveObject() && canvas.getActiveObject().type === 'activeSelection') {
+      e.preventDefault();
+      groupSelectedObjects();
+    }
+
+    // Ungroup objects with Ctrl+Shift+G
+    if (e.ctrlKey && e.shiftKey && e.key === 'g' && canvas.getActiveObject() && canvas.getActiveObject().type === 'group') {
+      e.preventDefault();
+      ungroupSelectedObjects();
+    }
+  };
+
+  // Group selected objects
+  const groupSelectedObjects = () => {
+    if (!canvas) return;
+    
+    const activeObject = canvas.getActiveObject() as any;
+    if (!activeObject || activeObject.type !== 'activeSelection') return;
+    
+    const group = activeObject.toGroup();
+    const designId = `group_${uuidv4()}`;
+    (group as CustomFabricObject).__designId = designId;
+    
+    canvas.setActiveObject(group);
+    canvas.renderAll();
+    
+    // Create a new group object in the design state
+    const groupObj = {
+      id: designId,
+      type: 'group' as any,
+      x: group.left || 0,
+      y: group.top || 0,
+      width: group.width || 0,
+      height: group.height || 0,
+      rotation: group.angle || 0,
+      scaleX: group.scaleX || 1,
+      scaleY: group.scaleY || 1,
+      opacity: group.opacity || 1,
+    };
+    
+    // Add the group to design state
+    dispatch({ type: 'ADD_OBJECT', payload: groupObj });
+    
+    // Remove the individual objects from design state (optional, depends on your implementation)
+    // For a real implementation, you might want to keep track of which objects are in the group
+  };
+
+  // Ungroup selected objects
+  const ungroupSelectedObjects = () => {
+    if (!canvas) return;
+    
+    const activeObject = canvas.getActiveObject() as any;
+    if (!activeObject || activeObject.type !== 'group') return;
+    
+    const designId = (activeObject as CustomFabricObject).__designId;
+    const items = activeObject.getObjects();
+    activeObject.destroy();
+    
+    canvas.remove(activeObject);
+    
+    // Add each item back to canvas individually
+    items.forEach((item: any) => {
+      canvas.add(item);
+      const newId = `object_${uuidv4()}`;
+      (item as CustomFabricObject).__designId = newId;
+      
+      // Create new design objects for each item
+      const itemObj = {
+        id: newId,
+        type: determineObjectType(item),
+        x: item.left || 0,
+        y: item.top || 0,
+        width: item.width || 0,
+        height: item.height || 0,
+        rotation: item.angle || 0,
+        scaleX: item.scaleX || 1,
+        scaleY: item.scaleY || 1,
+        opacity: item.opacity || 1,
+        fill: item.fill || null,
+        stroke: item.stroke || null,
+        strokeWidth: item.strokeWidth || 0,
+      };
+      
+      dispatch({ type: 'ADD_OBJECT', payload: itemObj });
+    });
+    
+    canvas.renderAll();
+    
+    // Remove the group object from design state
+    if (designId) {
+      dispatch({ type: 'REMOVE_OBJECT', payload: designId });
+    }
+  };
+
+  // Helper function to determine object type
+  const determineObjectType = (fabricObj: any): 'text' | 'image' | 'shape' => {
+    if (fabricObj instanceof Text) return 'text';
+    if (fabricObj instanceof Image) return 'image';
+    return 'shape';
   };
 
   // Handle object modifications
@@ -172,6 +335,23 @@ const DesignCanvas: React.FC<DesignCanvasProps> = ({ width, height, className })
     dispatch({ type: 'DUPLICATE_OBJECT', payload: id });
   };
 
+  // Zoom controls
+  const handleZoomIn = () => {
+    if (!canvas || zoom >= 3) return; // Limit max zoom
+    
+    const newZoom = zoom + 0.1;
+    canvas.setZoom(newZoom);
+    setZoom(newZoom);
+  };
+  
+  const handleZoomOut = () => {
+    if (!canvas || zoom <= 0.5) return; // Limit min zoom
+    
+    const newZoom = zoom - 0.1;
+    canvas.setZoom(newZoom);
+    setZoom(newZoom);
+  };
+
   // Sync canvas with design state
   useEffect(() => {
     if (!canvas || isLoading) return;
@@ -181,7 +361,11 @@ const DesignCanvas: React.FC<DesignCanvasProps> = ({ width, height, className })
     canvas.renderAll();
 
     // Clear canvas objects
-    canvas.remove(...canvas.getObjects());
+    const objectsToRemove = canvas.getObjects().filter(obj => {
+      // Don't remove the grid background
+      return !(obj as any).isGrid;
+    });
+    canvas.remove(...objectsToRemove);
 
     // Add all objects from design state
     designState.objects.forEach(async (obj) => {
@@ -200,6 +384,10 @@ const DesignCanvas: React.FC<DesignCanvasProps> = ({ width, height, className })
             scaleX: obj.scaleX,
             scaleY: obj.scaleY,
             opacity: obj.opacity,
+            charSpacing: 0,
+            textAlign: 'left',
+            stroke: obj.stroke,
+            strokeWidth: obj.strokeWidth,
           });
           break;
 
@@ -245,6 +433,8 @@ const DesignCanvas: React.FC<DesignCanvasProps> = ({ width, height, className })
                 scaleX: obj.scaleX,
                 scaleY: obj.scaleY,
                 opacity: obj.opacity,
+                rx: 0,
+                ry: 0,
               });
               break;
 
@@ -280,7 +470,6 @@ const DesignCanvas: React.FC<DesignCanvasProps> = ({ width, height, className })
               break;
 
             case 'polygon':
-              // This would be more complex in a real implementation
               fabricObj = new Polygon(
                 [
                   { x: 0, y: 0 },
@@ -344,8 +533,34 @@ const DesignCanvas: React.FC<DesignCanvasProps> = ({ width, height, className })
   }
 
   return (
-    <div className={`relative border border-gray-200 rounded-lg overflow-hidden ${className}`}>
-      <canvas ref={canvasRef} />
+    <div className="relative border border-gray-100 rounded-lg overflow-hidden shadow-sm bg-white">
+      <div className="bg-gray-50 p-1 border-b border-gray-100 flex justify-between items-center">
+        <div className="flex space-x-1">
+          <button 
+            className="px-2 py-1 text-xs font-medium text-gray-500 hover:bg-gray-100 rounded"
+            onClick={handleZoomOut}
+          >
+            -
+          </button>
+          <span className="px-2 py-1 text-xs font-medium">{Math.round(zoom * 100)}%</span>
+          <button 
+            className="px-2 py-1 text-xs font-medium text-gray-500 hover:bg-gray-100 rounded"
+            onClick={handleZoomIn}
+          >
+            +
+          </button>
+        </div>
+        <div>
+          <span className="text-xs text-gray-500">
+            {width} × {height}px
+          </span>
+        </div>
+      </div>
+      <div className="canvas-wrapper overflow-auto p-4 bg-gray-50 flex items-center justify-center">
+        <div className="canvas-container drop-shadow-sm" style={{ width, height }}>
+          <canvas ref={canvasRef} />
+        </div>
+      </div>
     </div>
   );
 };
