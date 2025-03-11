@@ -46,16 +46,36 @@
     "submitFiles": "Submit Files"
   },
   "footer": {
+    "description": "We are specialists in customized printing solutions for businesses and individuals. With a passion for quality and creativity, we create printed materials that make an impression.",
     "services": "Services",
     "company": "Company",
-    "contact": "Contact",
+    "resources": "Resources",
     "newsletter": "Newsletter",
-    "emailPlaceholder": "Your email",
+    "newsletterDescription": "Get the latest articles, tips and offers directly in your inbox. We send newsletters about once a month.",
+    "emailPlaceholder": "Your email address",
     "subscribe": "Subscribe",
-    "copyright": "© 2023 Kalmar Studio. All rights reserved.",
+    "connect": "Connect with us",
+    "copyright": "All rights reserved.",
     "privacy": "Privacy Policy",
     "terms": "Terms of Service",
-    "follow": "Follow Us"
+    "services": {
+      "design": "Design Your Own",
+      "printing": "Print Services",
+      "clothes": "Clothing",
+      "stickers": "Stickers & Decals"
+    },
+    "company": {
+      "about": "About Us",
+      "team": "Our Team",
+      "careers": "Careers",
+      "contact": "Contact"
+    },
+    "resources": {
+      "blog": "Blog",
+      "news": "News",
+      "faq": "FAQ",
+      "press": "Press Kit"
+    }
   },
   "getQuote": "Get a Quote",
   "login": "Sign In",

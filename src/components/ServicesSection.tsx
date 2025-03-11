@@ -9,43 +9,43 @@ import { cn } from '@/lib/utils';
 const ServicesSection = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const isVisible = useScrollReveal(sectionRef, 0.1);
-  const { t } = useTranslation();
+  const { t } = useTranslation(['home', 'common']);
 
   const services = [
     {
-      title: t('services.tshirts.title'),
-      description: t('services.tshirts.description'),
+      title: t('home:services.categories.tshirts.title'),
+      description: t('home:services.categories.tshirts.description'),
       icon: <ShoppingBag className="h-6 w-6" />,
       link: '/services#t-shirts'
     },
     {
-      title: t('services.businessCards.title'),
-      description: t('services.businessCards.description'),
+      title: t('home:services.categories.businessCards.title'),
+      description: t('home:services.categories.businessCards.description'),
       icon: <FileImage className="h-6 w-6" />,
       link: '/services#business-cards'
     },
     {
-      title: t('services.decals.title'),
-      description: t('services.decals.description'),
+      title: t('home:services.categories.decals.title'),
+      description: t('home:services.categories.decals.description'),
       icon: <Image className="h-6 w-6" />,
       link: '/services#decals'
     },
     {
-      title: t('services.graphicDesign.title'),
-      description: t('services.graphicDesign.description'),
+      title: t('home:services.categories.graphicDesign.title'),
+      description: t('home:services.categories.graphicDesign.description'),
       icon: <Palette className="h-6 w-6" />,
       link: '/services#design'
     },
     {
-      title: t('services.webSocial.title'),
-      description: t('services.webSocial.description'),
+      title: t('home:services.categories.webSocial.title'),
+      description: t('home:services.categories.webSocial.description'),
       icon: <Globe className="h-6 w-6" />,
       link: '/services#web'
     }
   ];
 
   return (
-    <section ref={sectionRef} className="py-20 md:py-32 bg-secondary/50">
+    <section ref={sectionRef} className="py-20 md:py-32 bg-orange-50/70">
       <div className="section-container">
         <div className="text-center mb-16">
           <span
@@ -54,7 +54,7 @@ const ServicesSection = () => {
               isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
             )}
           >
-            {t('services.title')}
+            {t('home:services.title')}
           </span>
           <h2
             className={cn(
@@ -62,7 +62,7 @@ const ServicesSection = () => {
               isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
             )}
           >
-            {t('services.title')}
+            {t('home:services.title')}
           </h2>
           <p
             className={cn(
@@ -70,7 +70,7 @@ const ServicesSection = () => {
               isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
             )}
           >
-            {t('services.description')}
+            {t('home:services.description')}
           </p>
         </div>
 
@@ -79,7 +79,7 @@ const ServicesSection = () => {
             <div
               key={index}
               className={cn(
-                "group p-8 bg-background rounded-xl border border-border shadow-subtle hover:shadow-elevated transition-all duration-500 relative overflow-hidden",
+                "group p-8 bg-white rounded-xl border border-purple-100 hover:border-purple-200 transition-all duration-500 relative overflow-hidden",
                 isVisible
                   ? "opacity-100 translate-y-0"
                   : "opacity-0 translate-y-8"
@@ -88,9 +88,9 @@ const ServicesSection = () => {
                 transitionDelay: isVisible ? `${300 + index * 100}ms` : "0ms",
               }}
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-kalmar-50/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-50/40 to-orange-50/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               
-              <div className="p-3 bg-kalmar-100/50 rounded-lg inline-block mb-5">
+              <div className="p-3 bg-orange-100/50 rounded-lg inline-block mb-5">
                 {service.icon}
               </div>
               
@@ -104,9 +104,9 @@ const ServicesSection = () => {
               
               <NavLink
                 to={service.link}
-                className="flex items-center text-kalmar-600 font-medium hover:text-kalmar-700 transition-colors group-hover:underline"
+                className="flex items-center text-purple-600 font-medium hover:text-purple-700 transition-colors group-hover:underline"
               >
-                {t('common.readMore')}
+                {t('common:buttons.readMore')}
                 <ExternalLink className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </NavLink>
             </div>
@@ -128,7 +128,7 @@ const ServicesSection = () => {
               transitionDuration: "700ms",
             }}
           >
-            {t('services.exploreAll')}
+            {t('home:services.exploreAll')}
           </NavLink>
         </div>
       </div>

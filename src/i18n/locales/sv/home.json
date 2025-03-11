@@ -6,37 +6,31 @@
     "subtitle": "Anpassat efter dina behov",
     "description": "Skräddarsydda designer för t-shirts, visitkort, dekaler och mer – Gjorda just för dig med premiumkvalitet och personlig service.",
     "scrollDown": "Scrolla ner för att utforska våra tjänster",
-    "popularServices": "Populära tjänster",
-    "categories": {
-      "clothing": "Anpassade kläder för varumärken, evenemang och team",
-      "print": "Visitkort, broschyrer och marknadsföringsmaterial",
-      "stickers": "Anpassade klistermärken och dekaler för alla ytor",
-      "0": {
-        "features": {
-          "1": "Högkvalitativa t-shirts, hoodies och kepsar",
-          "2": "Tåligt screentryck och broderi",
-          "3": "Perfekt för laguniformer och evenemang"
-        }
+    "imageAlt": "Modern tryckerutrustning i arbete",
+    "stats": {
+      "title": "Snabb Service",
+      "description": "Kundnöjdhet",
+      "fastDelivery": "Expressleverans tillgänglig"
+    },
+    "features": {
+      "printing": {
+        "title": "Premiumtryck",
+        "description": "Högkvalitativa material & tekniker"
       },
-      "1": {
-        "features": {
-          "1": "Premium visitkort och kontorsmaterial",
-          "2": "Broschyrer, kataloger och marknadsföringsmaterial",
-          "3": "Snabb leverans på stora beställningar"
-        }
+      "design": {
+        "title": "Kreativ Design",
+        "description": "Expertdesigners till din tjänst"
       },
-      "2": {
-        "features": {
-          "1": "Väderbeständiga vinyldekaler",
-          "2": "Anpassade former och storlekar tillgängliga",
-          "3": "Perfekt för varumärkesprofilering och kampanjer"
-        }
+      "materials": {
+        "title": "Kvalitetsmaterial",
+        "description": "Miljövänliga & hållbara alternativ"
       }
     }
   },
   "services": {
-    "title": "Upptäck vårt utbud av trycktjänster",
+    "title": "Våra Tjänster",
     "description": "Vi erbjuder högkvalitativa tryck- och designlösningar för alla behov, från företag till privatpersoner.",
+    "exploreAll": "Utforska alla tjänster",
     "categories": {
       "tshirts": {
         "title": "T-shirts & Kläder",
@@ -58,8 +52,7 @@
         "title": "Webb & Sociala Medier",
         "description": "Designlösningar för dina digitala kanaler, från webbplatser till sociala medier."
       }
-    },
-    "exploreAll": "Utforska alla tjänster"
+    }
   },
   "about": {
     "tagline": "OM KALMAR STUDIO",

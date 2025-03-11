@@ -12,22 +12,22 @@ const Footer = () => {
   
   const footerLinks = {
     services: [
-      { name: t('footer.links.services.design'), href: '/design' },
-      { name: t('footer.links.services.printing'), href: '/design/print' },
-      { name: t('footer.links.services.clothes'), href: '/design/clothes' },
-      { name: t('footer.links.services.stickers'), href: '/design/stickers' },
+      { name: t('footer.services.design'), href: '/design' },
+      { name: t('footer.services.printing'), href: '/design/print' },
+      { name: t('footer.services.clothes'), href: '/design/clothes' },
+      { name: t('footer.services.stickers'), href: '/design/stickers' },
     ],
     company: [
-      { name: t('footer.links.company.about'), href: '/about' },
-      { name: t('footer.links.company.team'), href: '/team' },
-      { name: t('footer.links.company.careers'), href: '/career' },
-      { name: t('footer.links.company.contact'), href: '/contact' },
+      { name: t('footer.company.about'), href: '/about' },
+      { name: t('footer.company.team'), href: '/team' },
+      { name: t('footer.company.careers'), href: '/career' },
+      { name: t('footer.company.contact'), href: '/contact' },
     ],
     resources: [
-      { name: t('footer.links.resources.blog'), href: '/blog' },
-      { name: t('footer.links.resources.news'), href: '/news' },
-      { name: t('footer.links.resources.faq'), href: '/faq' },
-      { name: t('footer.links.resources.press'), href: '/press' },
+      { name: t('footer.resources.blog'), href: '/blog' },
+      { name: t('footer.resources.news'), href: '/news' },
+      { name: t('footer.resources.faq'), href: '/faq' },
+      { name: t('footer.resources.press'), href: '/press' },
     ]
   };
   
@@ -78,7 +78,7 @@ const Footer = () => {
           
           {/* Services Links */}
           <div>
-            <h3 className="text-base font-semibold mb-5 text-gray-900">{t('footer.categories.services')}</h3>
+            <h3 className="text-base font-semibold mb-5 text-gray-900">{t('footer.services')}</h3>
             <ul className="space-y-3">
               {footerLinks.services.map((link, index) => (
                 <li key={index}>
@@ -95,7 +95,7 @@ const Footer = () => {
           
           {/* Company Links */}
           <div>
-            <h3 className="text-base font-semibold mb-5 text-gray-900">{t('footer.categories.company')}</h3>
+            <h3 className="text-base font-semibold mb-5 text-gray-900">{t('footer.company')}</h3>
             <ul className="space-y-3">
               {footerLinks.company.map((link, index) => (
                 <li key={index}>
@@ -112,7 +112,7 @@ const Footer = () => {
           
           {/* Resources Links */}
           <div>
-            <h3 className="text-base font-semibold mb-5 text-gray-900">{t('footer.categories.resources')}</h3>
+            <h3 className="text-base font-semibold mb-5 text-gray-900">{t('footer.resources')}</h3>
             <ul className="space-y-3">
               {footerLinks.resources.map((link, index) => (
                 <li key={index}>
@@ -132,16 +132,16 @@ const Footer = () => {
         <div className="border-t border-purple-100 pt-8 pb-6">
           <div className="grid md:grid-cols-2 gap-8 items-center">
             <div>
-              <h3 className="text-lg font-semibold mb-2 text-gray-900">{t('footer.newsletter.title')}</h3>
+              <h3 className="text-lg font-semibold mb-2 text-gray-900">{t('footer.newsletter')}</h3>
               <p className="text-gray-600 mb-0">
-                {t('footer.newsletter.description')}
+                {t('footer.newsletterDescription')}
               </p>
             </div>
             <div>
               <form className="flex flex-col sm:flex-row gap-3">
                 <input
                   type="email"
-                  placeholder={t('footer.newsletter.placeholder')}
+                  placeholder={t('footer.emailPlaceholder')}
                   className="flex-grow px-4 py-3 rounded-lg border border-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white"
                   required
                 />
@@ -149,7 +149,7 @@ const Footer = () => {
                   type="submit" 
                   className="bg-purple-600 hover:bg-purple-700 text-white font-medium py-3 px-6 rounded-lg transition-colors whitespace-nowrap"
                 >
-                  {t('footer.newsletter.button')}
+                  {t('footer.subscribe')}
                 </button>
               </form>
             </div>
@@ -161,7 +161,7 @@ const Footer = () => {
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-6 mb-4 md:mb-0">
               <div className="text-gray-600 text-sm">
-                © {currentYear} Kalmar Studio. {t('footer.rights')}
+                © {currentYear} Kalmar Studio. {t('footer.copyright')}
               </div>
               <div className="flex space-x-4 text-sm">
                 <NavLink to="/privacy" className="text-gray-600 hover:text-purple-600 transition-colors">

@@ -46,16 +46,36 @@
     "submitFiles": "Skicka filer"
   },
   "footer": {
+    "description": "Vi är specialister på skräddarsydda trycklösningar för företag och privatpersoner. Med passion för kvalitet och kreativitet skapar vi trycksaker som gör intryck.",
     "services": "Tjänster",
     "company": "Företag",
-    "contact": "Kontakt",
+    "resources": "Resurser",
     "newsletter": "Nyhetsbrev",
-    "emailPlaceholder": "Din e-post",
+    "newsletterDescription": "Få de senaste artiklarna, tips och erbjudanden direkt i din inkorg. Vi skickar nyhetsbrev ungefär en gång i månaden.",
+    "emailPlaceholder": "Din e-postadress",
     "subscribe": "Prenumerera",
-    "copyright": "© 2023 Kalmar Studio. Alla rättigheter förbehållna.",
+    "connect": "Följ oss",
+    "copyright": "Alla rättigheter förbehållna.",
     "privacy": "Integritetspolicy",
     "terms": "Användarvillkor",
-    "follow": "Följ oss"
+    "services": {
+      "design": "Designa själv",
+      "printing": "Trycktjänster",
+      "clothes": "Kläder",
+      "stickers": "Dekaler & Klistermärken"
+    },
+    "company": {
+      "about": "Om oss",
+      "team": "Vårt team",
+      "careers": "Karriärer",
+      "contact": "Kontakt"
+    },
+    "resources": {
+      "blog": "Blogg",
+      "news": "Nyheter",
+      "faq": "Vanliga frågor",
+      "press": "Presskit"
+    }
   },
   "getQuote": "Få en offert",
   "login": "Logga in",

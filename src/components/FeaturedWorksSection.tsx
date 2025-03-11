@@ -18,29 +18,29 @@ const FeaturedWorksSection = () => {
 
   const projects = [
     {
-      title: t('recentProjects.project1.title'),
-      category: t('recentProjects.project1.category'),
+      title: t('home:recentProjects.project1.title'),
+      category: t('home:recentProjects.project1.category'),
       image: 'https://images.unsplash.com/photo-1586075010923-2dd4570fb338?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
       loaded: loaded1,
       handleImageLoaded: handleImageLoaded1
     },
     {
-      title: t('recentProjects.project2.title'),
-      category: t('recentProjects.project2.category'),
+      title: t('home:recentProjects.project2.title'),
+      category: t('home:recentProjects.project2.category'),
       image: 'https://images.unsplash.com/photo-1562157873-818bc0726f68?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
       loaded: loaded2,
       handleImageLoaded: handleImageLoaded2
     },
     {
-      title: t('recentProjects.project3.title'),
-      category: t('recentProjects.project3.category'),
+      title: t('home:recentProjects.project3.title'),
+      category: t('home:recentProjects.project3.category'),
       image: 'https://images.unsplash.com/photo-1621331938577-3056e20fecfc?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
       loaded: loaded3,
       handleImageLoaded: handleImageLoaded3
     },
     {
-      title: t('recentProjects.project4.title'),
-      category: t('recentProjects.project4.category'),
+      title: t('home:recentProjects.project4.title'),
+      category: t('home:recentProjects.project4.category'),
       image: 'https://images.unsplash.com/photo-1589384267710-7a170981ca78?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
       loaded: loaded4,
       handleImageLoaded: handleImageLoaded4
@@ -48,18 +48,21 @@ const FeaturedWorksSection = () => {
   ];
 
   return (
-    <section ref={sectionRef} className="py-20 md:py-32">
+    <section ref={sectionRef} className="py-20 md:py-32 bg-gradient-to-br from-white to-purple-50/30">
       <div className="section-container">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12">
           <div>
-            <motion.span
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               transition={{ duration: 0.5 }}
-              className="inline-block py-1 px-3 mb-6 text-xs font-medium tracking-wider border border-primary/30 rounded-full bg-primary/5"
+              className="inline-flex items-center space-x-2 px-3 py-1.5 mb-6 rounded-full bg-gradient-to-r from-purple-100 to-orange-100 border border-purple-200"
             >
-              {t('recentProjects.tagline')}
-            </motion.span>
+              <span className="block w-2 h-2 rounded-full bg-purple-500"></span>
+              <span className="text-xs font-medium tracking-wider text-purple-700">
+                {t('home:recentProjects.tagline')}
+              </span>
+            </motion.div>
             
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
@@ -67,7 +70,7 @@ const FeaturedWorksSection = () => {
               transition={{ duration: 0.5, delay: 0.1 }}
               className="text-3xl md:text-4xl font-bold mb-4"
             >
-              {t('recentProjects.title')}
+              {t('home:recentProjects.title')}
             </motion.h2>
             
             <motion.p
@@ -76,7 +79,7 @@ const FeaturedWorksSection = () => {
               transition={{ duration: 0.5, delay: 0.2 }}
               className="text-foreground/70 text-lg max-w-2xl"
             >
-              {t('recentProjects.description')}
+              {t('home:recentProjects.description')}
             </motion.p>
           </div>
           
@@ -86,8 +89,11 @@ const FeaturedWorksSection = () => {
             transition={{ duration: 0.5, delay: 0.3 }}
             className="mt-6 md:mt-0"
           >
-            <NavLink to="/services" className="button-outline group">
-              {t('buttons.viewAll')}
+            <NavLink 
+              to="/services" 
+              className="inline-flex items-center justify-center px-6 py-3 rounded-lg border border-purple-200 bg-white text-purple-700 font-medium transition-all duration-300 hover:bg-purple-50 hover:border-purple-300 group"
+            >
+              {t('common:buttons.viewAll')}
               <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
             </NavLink>
           </motion.div>
@@ -100,7 +106,7 @@ const FeaturedWorksSection = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
               transition={{ duration: 0.5, delay: 0.4 + index * 0.1 }}
-              className="group overflow-hidden rounded-xl shadow-card bg-white hover:shadow-xl transition-shadow duration-500"
+              className="group overflow-hidden rounded-xl border border-purple-100 bg-white hover:border-purple-200 transition-all duration-500"
             >
               <div className="relative overflow-hidden aspect-[16/10]">
                 <img
@@ -116,7 +122,7 @@ const FeaturedWorksSection = () => {
                   <div className="p-6 w-full">
                     <NavLink
                       to="/services"
-                      className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-kalmar-600 transform translate-y-10 group-hover:translate-y-0 transition-transform duration-300"
+                      className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-purple-600 transform translate-y-10 group-hover:translate-y-0 transition-transform duration-300"
                     >
                       <ExternalLink className="h-5 w-5" />
                     </NavLink>
@@ -125,15 +131,17 @@ const FeaturedWorksSection = () => {
               </div>
               
               <div className="p-6">
-                <p className="text-sm text-kalmar-600 font-medium mb-2">{project.category}</p>
-                <h3 className="text-xl font-semibold mb-4 group-hover:text-kalmar-600 transition-colors">
+                <div className="inline-block px-2.5 py-1 mb-3 text-xs font-medium rounded-full bg-gradient-to-r from-purple-100 to-orange-100 text-purple-700">
+                  {project.category}
+                </div>
+                <h3 className="text-xl font-semibold mb-4 group-hover:text-purple-600 transition-colors">
                   {project.title}
                 </h3>
                 <NavLink
                   to="/services"
-                  className="flex items-center text-sm text-kalmar-600 font-medium hover:text-kalmar-700 transition-colors group-hover:underline"
+                  className="flex items-center text-sm text-purple-600 font-medium hover:text-purple-700 transition-colors group-hover:underline"
                 >
-                  {t('buttons.readMore')}
+                  {t('common:buttons.readMore')}
                   <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </NavLink>
               </div>

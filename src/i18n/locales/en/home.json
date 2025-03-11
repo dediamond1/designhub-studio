@@ -6,37 +6,31 @@
     "subtitle": "Tailored to Your Needs",
     "description": "Custom designs for T-shirts, Business Cards, Decals, and more – Made just for you with premium quality and personalized service.",
     "scrollDown": "Scroll down to explore our services",
-    "popularServices": "Popular Services",
-    "categories": {
-      "clothing": "Custom apparel for brands, events, and teams",
-      "print": "Business cards, brochures, and marketing materials",
-      "stickers": "Custom stickers and decals for any surface",
-      "0": {
-        "features": {
-          "1": "High-quality t-shirts, hoodies, and caps",
-          "2": "Durable screen printing and embroidery",
-          "3": "Perfect for team uniforms and events"
-        }
+    "imageAlt": "Modern printing equipment in action",
+    "stats": {
+      "title": "Fast Service",
+      "description": "Customer satisfaction",
+      "fastDelivery": "Express delivery available"
+    },
+    "features": {
+      "printing": {
+        "title": "Premium Printing",
+        "description": "High-quality materials & techniques"
       },
-      "1": {
-        "features": {
-          "1": "Premium business cards and stationery",
-          "2": "Brochures, catalogs, and marketing materials",
-          "3": "Fast turnaround on large orders"
-        }
+      "design": {
+        "title": "Creative Design",
+        "description": "Expert designers at your service"
       },
-      "2": {
-        "features": {
-          "1": "Weather-resistant vinyl decals",
-          "2": "Custom shapes and sizes available",
-          "3": "Perfect for branding and promotions"
-        }
+      "materials": {
+        "title": "Quality Materials",
+        "description": "Eco-friendly & durable options"
       }
     }
   },
   "services": {
-    "title": "Discover our range of printing services",
+    "title": "Our Services",
     "description": "We offer high-quality print and design solutions for all needs, from businesses to individuals.",
+    "exploreAll": "Explore all services",
     "categories": {
       "tshirts": {
         "title": "T-shirts & Clothing",
@@ -58,8 +52,7 @@
         "title": "Web & Social Media",
         "description": "Design solutions for your digital channels, from websites to social media."
       }
-    },
-    "exploreAll": "Explore all services"
+    }
   },
   "about": {
     "tagline": "ABOUT KALMAR STUDIO",

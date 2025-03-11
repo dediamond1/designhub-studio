@@ -76,10 +76,10 @@ const ProcessSection = () => {
               className="text-center"
             >
               <div className="relative mb-6 mx-auto">
-                <div className="w-16 h-16 bg-kalmar-100 rounded-full flex items-center justify-center mx-auto">
-                  <div className="text-kalmar-600">{process.icon}</div>
+                <div className="w-16 h-16 bg-gradient-to-br from-purple-100 to-orange-100 rounded-full flex items-center justify-center mx-auto">
+                  <div className="text-purple-600">{process.icon}</div>
                 </div>
-                <div className="absolute -top-2 -right-2 w-8 h-8 bg-kalmar-600 rounded-full text-white flex items-center justify-center text-sm font-bold">
+                <div className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-r from-purple-600 to-orange-500 rounded-full text-white flex items-center justify-center text-sm font-bold">
                   {index + 1}
                 </div>
               </div>

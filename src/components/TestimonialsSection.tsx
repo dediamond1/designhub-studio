@@ -18,7 +18,7 @@ const TestimonialsSection = () => {
   }>;
 
   return (
-    <section ref={sectionRef} className="py-20 md:py-32 bg-kalmar-50">
+    <section ref={sectionRef} className="py-20 md:py-32 bg-gradient-to-br from-purple-50 to-orange-50">
       <div className="section-container">
         <div className="text-center mb-16">
           <motion.span
@@ -56,9 +56,11 @@ const TestimonialsSection = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
               transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
-              className="bg-white p-8 rounded-xl shadow-card relative overflow-hidden"
+              className="bg-white p-8 rounded-xl border border-purple-100 relative overflow-hidden group"
             >
-              <div className="absolute top-6 right-6 text-kalmar-200">
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-50/0 to-orange-50/0 group-hover:from-purple-50/100 group-hover:to-orange-50/60 transition-all duration-700"></div>
+              
+              <div className="absolute top-6 right-6 text-orange-200 group-hover:text-orange-300 transition-colors duration-700">
                 <Quote size={48} />
               </div>
               
@@ -70,8 +72,8 @@ const TestimonialsSection = () => {
                 ))}
               </div>
               
-              <div>
-                <h4 className="font-semibold">{testimonial.author}</h4>
+              <div className="relative z-10">
+                <h4 className="font-semibold text-gray-800">{testimonial.author}</h4>
                 <p className="text-sm text-foreground/60">{testimonial.company}</p>
               </div>
             </motion.div>
