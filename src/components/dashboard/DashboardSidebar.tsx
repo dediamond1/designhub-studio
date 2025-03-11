@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { 
@@ -15,11 +16,16 @@ import {
   UserPlus
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useAuth } from '@/contexts/AuthContext';
 
 const DashboardSidebar = () => {
   const [collapsed, setCollapsed] = useState(false);
-  const { user, logout } = useAuth();
+  
+  // Mock user data instead of using AuthContext
+  const mockUser = {
+    name: 'Demo User',
+    email: 'demo@example.com',
+    role: 'admin'
+  };
 
   const sidebarItems = [
     { name: 'Overview', path: '/dashboard', icon: Home },
@@ -35,7 +41,13 @@ const DashboardSidebar = () => {
     { name: 'Settings', path: '/dashboard/settings', icon: Settings },
   ];
 
-  const displayItems = [...sidebarItems, ...(user?.role === 'admin' ? adminItems : [])];
+  const displayItems = [...sidebarItems, ...(mockUser.role === 'admin' ? adminItems : [])];
+
+  const handleLogout = () => {
+    console.log('Mock logout');
+    // Use window.location instead of navigate since we're not in a component using Router
+    window.location.href = '/login';
+  };
 
   return (
     <aside 
@@ -90,7 +102,7 @@ const DashboardSidebar = () => {
       
       <div className="p-4 border-t border-border">
         <button
-          onClick={logout}
+          onClick={handleLogout}
           className="flex items-center w-full p-2 rounded-md text-sm group transition-colors text-sidebar-foreground hover:bg-sidebar-accent/80"
         >
           <LogOut size={20} className={cn(collapsed ? "" : "mr-3")} />
