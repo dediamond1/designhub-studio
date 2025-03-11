@@ -1,10 +1,9 @@
-
-import { connectToDatabase } from '@/lib/db';
 import { ObjectId } from 'mongodb';
+import { dbConnect } from '@/lib/db';
 
 export async function getOrders(req: any, res: any) {
   try {
-    const { db } = await connectToDatabase();
+    const { db } = await dbConnect();
     
     const orders = await db.collection('orders')
       .find({})
@@ -21,7 +20,7 @@ export async function getOrders(req: any, res: any) {
 export async function getOrder(req: any, res: any) {
   try {
     const { id } = req.params;
-    const { db } = await connectToDatabase();
+    const { db } = await dbConnect();
     
     const order = await db.collection('orders').findOne({ _id: new ObjectId(id) });
     
@@ -39,7 +38,7 @@ export async function getOrder(req: any, res: any) {
 export async function createOrder(req: any, res: any) {
   try {
     const { customer, items, total, status } = req.body;
-    const { db } = await connectToDatabase();
+    const { db } = await dbConnect();
     
     const result = await db.collection('orders').insertOne({
       customer,
@@ -66,7 +65,7 @@ export async function updateOrderStatus(req: any, res: any) {
   try {
     const { id } = req.params;
     const { status } = req.body;
-    const { db } = await connectToDatabase();
+    const { db } = await dbConnect();
     
     await db.collection('orders').updateOne(
       { _id: new ObjectId(id) },

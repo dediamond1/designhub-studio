@@ -10,6 +10,9 @@ import Index from "./pages/Index";
 import About from "./pages/About";
 import Services from "./pages/Services";
 import Design from "./pages/Design";
+import ClothesDesign from "./pages/design/Clothes";
+import PrintDesign from "./pages/design/Print";
+import StickersDesign from "./pages/design/Stickers";
 import Blog from "./pages/Blog";
 import News from "./pages/News";
 import Offers from "./pages/Offers";
@@ -43,6 +46,9 @@ const App = () => (
             <Route path="/about" element={<About />} />
             <Route path="/services" element={<Services />} />
             <Route path="/design" element={<Design />} />
+            <Route path="/design/clothes" element={<ClothesDesign />} />
+            <Route path="/design/print" element={<PrintDesign />} />
+            <Route path="/design/stickers" element={<StickersDesign />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/news" element={<News />} />
             <Route path="/offers" element={<Offers />} />

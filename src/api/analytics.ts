@@ -1,9 +1,9 @@
-
-import { connectToDatabase } from '@/lib/db';
+import { ObjectId } from 'mongodb';
+import { dbConnect } from '@/lib/db';
 
 export async function getDashboardMetrics(req: any, res: any) {
   try {
-    const { db } = await connectToDatabase();
+    const { db } = await dbConnect();
     
     // Get total orders
     const totalOrders = await db.collection('orders').countDocuments();
@@ -70,7 +70,7 @@ export async function getDashboardMetrics(req: any, res: any) {
 
 export async function getProductsAnalytics(req: any, res: any) {
   try {
-    const { db } = await connectToDatabase();
+    const { db } = await dbConnect();
     
     // Get top selling products
     const topSellingProducts = await db.collection('orders')

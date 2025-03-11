@@ -1,14 +1,13 @@
-
-import { connectToDatabase } from '@/lib/db';
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
+import { ObjectId } from 'mongodb';
+import { dbConnect } from '@/lib/db';
+import { auth } from '@/lib/better-auth';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 
 export async function login(req: any, res: any) {
   try {
     const { email, password } = req.body;
-    const { db } = await connectToDatabase();
+    const { db } = await dbConnect();
     
     const user = await db.collection('users').findOne({ email });
     
@@ -16,7 +15,7 @@ export async function login(req: any, res: any) {
       return res.status(401).json({ message: 'Invalid email or password' });
     }
     
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    const isPasswordValid = await auth.compare(password, user.password);
     
     if (!isPasswordValid) {
       return res.status(401).json({ message: 'Invalid email or password' });
@@ -49,7 +48,7 @@ export async function login(req: any, res: any) {
 export async function register(req: any, res: any) {
   try {
     const { name, email, password } = req.body;
-    const { db } = await connectToDatabase();
+    const { db } = await dbConnect();
     
     // Check if user already exists
     const existingUser = await db.collection('users').findOne({ email });
@@ -59,7 +58,7 @@ export async function register(req: any, res: any) {
     }
     
     // Hash password
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await auth.hash(password, 10);
     
     // Create new user
     const result = await db.collection('users').insertOne({
@@ -116,7 +115,7 @@ export async function getMe(req: any, res: any) {
     }
     
     const decoded = jwt.verify(token, JWT_SECRET) as any;
-    const { db } = await connectToDatabase();
+    const { db } = await dbConnect();
     
     const user = await db.collection('users').findOne({ _id: decoded.id });
     

@@ -1,10 +1,9 @@
-
-import { connectToDatabase } from '@/lib/db';
 import { ObjectId } from 'mongodb';
+import { dbConnect } from '@/lib/db';
 
 export async function getDesigns(req: any, res: any) {
   try {
-    const { db } = await connectToDatabase();
+    const { db } = await dbConnect();
     
     const designs = await db.collection('designs')
       .find({})
@@ -21,7 +20,7 @@ export async function getDesigns(req: any, res: any) {
 export async function getDesign(req: any, res: any) {
   try {
     const { id } = req.params;
-    const { db } = await connectToDatabase();
+    const { db } = await dbConnect();
     
     const design = await db.collection('designs').findOne({ _id: new ObjectId(id) });
     
@@ -39,7 +38,7 @@ export async function getDesign(req: any, res: any) {
 export async function createDesign(req: any, res: any) {
   try {
     const { name, customer, template, elements } = req.body;
-    const { db } = await connectToDatabase();
+    const { db } = await dbConnect();
     
     const result = await db.collection('designs').insertOne({
       name,
@@ -66,7 +65,7 @@ export async function updateDesign(req: any, res: any) {
   try {
     const { id } = req.params;
     const updates = req.body;
-    const { db } = await connectToDatabase();
+    const { db } = await dbConnect();
     
     delete updates._id; // Prevent _id field from being updated
     
@@ -87,7 +86,7 @@ export async function updateDesign(req: any, res: any) {
 export async function deleteDesign(req: any, res: any) {
   try {
     const { id } = req.params;
-    const { db } = await connectToDatabase();
+    const { db } = await dbConnect();
     
     await db.collection('designs').deleteOne({ _id: new ObjectId(id) });
     

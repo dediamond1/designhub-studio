@@ -1,10 +1,9 @@
-
-import { connectToDatabase } from '@/lib/db';
 import { ObjectId } from 'mongodb';
+import { dbConnect } from '@/lib/db';
 
 export async function getProducts(req: any, res: any) {
   try {
-    const { db } = await connectToDatabase();
+    const { db } = await dbConnect();
     
     const products = await db.collection('products')
       .find({})
@@ -21,7 +20,7 @@ export async function getProducts(req: any, res: any) {
 export async function getProduct(req: any, res: any) {
   try {
     const { id } = req.params;
-    const { db } = await connectToDatabase();
+    const { db } = await dbConnect();
     
     const product = await db.collection('products').findOne({ _id: new ObjectId(id) });
     
@@ -39,7 +38,7 @@ export async function getProduct(req: any, res: any) {
 export async function createProduct(req: any, res: any) {
   try {
     const { name, category, price, stock, status } = req.body;
-    const { db } = await connectToDatabase();
+    const { db } = await dbConnect();
     
     const result = await db.collection('products').insertOne({
       name,
@@ -68,7 +67,7 @@ export async function updateProduct(req: any, res: any) {
   try {
     const { id } = req.params;
     const updates = req.body;
-    const { db } = await connectToDatabase();
+    const { db } = await dbConnect();
     
     delete updates._id; // Prevent _id field from being updated
     
@@ -89,7 +88,7 @@ export async function updateProduct(req: any, res: any) {
 export async function deleteProduct(req: any, res: any) {
   try {
     const { id } = req.params;
-    const { db } = await connectToDatabase();
+    const { db } = await dbConnect();
     
     await db.collection('products').deleteOne({ _id: new ObjectId(id) });
     

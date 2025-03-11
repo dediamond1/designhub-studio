@@ -1,10 +1,9 @@
-
-import { connectToDatabase } from '@/lib/db';
 import { ObjectId } from 'mongodb';
+import { dbConnect } from '@/lib/db';
 
 export async function getCustomers(req: any, res: any) {
   try {
-    const { db } = await connectToDatabase();
+    const { db } = await dbConnect();
     
     const customers = await db.collection('customers')
       .find({})
@@ -21,7 +20,7 @@ export async function getCustomers(req: any, res: any) {
 export async function getCustomer(req: any, res: any) {
   try {
     const { id } = req.params;
-    const { db } = await connectToDatabase();
+    const { db } = await dbConnect();
     
     const customer = await db.collection('customers').findOne({ _id: new ObjectId(id) });
     
@@ -39,7 +38,7 @@ export async function getCustomer(req: any, res: any) {
 export async function createCustomer(req: any, res: any) {
   try {
     const { name, email, phone } = req.body;
-    const { db } = await connectToDatabase();
+    const { db } = await dbConnect();
     
     const result = await db.collection('customers').insertOne({
       name,
@@ -68,7 +67,7 @@ export async function updateCustomer(req: any, res: any) {
   try {
     const { id } = req.params;
     const updates = req.body;
-    const { db } = await connectToDatabase();
+    const { db } = await dbConnect();
     
     delete updates._id; // Prevent _id field from being updated
     
