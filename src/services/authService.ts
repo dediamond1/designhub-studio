@@ -1,74 +1,50 @@
 
 import { dbConnect } from '@/lib/db';
-import { ObjectId } from 'mongodb';
+import UserModel from '@/models/User';
+import InviteModel from '@/models/Invite';
+import { UserDocument, AuthResponse, UserResponse } from '@/types/user';
 import * as crypto from 'crypto';
 
-// Define User interface
-export interface User {
-  _id?: string | ObjectId;
-  id: string;
-  email: string;
-  password?: string;
-  name: string;
-  role: 'admin' | 'user' | 'team-member';
-  createdAt?: Date;
-  updatedAt?: Date;
-  resetPasswordToken?: string;
-  resetPasswordExpires?: Date;
-  verificationToken?: string;
-  verified?: boolean;
-  lastLogin?: Date;
-}
-
-export interface AuthResponse {
-  user: Omit<User, 'password' | 'resetPasswordToken' | 'resetPasswordExpires' | 'verificationToken'>;
-  success: boolean;
-  message?: string;
-}
-
-// Mock password hashing functions
+// Helper functions for password management
 const hashPassword = async (password: string): Promise<string> => {
-  // In browser environment, we can't use bcrypt
-  // This is a simplified hash for demonstration purposes only
-  // In a real application, NEVER use this approach!
+  // Simple hash function for demo purposes only
+  // In production, use bcrypt or similar
   return crypto.createHash('sha256').update(password).digest('hex');
 };
 
 const comparePassword = async (plainPassword: string, hashedPassword: string): Promise<boolean> => {
-  // Again, this is only for demonstration
   const hashedPlainPassword = crypto.createHash('sha256').update(plainPassword).digest('hex');
   return hashedPlainPassword === hashedPassword;
 };
 
-// User sanitization (remove sensitive fields)
-const sanitizeUser = (user: any): Omit<User, 'password' | 'resetPasswordToken' | 'resetPasswordExpires' | 'verificationToken'> => {
-  const { password, resetPasswordToken, resetPasswordExpires, verificationToken, ...sanitizedUser } = user;
+// Remove sensitive fields from user object
+const sanitizeUser = (user: any): UserResponse => {
+  // Create a plain JS object if it's a mongoose document
+  const userObj = user.toObject ? user.toObject() : { ...user };
   
-  // Convert MongoDB ObjectId to string
-  if (sanitizedUser._id instanceof ObjectId) {
-    sanitizedUser.id = sanitizedUser._id.toString();
-  } else if (typeof sanitizedUser._id === 'string') {
-    sanitizedUser.id = sanitizedUser._id;
-  } else if (sanitizedUser._id) {
+  // Remove sensitive fields
+  const { password, resetPasswordToken, resetPasswordExpires, verificationToken, __v, ...sanitizedUser } = userObj;
+  
+  // Ensure id is a string
+  if (!sanitizedUser.id && sanitizedUser._id) {
     sanitizedUser.id = sanitizedUser._id.toString();
   }
   
-  return sanitizedUser;
+  return sanitizedUser as UserResponse;
 };
 
-// Generate a random token
+// Generate a secure random token
 const generateToken = (): string => {
-  return crypto.randomBytes(16).toString('hex');
+  return crypto.randomBytes(32).toString('hex');
 };
 
 // Register a new user
 export const registerUser = async (name: string, email: string, password: string, role: 'admin' | 'user' | 'team-member' = 'user'): Promise<AuthResponse> => {
   try {
-    const { db } = await dbConnect();
-    const usersCollection = db.collection('users');
+    await dbConnect();
     
     // Check if email already exists
-    const existingUser = await usersCollection.findOne({ email });
+    const existingUser = await UserModel.findOne({ email }).exec();
     if (existingUser) {
       throw new Error('Email already in use');
     }
@@ -80,28 +56,22 @@ export const registerUser = async (name: string, email: string, password: string
     const hashedPassword = await hashPassword(password);
     
     // Create new user
-    const newUser = {
+    const newUser = await UserModel.create({
       email,
       password: hashedPassword,
       name,
       role,
       verificationToken,
       verified: false,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
+    });
     
-    const result = await usersCollection.insertOne(newUser);
-    const insertedUser = {
-      ...newUser,
-      _id: result.insertedId,
-      id: result.insertedId.toString()
-    };
-    
-    // Send verification email
+    // Send verification email (mock)
     await sendVerificationEmail(email, name, verificationToken);
     
-    return { user: sanitizeUser(insertedUser), success: true };
+    return { 
+      user: sanitizeUser(newUser), 
+      success: true 
+    };
   } catch (error) {
     console.error("Registration error:", error);
     throw error;
@@ -111,11 +81,10 @@ export const registerUser = async (name: string, email: string, password: string
 // Login user
 export const loginUser = async (email: string, password: string): Promise<AuthResponse> => {
   try {
-    const { db } = await dbConnect();
-    const usersCollection = db.collection('users');
+    await dbConnect();
     
     // Find user by email
-    const user = await usersCollection.findOne({ email });
+    const user = await UserModel.findOne({ email }).exec();
     if (!user) {
       throw new Error('Invalid credentials');
     }
@@ -127,39 +96,31 @@ export const loginUser = async (email: string, password: string): Promise<AuthRe
     }
     
     // Update last login
-    await usersCollection.updateOne(
-      { _id: user._id },
-      { $set: { lastLogin: new Date(), updatedAt: new Date() } }
-    );
-
-    // Ensure user has an id field
-    const userWithId = {
-      ...user,
-      id: user._id.toString()
-    };
+    user.lastLogin = new Date();
+    user.updatedAt = new Date();
+    await user.save();
     
-    return { user: sanitizeUser(userWithId), success: true };
+    return { 
+      user: sanitizeUser(user), 
+      success: true 
+    };
   } catch (error) {
     console.error("Login error:", error);
     throw error;
   }
 };
 
-// Get current user
-export const getCurrentUser = async (userId: string): Promise<User | null> => {
+// Get current user by ID
+export const getCurrentUser = async (userId: string): Promise<UserResponse | null> => {
   try {
-    const { db } = await dbConnect();
-    const usersCollection = db.collection('users');
+    await dbConnect();
     
-    const user = await usersCollection.findOne({ _id: new ObjectId(userId) });
+    const user = await UserModel.findById(userId).exec();
     if (!user) {
       return null;
     }
     
-    return sanitizeUser({
-      ...user,
-      id: user._id.toString()
-    });
+    return sanitizeUser(user);
   } catch (error) {
     console.error("Get user error:", error);
     return null;
@@ -169,33 +130,27 @@ export const getCurrentUser = async (userId: string): Promise<User | null> => {
 // Request password reset
 export const requestPasswordReset = async (email: string): Promise<boolean> => {
   try {
-    const { db } = await dbConnect();
-    const usersCollection = db.collection('users');
+    await dbConnect();
     
     // Find user by email
-    const user = await usersCollection.findOne({ email });
+    const user = await UserModel.findOne({ email }).exec();
     if (!user) {
-      // Don't reveal that email doesn't exist
+      // Don't reveal that email doesn't exist for security
       return false;
     }
     
     // Generate reset token
     const resetToken = generateToken();
     
-    // Update user with reset token and expiry
+    // Set token expiry (1 hour)
     const resetPasswordExpires = new Date();
-    resetPasswordExpires.setHours(resetPasswordExpires.getHours() + 1); // 1 hour expiry
+    resetPasswordExpires.setHours(resetPasswordExpires.getHours() + 1);
     
-    await usersCollection.updateOne(
-      { _id: user._id },
-      { 
-        $set: { 
-          resetPasswordToken: resetToken, 
-          resetPasswordExpires, 
-          updatedAt: new Date() 
-        } 
-      }
-    );
+    // Update user with reset token
+    user.resetPasswordToken = resetToken;
+    user.resetPasswordExpires = resetPasswordExpires;
+    user.updatedAt = new Date();
+    await user.save();
     
     // Send password reset email
     await sendPasswordResetEmail(email, user.name, resetToken);
@@ -207,17 +162,16 @@ export const requestPasswordReset = async (email: string): Promise<boolean> => {
   }
 };
 
-// Reset password
+// Reset password with token
 export const resetPassword = async (token: string, newPassword: string): Promise<boolean> => {
   try {
-    const { db } = await dbConnect();
-    const usersCollection = db.collection('users');
+    await dbConnect();
     
     // Find user by reset token and check expiry
-    const user = await usersCollection.findOne({
+    const user = await UserModel.findOne({
       resetPasswordToken: token,
       resetPasswordExpires: { $gt: new Date() }
-    });
+    }).exec();
     
     if (!user) {
       throw new Error('Invalid or expired reset token');
@@ -226,20 +180,12 @@ export const resetPassword = async (token: string, newPassword: string): Promise
     // Hash new password
     const hashedPassword = await hashPassword(newPassword);
     
-    // Update user with new password and clear reset token
-    await usersCollection.updateOne(
-      { _id: user._id },
-      { 
-        $set: { 
-          password: hashedPassword,
-          updatedAt: new Date()
-        },
-        $unset: { 
-          resetPasswordToken: "",
-          resetPasswordExpires: ""
-        }
-      }
-    );
+    // Update user password and clear reset token
+    user.password = hashedPassword;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+    user.updatedAt = new Date();
+    await user.save();
     
     return true;
   } catch (error) {
@@ -248,32 +194,23 @@ export const resetPassword = async (token: string, newPassword: string): Promise
   }
 };
 
-// Verify email
+// Verify email with token
 export const verifyEmail = async (token: string): Promise<boolean> => {
   try {
-    const { db } = await dbConnect();
-    const usersCollection = db.collection('users');
+    await dbConnect();
     
     // Find user by verification token
-    const user = await usersCollection.findOne({
-      verificationToken: token
-    });
+    const user = await UserModel.findOne({ verificationToken: token }).exec();
     
     if (!user) {
       throw new Error('Invalid verification token');
     }
     
-    // Update user as verified
-    await usersCollection.updateOne(
-      { _id: user._id },
-      { 
-        $set: { 
-          verified: true,
-          updatedAt: new Date()
-        },
-        $unset: { verificationToken: "" }
-      }
-    );
+    // Mark user as verified and remove token
+    user.verified = true;
+    user.verificationToken = undefined;
+    user.updatedAt = new Date();
+    await user.save();
     
     return true;
   } catch (error) {
@@ -282,21 +219,19 @@ export const verifyEmail = async (token: string): Promise<boolean> => {
   }
 };
 
-// Invite team member
+// Invite a team member
 export const inviteTeamMember = async (email: string, name: string, role: 'admin' | 'team-member', invitedBy: string): Promise<boolean> => {
   try {
-    const { db } = await dbConnect();
-    const usersCollection = db.collection('users');
-    const invitesCollection = db.collection('invites');
+    await dbConnect();
     
     // Check if user already exists
-    const existingUser = await usersCollection.findOne({ email });
+    const existingUser = await UserModel.findOne({ email }).exec();
     if (existingUser) {
       throw new Error('User with this email already exists');
     }
     
     // Check if invite already exists
-    const existingInvite = await invitesCollection.findOne({ email });
+    const existingInvite = await InviteModel.findOne({ email }).exec();
     if (existingInvite) {
       throw new Error('Invitation has already been sent to this email');
     }
@@ -304,8 +239,8 @@ export const inviteTeamMember = async (email: string, name: string, role: 'admin
     // Generate invite token
     const inviteToken = generateToken();
     
-    // Store invitation
-    await invitesCollection.insertOne({
+    // Create invitation
+    await InviteModel.create({
       email,
       name,
       role,
@@ -327,12 +262,10 @@ export const inviteTeamMember = async (email: string, name: string, role: 'admin
 // Accept team invitation
 export const acceptInvitation = async (token: string, password: string): Promise<AuthResponse> => {
   try {
-    const { db } = await dbConnect();
-    const usersCollection = db.collection('users');
-    const invitesCollection = db.collection('invites');
+    await dbConnect();
     
     // Find invitation
-    const invitation = await invitesCollection.findOne({ token });
+    const invitation = await InviteModel.findOne({ token }).exec();
     if (!invitation) {
       throw new Error('Invalid invitation token');
     }
@@ -340,28 +273,22 @@ export const acceptInvitation = async (token: string, password: string): Promise
     // Hash password
     const hashedPassword = await hashPassword(password);
     
-    // Create user
-    const newUser = {
+    // Create user from invitation
+    const newUser = await UserModel.create({
       email: invitation.email,
       password: hashedPassword,
       name: invitation.name,
       role: invitation.role,
-      verified: true,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
-    
-    const result = await usersCollection.insertOne(newUser);
-    const insertedUser = {
-      ...newUser,
-      _id: result.insertedId,
-      id: result.insertedId.toString()
-    };
+      verified: true
+    });
     
     // Delete invitation
-    await invitesCollection.deleteOne({ token });
+    await InviteModel.deleteOne({ token });
     
-    return { user: sanitizeUser(insertedUser), success: true };
+    return { 
+      user: sanitizeUser(newUser), 
+      success: true 
+    };
   } catch (error) {
     console.error("Accept invitation error:", error);
     throw new Error('Invalid or expired invitation token');
@@ -369,10 +296,9 @@ export const acceptInvitation = async (token: string, password: string): Promise
 };
 
 // Update user profile
-export const updateUserProfile = async (userId: string, updates: Partial<User>): Promise<User> => {
+export const updateUserProfile = async (userId: string, updates: Partial<UserDocument>): Promise<UserResponse> => {
   try {
-    const { db } = await dbConnect();
-    const usersCollection = db.collection('users');
+    await dbConnect();
     
     // Don't allow updating sensitive fields
     const { password, resetPasswordToken, resetPasswordExpires, verificationToken, role, ...safeUpdates } = updates;
@@ -380,20 +306,18 @@ export const updateUserProfile = async (userId: string, updates: Partial<User>):
     // Add updated timestamp
     safeUpdates.updatedAt = new Date();
     
-    await usersCollection.updateOne(
-      { _id: new ObjectId(userId) },
-      { $set: safeUpdates }
-    );
+    // Find and update user
+    const updatedUser = await UserModel.findByIdAndUpdate(
+      userId,
+      { $set: safeUpdates },
+      { new: true }
+    ).exec();
     
-    const updatedUser = await usersCollection.findOne({ _id: new ObjectId(userId) });
     if (!updatedUser) {
       throw new Error('User not found');
     }
     
-    return sanitizeUser({
-      ...updatedUser,
-      id: updatedUser._id.toString()
-    });
+    return sanitizeUser(updatedUser);
   } catch (error) {
     console.error("Update user profile error:", error);
     throw error;
@@ -401,32 +325,33 @@ export const updateUserProfile = async (userId: string, updates: Partial<User>):
 };
 
 // Admin: update user role
-export const updateUserRole = async (adminId: string, userId: string, newRole: 'admin' | 'user' | 'team-member'): Promise<User> => {
+export const updateUserRole = async (adminId: string, userId: string, newRole: 'admin' | 'user' | 'team-member'): Promise<UserResponse> => {
   try {
-    const { db } = await dbConnect();
-    const usersCollection = db.collection('users');
+    await dbConnect();
     
-    // Verify admin
-    const admin = await usersCollection.findOne({ _id: new ObjectId(adminId) });
+    // Verify admin privileges
+    const admin = await UserModel.findById(adminId).exec();
     if (!admin || admin.role !== 'admin') {
       throw new Error('Unauthorized: Admin privileges required');
     }
     
-    // Update user role
-    await usersCollection.updateOne(
-      { _id: new ObjectId(userId) },
-      { $set: { role: newRole, updatedAt: new Date() } }
-    );
+    // Find and update user role
+    const updatedUser = await UserModel.findByIdAndUpdate(
+      userId,
+      { 
+        $set: { 
+          role: newRole, 
+          updatedAt: new Date() 
+        } 
+      },
+      { new: true }
+    ).exec();
     
-    const updatedUser = await usersCollection.findOne({ _id: new ObjectId(userId) });
     if (!updatedUser) {
       throw new Error('User not found');
     }
     
-    return sanitizeUser({
-      ...updatedUser,
-      id: updatedUser._id.toString()
-    });
+    return sanitizeUser(updatedUser);
   } catch (error) {
     console.error("Update user role error:", error);
     throw error;
@@ -434,24 +359,21 @@ export const updateUserRole = async (adminId: string, userId: string, newRole: '
 };
 
 // Admin: get all users
-export const getAllUsers = async (adminId: string): Promise<User[]> => {
+export const getAllUsers = async (adminId: string): Promise<UserResponse[]> => {
   try {
-    const { db } = await dbConnect();
-    const usersCollection = db.collection('users');
+    await dbConnect();
     
-    // Verify admin
-    const admin = await usersCollection.findOne({ _id: new ObjectId(adminId) });
+    // Verify admin privileges
+    const admin = await UserModel.findById(adminId).exec();
     if (!admin || admin.role !== 'admin') {
       throw new Error('Unauthorized: Admin privileges required');
     }
     
-    const users = await usersCollection.find().toArray();
+    // Get all users
+    const users = await UserModel.find().exec();
     
-    // Sanitize all users
-    return users.map(user => sanitizeUser({
-      ...user,
-      id: user._id.toString()
-    }));
+    // Sanitize all user data
+    return users.map(user => sanitizeUser(user));
   } catch (error) {
     console.error("Get all users error:", error);
     throw error;
@@ -461,11 +383,10 @@ export const getAllUsers = async (adminId: string): Promise<User[]> => {
 // Admin: delete user
 export const deleteUser = async (adminId: string, userId: string): Promise<boolean> => {
   try {
-    const { db } = await dbConnect();
-    const usersCollection = db.collection('users');
+    await dbConnect();
     
-    // Verify admin
-    const admin = await usersCollection.findOne({ _id: new ObjectId(adminId) });
+    // Verify admin privileges
+    const admin = await UserModel.findById(adminId).exec();
     if (!admin || admin.role !== 'admin') {
       throw new Error('Unauthorized: Admin privileges required');
     }
@@ -475,7 +396,8 @@ export const deleteUser = async (adminId: string, userId: string): Promise<boole
       throw new Error('Cannot delete your own account');
     }
     
-    const result = await usersCollection.deleteOne({ _id: new ObjectId(userId) });
+    // Delete user
+    const result = await UserModel.deleteOne({ _id: userId });
     
     return result.deletedCount === 1;
   } catch (error) {
@@ -484,11 +406,11 @@ export const deleteUser = async (adminId: string, userId: string): Promise<boole
   }
 };
 
-// Helper email functions - mocked for browser environment
+// Mock email sending functions
 const sendVerificationEmail = async (email: string, name: string, token: string): Promise<void> => {
   try {
     console.log(`[MOCK] Sending verification email to ${email} with token ${token}`);
-    // In a real application, this would send an actual email
+    // In production, use SendGrid or similar email service
   } catch (error) {
     console.error("Send verification email error:", error);
   }
@@ -497,7 +419,7 @@ const sendVerificationEmail = async (email: string, name: string, token: string)
 const sendPasswordResetEmail = async (email: string, name: string, token: string): Promise<void> => {
   try {
     console.log(`[MOCK] Sending password reset email to ${email} with token ${token}`);
-    // In a real application, this would send an actual email
+    // In production, use SendGrid or similar email service
   } catch (error) {
     console.error("Send password reset email error:", error);
   }
@@ -506,7 +428,7 @@ const sendPasswordResetEmail = async (email: string, name: string, token: string
 const sendInvitationEmail = async (email: string, name: string, token: string): Promise<void> => {
   try {
     console.log(`[MOCK] Sending invitation email to ${email} with token ${token}`);
-    // In a real application, this would send an actual email
+    // In production, use SendGrid or similar email service
   } catch (error) {
     console.error("Send invitation email error:", error);
   }

@@ -13,6 +13,7 @@ import {
   updateUserRole,
   deleteUser
 } from '@/services/authService';
+import { UserResponse } from '@/types/user';
 
 // These functions are adapters for our API routes
 // They bridge between the API layer and our service layer
@@ -20,9 +21,10 @@ import {
 // But for demo purposes, they directly access the service layer
 
 // User login
-export const login = async (email: string, password: string) => {
+export const login = async (email: string, password: string): Promise<UserResponse> => {
   try {
-    return await loginUser(email, password);
+    const response = await loginUser(email, password);
+    return response.user;
   } catch (error) {
     console.error("Login error:", error);
     throw error;
@@ -122,7 +124,8 @@ export const invite = async (adminId: string, email: string, name: string, role:
 // Accept invitation
 export const acceptTeamInvitation = async (token: string, password: string) => {
   try {
-    return await acceptInvitation(token, password);
+    const response = await acceptInvitation(token, password);
+    return response;
   } catch (error) {
     console.error("Accept invitation error:", error);
     throw error;

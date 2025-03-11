@@ -1,8 +1,18 @@
 
 /**
- * Simple session storage wrapper
- * This implementation uses browser's sessionStorage
+ * Session storage wrapper with defensive programming
+ * This implementation uses browser's sessionStorage with fallbacks
  */
+
+// Type for session data structure
+export interface SessionData {
+  user?: any;
+  isLoggedIn?: boolean;
+  [key: string]: any;
+}
+
+// In-memory fallback storage when sessionStorage is not available
+const memoryStorage: Record<string, string> = {};
 
 export const sessionStorage = {
   /**
@@ -10,11 +20,16 @@ export const sessionStorage = {
    */
   getItem(key: string): string | null {
     try {
-      return window.sessionStorage.getItem(key);
+      // Try browser's sessionStorage first
+      if (typeof window !== 'undefined' && window.sessionStorage) {
+        return window.sessionStorage.getItem(key);
+      }
     } catch (error) {
       console.error('Error accessing sessionStorage:', error);
-      return null;
     }
+    
+    // Fallback to memory storage
+    return memoryStorage[key] || null;
   },
   
   /**
@@ -22,10 +37,17 @@ export const sessionStorage = {
    */
   setItem(key: string, value: string): void {
     try {
-      window.sessionStorage.setItem(key, value);
+      // Try browser's sessionStorage first
+      if (typeof window !== 'undefined' && window.sessionStorage) {
+        window.sessionStorage.setItem(key, value);
+        return;
+      }
     } catch (error) {
       console.error('Error setting sessionStorage item:', error);
     }
+    
+    // Fallback to memory storage
+    memoryStorage[key] = value;
   },
   
   /**
@@ -33,10 +55,17 @@ export const sessionStorage = {
    */
   removeItem(key: string): void {
     try {
-      window.sessionStorage.removeItem(key);
+      // Try browser's sessionStorage first
+      if (typeof window !== 'undefined' && window.sessionStorage) {
+        window.sessionStorage.removeItem(key);
+        return;
+      }
     } catch (error) {
       console.error('Error removing sessionStorage item:', error);
     }
+    
+    // Fallback to memory storage
+    delete memoryStorage[key];
   },
   
   /**
@@ -44,9 +73,45 @@ export const sessionStorage = {
    */
   clear(): void {
     try {
-      window.sessionStorage.clear();
+      // Try browser's sessionStorage first
+      if (typeof window !== 'undefined' && window.sessionStorage) {
+        window.sessionStorage.clear();
+        return;
+      }
     } catch (error) {
       console.error('Error clearing sessionStorage:', error);
+    }
+    
+    // Fallback to memory storage
+    Object.keys(memoryStorage).forEach(key => {
+      delete memoryStorage[key];
+    });
+  },
+  
+  /**
+   * Get parsed object from session storage
+   */
+  getObject<T>(key: string): T | null {
+    const value = this.getItem(key);
+    if (!value) return null;
+    
+    try {
+      return JSON.parse(value) as T;
+    } catch (error) {
+      console.error(`Error parsing session value for key "${key}":`, error);
+      return null;
+    }
+  },
+  
+  /**
+   * Store object in session storage as JSON
+   */
+  setObject<T>(key: string, value: T): void {
+    try {
+      const jsonValue = JSON.stringify(value);
+      this.setItem(key, jsonValue);
+    } catch (error) {
+      console.error(`Error stringifying value for key "${key}":`, error);
     }
   }
 };

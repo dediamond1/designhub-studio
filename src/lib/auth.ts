@@ -1,7 +1,6 @@
 
 import { sessionStorage } from './session';
-import { dbConnect } from './db';
-import type { User } from '@/services/authService';
+import { UserResponse } from '@/types/user';
 
 /**
  * Authentication library for client-side auth operations
@@ -13,26 +12,16 @@ export const auth = {
    */
   async login(email: string, password: string) {
     try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
-      
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Login failed');
-      }
-      
-      const data = await response.json();
+      // In a real app, this would make a fetch request to the login API
+      // For demo purposes in browser, we'll use our local API adapter
+      const { login } = await import('@/api/auth');
+      const userData = await login(email, password);
       
       // Store user data in session
-      sessionStorage.setItem('user', JSON.stringify(data.user));
+      sessionStorage.setObject('user', userData);
       sessionStorage.setItem('isLoggedIn', 'true');
       
-      return data.user;
+      return userData;
     } catch (error) {
       console.error('Login error:', error);
       throw error;
@@ -44,20 +33,9 @@ export const auth = {
    */
   async register(name: string, email: string, password: string) {
     try {
-      const response = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ name, email, password }),
-      });
-      
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Registration failed');
-      }
-      
-      return await response.json();
+      // In a real app, this would make a fetch request to the register API
+      const { register } = await import('@/api/auth');
+      return await register(name, email, password);
     } catch (error) {
       console.error('Registration error:', error);
       throw error;
@@ -70,7 +48,11 @@ export const auth = {
   logout() {
     sessionStorage.removeItem('user');
     sessionStorage.removeItem('isLoggedIn');
-    window.location.href = '/login';
+    
+    // Redirect to login page
+    if (typeof window !== 'undefined') {
+      window.location.href = '/login';
+    }
   },
   
   /**
@@ -83,16 +65,8 @@ export const auth = {
   /**
    * Get the current user
    */
-  getCurrentUser(): User | null {
-    const userJson = sessionStorage.getItem('user');
-    if (!userJson) return null;
-    
-    try {
-      return JSON.parse(userJson);
-    } catch (e) {
-      console.error('Error parsing user JSON:', e);
-      return null;
-    }
+  getCurrentUser(): UserResponse | null {
+    return sessionStorage.getObject<UserResponse>('user');
   },
   
   /**
@@ -100,20 +74,9 @@ export const auth = {
    */
   async sendPasswordResetEmail(email: string) {
     try {
-      const response = await fetch('/api/auth/forgot-password', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email }),
-      });
-      
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Failed to send password reset email');
-      }
-      
-      return await response.json();
+      // In a real app, this would make a fetch request to the forgot-password API
+      const { forgotPassword } = await import('@/api/auth');
+      return await forgotPassword(email);
     } catch (error) {
       console.error('Password reset error:', error);
       throw error;
@@ -125,20 +88,9 @@ export const auth = {
    */
   async resetPassword(token: string, newPassword: string) {
     try {
-      const response = await fetch('/api/auth/reset-password', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ token, newPassword }),
-      });
-      
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Failed to reset password');
-      }
-      
-      return await response.json();
+      // In a real app, this would make a fetch request to the reset-password API
+      const { changePassword } = await import('@/api/auth');
+      return await changePassword(token, newPassword);
     } catch (error) {
       console.error('Password reset error:', error);
       throw error;
@@ -148,31 +100,44 @@ export const auth = {
   /**
    * Update user profile
    */
-  async updateProfile(updates: Partial<User>) {
+  async updateProfile(updates: Partial<UserResponse>) {
     const user = this.getCurrentUser();
-    if (!user) throw new Error('User not authenticated');
+    if (!user || !user.id) {
+      throw new Error('User not authenticated');
+    }
     
     try {
-      const response = await fetch(`/api/users/${user.id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(updates),
-      });
+      // In a real app, this would make a fetch request to the user update API
+      // For our demo, we'll implement this directly
+      const { updateUserProfile } = await import('@/services/authService');
+      const updatedUser = await updateUserProfile(user.id, updates);
       
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Failed to update profile');
-      }
-      
-      const updatedUser = await response.json();
-      sessionStorage.setItem('user', JSON.stringify(updatedUser));
+      // Update user in session
+      sessionStorage.setObject('user', updatedUser);
       
       return updatedUser;
     } catch (error) {
       console.error('Profile update error:', error);
       throw error;
+    }
+  },
+  
+  /**
+   * Verify the current session is valid
+   */
+  async verifySession(): Promise<boolean> {
+    const user = this.getCurrentUser();
+    if (!user || !user.id) {
+      return false;
+    }
+    
+    try {
+      // In a real app, this would verify the session with the server
+      // For our demo, we'll just check if we have a user
+      return true;
+    } catch (error) {
+      console.error('Session verification error:', error);
+      return false;
     }
   }
 };
